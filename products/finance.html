@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Платформа автоматизации финансово-учётной работы — bit</title>
+<meta name="description" content="Бесшовная связка ЭДО, CRM и 1С с AI-распознаванием. 11 доменов, 200+ эндпоинтов." />
+<meta property="og:title" content="Финансовая платформа — bit" />
+<meta property="og:description" content="ЭДО · CRM · 1С · AI-распознавание в одном контуре." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark"></span><span>bit</span></a>
+    <nav class="nav-links">
+      <a href="../products/index.html" data-nav="/products">Продукты</a>
+      <a href="../services/index.html" data-nav="/services">Услуги</a>
+      <a href="../about.html" data-nav="/about">О компании</a>
+      <a href="../contact.html" data-nav="/contact">Контакты</a>
+    </nav>
+    <a href="../contact.html" class="btn btn-primary">Связаться</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap"><div class="crumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="index.html">Продукты</a><span class="sep">/</span><span class="here">Финансовая платформа</span></div></div>
+
+  <section class="hero compact">
+    <div class="bg-layer" aria-hidden="true">
+      <div class="dotgrid"></div>
+      <div class="circles"><svg viewBox="0 0 1200 1200" fill="none" stroke="rgba(110,138,250,0.5)" stroke-width="1"><circle cx="600" cy="600" r="200"/><circle cx="600" cy="600" r="320"/><circle cx="600" cy="600" r="440"/></svg></div>
+      <div class="scanlines"></div>
+    </div>
+    <div class="wrap">
+      <div class="hero-badges"><span class="badge production">Production</span><span class="badge">On-premise</span><span class="badge pre">Реестр ПО — готовится</span></div>
+      <h1>Платформа автоматизации финансово-учётной работы</h1>
+      <p class="sub">Бесшовная связка ЭДО, CRM и 1С с AI-распознаванием первичных документов в одном контуре. Закрывает процесс от поступления документа до проводки.</p>
+      <div class="hero-cta">
+        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
+        <a href="#tech" class="btn btn-ghost btn-lg">Технические детали</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mockup preview -->
+  <section class="block tight">
+    <div class="wrap">
+      <div class="epigraph" style="margin-bottom:32px">«Десятки переключений между Диадоком, Б24, 1С и банком<br>заменяются единым контуром, в котором документ идёт<br>от поступления до проводки автоматически.»</div>
+      <div class="mockup">
+        <div class="mockup-bar"><span class="dots"><span></span><span></span><span></span></span><span class="ttl">~ bit/finance/cli — pipeline_status</span></div>
+        <div class="mockup-body">
+          <div class="line"><span class="arrow">►</span><span>poll Диадок event_feed</span><span class="right">→ 47 events</span></div>
+          <div class="line"><span class="arrow">►</span><span>classify documents</span><span class="right">→ 47 done</span></div>
+          <div class="line"><span class="arrow">►</span><span>AI extract requisites</span><span class="right">→ 45 ok / 2 review</span></div>
+          <div class="line"><span class="arrow">►</span><span>match counterparties</span><span class="right">→ 47 matched</span></div>
+          <div class="line"><span class="arrow">►</span><span>push to 1С (OData)</span><span class="right">→ 45 created</span></div>
+          <div class="line"><span class="arrow">►</span><span>create Б24 tasks</span><span class="right">→ 45 created</span></div>
+          <div class="footline">─ Cycle: 4m 12s <span class="sep">·</span> queue: 0 <span class="sep">·</span> errors: 0</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Задача -->
+  <section class="block">
+    <div class="wrap">
+      <div class="split">
+        <div class="label-mono">01 / Задача</div>
+        <div class="prose">
+          <p>Финансовый блок крупного бизнеса работает с потоком первички — счета, УПД, акты, договоры, авансовые отчёты. Каждый документ проходит цепочку: получение → распознавание → ввод в учётную систему → согласование → проводка → оплата → архивирование.</p>
+          <p>Без автоматизации — десятки ручных переключений между Диадоком, Битрикс24, 1С, банком и Excel. Цикл одного счёта занимает дни, ошибки накапливаются на каждом шаге.</p>
+          <p>Платформа bit заменяет ручные переключения единым контуром, в котором документ идёт от поступления до проводки автоматически, а сотрудник подключается только в точках принятия решений.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Решение -->
+  <section class="block">
+    <div class="wrap">
+      <div class="split">
+        <div class="label-mono">02 / Решение</div>
+        <div>
+          <ul class="bullets" style="font-size:14px">
+            <li>Polling Диадока и автозагрузка всех событий через OIDC-аутентификацию</li>
+            <li>AI-распознавание реквизитов с верификацией по справочникам контрагентов</li>
+            <li>Автозаведение документов в 1С через OData (atom+xml)</li>
+            <li>Автосоздание задач Б24 для согласования и оплаты</li>
+            <li>Автогенерация платёжных поручений с экспортом реестра в банк</li>
+            <li>Дашборд для C-level с drill-down от итогов до первичного документа</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Domains -->
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">03 / Функциональные домены</div><h2>11 доменов, end-to-end процесс.</h2></div></div>
+      <div class="domains">
+        <div class="domain-card"><div class="head"><span class="num">01</span><h3>Входящие документы</h3></div><ul class="bullets"><li>Polling Диадока через OIDC</li><li>Маршрутизация по типам (УПД / счёт / акт / договор)</li><li>AI-распознавание реквизитов</li><li>Валидация по справочникам контрагентов</li><li>Дедупликация и связывание</li><li>Автозагрузка скан-копий в Б24-задачу</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">02</span><h3>Платежи и казначейство</h3></div><ul class="bullets"><li>Заявки на оплату с многоступенчатым согласованием</li><li>Автогенерация платёжных поручений в 1С</li><li>Лимиты по статьям ДДС</li><li>Контроль превышений</li><li>Дашборд факт vs план</li><li>Экспорт реестра платежей в банк</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">03</span><h3>Учёт ТМЦ и списания</h3></div><ul class="bullets"><li>Прием товара по приходным ордерам</li><li>Списания на объекты</li><li>Перемещения между подразделениями</li><li>Сверка с физическими остатками</li><li>Отчёт о неликвидах</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">04</span><h3>Табели и зарплата</h3></div><ul class="bullets"><li>Сбор табелей из Цифрового табеля</li><li>Импорт в 1С ЗУП через OData</li><li>Расчёт надбавок по объектам</li><li>Расчётные листки в личный кабинет</li><li>Сверка с производственным календарём</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">05</span><h3>Контрагенты и номенклатура</h3></div><ul class="bullets"><li>Автозаведение из ЕГРЮЛ/ЕГРИП по ИНН</li><li>Маппинг «наша номенклатура ↔ контрагентская»</li><li>Авторазрешение дублей</li><li>Self-learning на корректировках</li><li>Сверка с DaData</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">06</span><h3>Авансовые отчёты</h3></div><ul class="bullets"><li>Сбор чеков через бот</li><li>OCR + классификация по статьям</li><li>Автозаведение в 1С с проводками</li><li>Согласование в Б24</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">07</span><h3>Кассовые операции</h3></div><ul class="bullets"><li>Приходные/расходные кассовые ордера</li><li>Кассовая книга в 1С</li><li>Контроль кассового лимита</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">08</span><h3>Договоры и спецификации</h3></div><ul class="bullets"><li>Реестр договоров с реквизитами</li><li>Спецификации к рамочным договорам</li><li>Связь входящих документов с договорами</li><li>Контроль сроков и автонапоминания</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">09</span><h3>AI-распознавание и классификация</h3></div><ul class="bullets"><li>Pluggable провайдер (Gemini / YandexGPT / GigaChat / локальные)</li><li>Классификация типа документа</li><li>Извлечение реквизитов и табличных данных</li><li>Самообучение на корректировках</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">10</span><h3>Дашборд для C-level</h3></div><ul class="bullets"><li>7 разделов · 37+ виджетов</li><li>ECharts 6 + Vue 3 + Vben Admin</li><li>Materialized views в PostgreSQL</li><li>Drill-down от итогов к первичке</li><li>Экспорт в Excel/PDF</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">11</span><h3>Интеграции</h3></div><ul class="bullets"><li>Диадок (OIDC, событийный feed)</li><li>Битрикс24 (REST, batch до 50 запросов)</li><li>1С (OData, atom+xml, payment orders)</li><li>DaData (контрагенты, банки, ОКВЭД)</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech specs -->
+  <section class="block" id="tech">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">04 / Технические характеристики</div><h2>Стек, архитектура, развёртывание.</h2></div></div>
+      <div class="specs">
+        <div class="specs-row"><div class="key">Backend</div><div class="val">Django 6 · Django Ninja · Celery + Redis Beat · PostgreSQL</div></div>
+        <div class="specs-row"><div class="key">Frontend</div><div class="val">Vue 3.5 · Vben Admin v5 · NaiveUI · ECharts 6 · TypeScript</div></div>
+        <div class="specs-row"><div class="key">Развёртывание</div><div class="val">Docker · nginx · Astra Linux совместимо · on-premise или managed</div></div>
+        <div class="specs-row"><div class="key">Эндпоинтов</div><div class="val">200+</div></div>
+        <div class="specs-row"><div class="key">Воркеров</div><div class="val">100+ Celery-задач</div></div>
+        <div class="specs-row"><div class="key">Виджетов</div><div class="val">37 на C-level дашборде, 7 разделов</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integrations -->
+  <section class="block tight">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:24px"><div><div class="label">05 / Интеграции</div></div></div>
+      <div class="integrations-row">Диадок<span class="sep">·</span>Битрикс24<span class="sep">·</span>1С (Бухгалтерия / ЗУП / УТ)<span class="sep">·</span>DaData<span class="sep">·</span>Gemini<span class="sep">·</span>YandexGPT<span class="sep">·</span>GigaChat</div>
+    </div>
+  </section>
+
+  <!-- Условия -->
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">06 / Условия</div><h2>Три варианта поставки.</h2></div></div>
+      <div class="options-3">
+        <div class="opt-card"><div class="opt-sub">SaaS</div><h3>Управляемый сервис</h3><p>Размещаем платформу в инфраструктуре bit. Подключение к вашим системам — через защищённые API-туннели. Подписка с фиксированным SLA.</p></div>
+        <div class="opt-card"><div class="opt-sub">On-premise</div><h3>Внутренний контур</h3><p>Развёртывание в инфраструктуре заказчика. Astra Linux, PostgreSQL Pro, Docker. Полный контроль данных, документация, исходники у клиента.</p></div>
+        <div class="opt-card"><div class="opt-sub">Кастомизация</div><h3>Под процессы</h3><p>Доработка доменов под специфику бизнеса. Дополнительные интеграции, новые типы документов, расширенный дашборд. Фикс-цена за релиз.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="block" style="border-bottom:none">
+    <div class="wrap">
+      <div class="cta-strip">
+        <div><h2>Покажем платформу на ваших данных.</h2><p>30 минут с инженером, который ведёт продукт. Без слайдов, без презентаций.</p></div>
+        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other products -->
+  <section class="block" style="border-bottom:none">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">07 / Другие продукты</div></div></div>
+      <div class="grid-2" style="grid-template-columns:repeat(3,1fr)">
+        <a class="card linked" href="timesheet.html"><div class="card-top"><span class="card-idx num">02</span><span class="badge production">Production</span></div><h3>Цифровой табель</h3><p class="desc">Электронный табель для распределённых бригад через мессенджеры.</p><div class="divider"></div><div class="card-foot"><span class="mono">timesheet</span><span class="arrow-link">Открыть <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a>
+        <a class="card linked" href="logistics.html"><div class="card-top"><span class="card-idx num">03</span><span class="badge beta">Beta</span></div><h3>Система ЭПЛ/ЭТрН</h3><p class="desc">Электронные путевые листы для транспортных компаний.</p><div class="divider"></div><div class="card-foot"><span class="mono">logistics</span><span class="arrow-link">Открыть <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a>
+        <a class="card linked" href="smeta.html"><div class="card-top"><span class="card-idx num">04</span><span class="badge pre">Pre-release</span></div><h3>Сметная автоматизация</h3><p class="desc">Генерация черновых смет из PDF проектной документации.</p><div class="divider"></div><div class="card-foot"><span class="mono">smeta</span><span class="arrow-link">Открыть <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col"><a class="brand" href="../index.html" style="margin-bottom:14px"><span class="brand-mark"></span><span>bit</span></a><div class="foot-tag">Технологии для бизнеса. Делаем системы, которые продолжают работать после нашего ухода.</div></div>
+      <div class="foot-col"><h4>Контакты</h4><ul><li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li><li class="muted num">+7 (___) ___-__-__</li><li>Москва, ул. Староалексеевская, 5</li></ul></div>
+      <div class="foot-col"><h4>Реквизиты</h4><ul class="reqs"><li>ООО «БИТ»</li><li class="num">ИНН 9717191718</li><li class="num">КПП 771701001</li><li class="num">ОГРН 1267700141257</li></ul></div>
+    </div>
+    <div class="foot-bottom"><div>© 2026 ООО «БИТ» <span class="sep">·</span> Все права защищены</div><div class="right">Бизнес Информационные Технологии</div></div>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

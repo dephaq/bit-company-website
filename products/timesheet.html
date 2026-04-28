@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Цифровой табель — bit</title>
+<meta name="description" content="Электронный табель для распределённых бригад через корпоративные мессенджеры. Бот в МАКС, экспорт в 1С ЗУП." />
+<meta property="og:title" content="Цифровой табель — bit" />
+<meta property="og:description" content="Без приложений, без логинов. 10 доменов, экспорт в 1С ЗУП." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark"></span><span>bit</span></a>
+    <nav class="nav-links">
+      <a href="../products/index.html" data-nav="/products">Продукты</a>
+      <a href="../services/index.html" data-nav="/services">Услуги</a>
+      <a href="../about.html" data-nav="/about">О компании</a>
+      <a href="../contact.html" data-nav="/contact">Контакты</a>
+    </nav>
+    <a href="../contact.html" class="btn btn-primary">Связаться</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap"><div class="crumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="index.html">Продукты</a><span class="sep">/</span><span class="here">Цифровой табель</span></div></div>
+
+  <section class="hero compact">
+    <div class="bg-layer" aria-hidden="true">
+      <div class="dotgrid"></div>
+      <div class="circles"><svg viewBox="0 0 1200 1200" fill="none" stroke="rgba(110,138,250,0.5)" stroke-width="1"><circle cx="600" cy="600" r="200"/><circle cx="600" cy="600" r="320"/><circle cx="600" cy="600" r="440"/></svg></div>
+      <div class="scanlines"></div>
+    </div>
+    <div class="wrap">
+      <div class="hero-badges"><span class="badge production">Production</span><span class="badge">On-premise</span><span class="badge pre">Реестр ПО — готовится</span></div>
+      <h1>Цифровой табель</h1>
+      <p class="sub">Электронный табель учёта рабочего времени для распределённых бригад через корпоративные мессенджеры. Без приложений, без логинов.</p>
+      <div class="hero-cta">
+        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
+        <a href="#tech" class="btn btn-ghost btn-lg">Технические детали</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block tight">
+    <div class="wrap">
+      <div class="epigraph" style="margin-bottom:32px">«Бригадир отмечает явку команды прямо в корпоративном<br>мессенджере — данные сразу попадают в 1С ЗУП.<br>Ручного переноса больше нет.»</div>
+      <div class="mockup">
+        <div class="mockup-bar"><span class="dots"><span></span><span></span><span></span></span><span class="ttl">МАКС · #бригада-14</span></div>
+        <div class="mockup-body">
+          <div class="chat-line"><span class="who user">[Бригадир]</span>/табель сегодня</div>
+          <div class="chat-line"><span class="who bot">[bit]</span>Бригада 14, объект «Староалексеевская-5» · 6 человек
+            <span class="nested"><span class="check">✓</span> Иванов <span class="sep">·</span> <span class="check">✓</span> Петров <span class="sep">·</span> <span class="check">✓</span> Сидоров</span>
+            <span class="nested"><span class="muted">⊘</span> Кузнецов (отпуск)</span>
+            <span class="nested"><span class="pending">⏳</span> Михайлов <span class="sep">·</span> <span class="pending">⏳</span> Соколов</span>
+          </div>
+          <div class="chat-line"><span class="who user">[Бригадир]</span>+Михайлов 8ч, +Соколов 8ч</div>
+          <div class="chat-line"><span class="who bot">[bit]</span>Принято. Передано в 1С ЗУП.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">01 / Задача</div><div class="prose">
+      <p>Распределённые бригады на объектах ведут табель на бумаге. Бригадир собирает данные в WhatsApp, кадровик переносит вручную в 1С ЗУП. Ошибки, потерянные дни, споры по часам, расчёт идёт с задержкой.</p>
+      <p>Цифровой табель убирает ручной перенос: бригадир отмечает явку команды прямо в корпоративном мессенджере, данные сразу попадают в учёт. Кадровик видит готовые табели, а не сырьё для ввода.</p>
+    </div></div></div>
+  </section>
+
+  <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">02 / Решение</div><div>
+      <ul class="bullets" style="font-size:14px">
+        <li>Бот в МАКС с inline-кнопками — отметка явки в один тап</li>
+        <li>Иерархия ролей с каскадом приглашений по invite-кодам</li>
+        <li>Гео-привязка явки к объекту (опционально)</li>
+        <li>Прямой экспорт в 1С ЗУП через OData</li>
+        <li>Аудит-лента в Google Sheets для кадровика — полная история изменений</li>
+      </ul>
+    </div></div></div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">03 / Функциональные домены</div><h2>10 доменов от онбординга до экспорта.</h2></div></div>
+      <div class="domains">
+        <div class="domain-card"><div class="head"><span class="num">01</span><h3>Онбординг</h3></div><ul class="bullets"><li>Invite-коды с TTL 24 часа</li><li>Иерархия Admin → Бригадир → Сотрудник</li><li>Каскад приглашений</li><li>Привязка к объекту при активации</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">02</span><h3>Сменный учёт</h3></div><ul class="bullets"><li>Явка / неявка / больничный / отпуск</li><li>Командировка, простой по причине</li><li>Замечания и комментарии</li><li>Часы и переработки</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">03</span><h3>Объекты и бригады</h3></div><ul class="bullets"><li>Множественные привязки сотрудников</li><li>Ротация бригадиров</li><li>Иерархия объектов и подразделений</li><li>График вахт</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">04</span><h3>Геолокация</h3></div><ul class="bullets"><li>Привязка точки явки к объекту</li><li>Радиус допустимого отклонения</li><li>Алерты при отклонениях</li><li>Опциональный режим без гео</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">05</span><h3>Согласования</h3></div><ul class="bullets"><li>Спорные часы — цепочка утверждения</li><li>Эскалация на руководителя объекта</li><li>Запросы на исправление прошедших дней</li><li>История правок</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">06</span><h3>Экспорт в 1С ЗУП</h3></div><ul class="bullets"><li>OData-интеграция</li><li>Выгрузка по объектам и подразделениям</li><li>Маппинг видов времени</li><li>Контроль успешности проводки</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">07</span><h3>Уведомления</h3></div><ul class="bullets"><li>Ежедневные напоминания бригадирам</li><li>Эскалации при незакрытом дне</li><li>Недельные сводки руководителям</li><li>Алерты по аномалиям</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">08</span><h3>Аудит и отчётность</h3></div><ul class="bullets"><li>Google Sheets для кадровика</li><li>История изменений по каждой записи</li><li>Кто, когда, что поменял</li><li>Выгрузка отчётов в Excel</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">09</span><h3>Бот в МАКС</h3></div><ul class="bullets"><li>Inline-кнопки и FSM-диалоги</li><li>Голосовые команды</li><li>Группы для бригад</li><li>Личные карточки в DM</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">10</span><h3>Веб-админка для кадровика</h3></div><ul class="bullets"><li>Карточки сотрудников</li><li>Графики выходов по объектам</li><li>Исключения и алерты</li><li>Ручные правки с обоснованием</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="tech">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">04 / Технические характеристики</div></div></div>
+      <div class="specs">
+        <div class="specs-row"><div class="key">Backend</div><div class="val">Python 3.13 · FastAPI · SQLModel · APScheduler · alembic</div></div>
+        <div class="specs-row"><div class="key">Хранилище</div><div class="val">SQLite (MVP) / PostgreSQL (production)</div></div>
+        <div class="specs-row"><div class="key">Развёртывание</div><div class="val">Docker · VPS · автоматический бэкап · health-check</div></div>
+        <div class="specs-row"><div class="key">Мессенджер</div><div class="val">МАКС Bot API</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block tight">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:24px"><div><div class="label">05 / Интеграции</div></div></div>
+      <div class="integrations-row">МАКС<span class="sep">·</span>1С ЗУП<span class="sep">·</span>Google Sheets<span class="sep">·</span>Google Drive</div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">06 / Условия</div><h2>Три варианта поставки.</h2></div></div>
+      <div class="options-3">
+        <div class="opt-card"><div class="opt-sub">SaaS</div><h3>Управляемый сервис</h3><p>Размещаем сервис на стороне bit, подключаем к вашему 1С ЗУП через защищённый туннель. Подписка с фиксированным SLA.</p></div>
+        <div class="opt-card"><div class="opt-sub">On-premise</div><h3>Внутренний контур</h3><p>Развёртывание в инфраструктуре заказчика. Astra Linux, PostgreSQL, Docker. Документация и исходники у клиента.</p></div>
+        <div class="opt-card"><div class="opt-sub">Кастомизация</div><h3>Под процессы</h3><p>Свои виды времени, свои поля карточек, дополнительные интеграции. Фикс-цена за релиз.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="border-bottom:none">
+    <div class="wrap">
+      <div class="cta-strip">
+        <div><h2>Покажем табель на ваших бригадах.</h2><p>30 минут с инженером, который ведёт продукт.</p></div>
+        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="border-bottom:none">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">07 / Другие продукты</div></div></div>
+      <div class="grid-2" style="grid-template-columns:repeat(3,1fr)">
+        <a class="card linked" href="finance.html"><div class="card-top"><span class="card-idx num">01</span><span class="badge production">Production</span></div><h3>Финансовая платформа</h3><p class="desc">ЭДО · CRM · 1С · AI-распознавание в одном контуре.</p><div class="divider"></div><div class="card-foot"><span class="mono">finance</span><span class="arrow-link">Открыть →</span></div></a>
+        <a class="card linked" href="logistics.html"><div class="card-top"><span class="card-idx num">03</span><span class="badge beta">Beta</span></div><h3>Система ЭПЛ/ЭТрН</h3><p class="desc">Электронные путевые листы для транспортных компаний.</p><div class="divider"></div><div class="card-foot"><span class="mono">logistics</span><span class="arrow-link">Открыть →</span></div></a>
+        <a class="card linked" href="smeta.html"><div class="card-top"><span class="card-idx num">04</span><span class="badge pre">Pre-release</span></div><h3>Сметная автоматизация</h3><p class="desc">Генерация черновых смет из PDF проектной документации.</p><div class="divider"></div><div class="card-foot"><span class="mono">smeta</span><span class="arrow-link">Открыть →</span></div></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col"><a class="brand" href="../index.html" style="margin-bottom:14px"><span class="brand-mark"></span><span>bit</span></a><div class="foot-tag">Технологии для бизнеса. Делаем системы, которые продолжают работать после нашего ухода.</div></div>
+      <div class="foot-col"><h4>Контакты</h4><ul><li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li><li class="muted num">+7 (___) ___-__-__</li><li>Москва, ул. Староалексеевская, 5</li></ul></div>
+      <div class="foot-col"><h4>Реквизиты</h4><ul class="reqs"><li>ООО «БИТ»</li><li class="num">ИНН 9717191718</li><li class="num">КПП 771701001</li><li class="num">ОГРН 1267700141257</li></ul></div>
+    </div>
+    <div class="foot-bottom"><div>© 2026 ООО «БИТ» <span class="sep">·</span> Все права защищены</div><div class="right">Бизнес Информационные Технологии</div></div>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

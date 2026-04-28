@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Продукты — bit</title>
+<meta name="description" content="Готовые продукты bit — платформы в промышленной эксплуатации: финансы, табель, ЭПЛ, сметы." />
+<meta property="og:title" content="Продукты — bit" />
+<meta property="og:description" content="4 платформы в эксплуатации: финансы, табель, ЭПЛ, сметы." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark"></span><span>bit</span></a>
+    <nav class="nav-links">
+      <a href="../products/index.html" data-nav="/products">Продукты</a>
+      <a href="../services/index.html" data-nav="/services">Услуги</a>
+      <a href="../about.html" data-nav="/about">О компании</a>
+      <a href="../contact.html" data-nav="/contact">Контакты</a>
+    </nav>
+    <a href="../contact.html" class="btn btn-primary">Связаться</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="crumbs"><a href="../index.html">Главная</a><span class="sep">/</span><span class="here">Продукты</span></div>
+  </div>
+
+  <section class="hero compact">
+    <div class="bg-layer" aria-hidden="true">
+      <div class="dotgrid"></div>
+      <div class="circles"><svg viewBox="0 0 1200 1200" fill="none" stroke="rgba(110,138,250,0.5)" stroke-width="1"><circle cx="600" cy="600" r="200"/><circle cx="600" cy="600" r="320"/><circle cx="600" cy="600" r="440"/><circle cx="600" cy="600" r="560"/></svg></div>
+    </div>
+    <div class="wrap">
+      <div class="eyebrow"><span class="dot"></span><span>4 платформы · промышленная эксплуатация</span></div>
+      <h1>Готовые продукты.</h1>
+      <p class="sub">Платформы bit, которые уже работают в корпоративных контурах. Часть тиражируется как SaaS, часть собирается под инфраструктуру заказчика.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+
+      <div class="product-row">
+        <div>
+          <div class="meta"><span class="badge production">Production</span><span>· finance</span></div>
+          <h3>Платформа автоматизации финансово-учётной работы</h3>
+          <p>Бесшовная связка ЭДО, CRM и 1С с AI-распознаванием первичных документов в одном контуре. Закрывает процесс от поступления документа до проводки. <span class="num-accent">11 функциональных доменов</span>, <span class="num-accent">200+ API-эндпоинтов</span>, <span class="num-accent">100+ Celery-воркеров</span>, Vue-дашборд с 37 виджетами.</p>
+          <a class="arrow-link" href="finance.html">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="stats">
+          <div class="row"><span>Доменов</span><span>11</span></div>
+          <div class="row"><span>Эндпоинтов</span><span>200+</span></div>
+          <div class="row"><span>Воркеров</span><span>100+</span></div>
+          <div class="row"><span>Виджетов</span><span>37</span></div>
+          <div class="row"><span>Интеграций</span><span>7</span></div>
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div>
+          <div class="meta"><span class="badge production">Production</span><span>· timesheet</span></div>
+          <h3>Цифровой табель учёта рабочего времени</h3>
+          <p>Электронный табель для распределённых бригад через корпоративные мессенджеры. Без приложений и логинов: бригадир отмечает явку прямо в МАКС, данные сразу попадают в 1С ЗУП. <span class="num-accent">10 функциональных доменов</span>, гео-привязка явки, экспорт в 1С ЗУП через OData, аудит-лента в Google Sheets.</p>
+          <a class="arrow-link" href="timesheet.html">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="stats">
+          <div class="row"><span>Доменов</span><span>10</span></div>
+          <div class="row"><span>Бот</span><span>МАКС</span></div>
+          <div class="row"><span>Экспорт</span><span>1С ЗУП OData</span></div>
+          <div class="row"><span>Хранилище</span><span>SQLite / PG</span></div>
+          <div class="row"><span>Развёртывание</span><span>Docker · VPS</span></div>
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div>
+          <div class="meta"><span class="badge beta">Beta</span><span>· logistics</span></div>
+          <h3>Система электронных путевых листов (ЭПЛ/ЭТрН)</h3>
+          <p>Электронные путевые листы и транспортные накладные для транспортных компаний. Связка с Контур.Логистика и ФГИС ЭПД, подписи прямо в мессенджере. <span class="num-accent">11 доменов</span>, <span class="num-accent">6 титулов ЭПЛ</span> по приказу ФНС 5.01, цепочка ПЭП/УНЭП/КЭП через Контур, Госключ и КриптоПро.</p>
+          <a class="arrow-link" href="logistics.html">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="stats">
+          <div class="row"><span>Доменов</span><span>11</span></div>
+          <div class="row"><span>Титулов ЭПЛ</span><span>6 (T1–T6)</span></div>
+          <div class="row"><span>Подписи</span><span>ПЭП/УНЭП/КЭП</span></div>
+          <div class="row"><span>Формат</span><span>ФНС 5.01</span></div>
+          <div class="row"><span>Сдача</span><span>ФГИС ЭПД</span></div>
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div>
+          <div class="meta"><span class="badge pre">Pre-release</span><span>· smeta</span></div>
+          <h3>Автоматизация сметной документации</h3>
+          <p>Генерация черновых строительных смет из PDF проектной документации с маппингом на актуальные нормативные базы. <span class="num-accent">13 функциональных доменов</span>, <span class="num-accent">290 000+ нормативных позиций</span>, <span class="num-accent">440 mapping rules</span> с precision 100%, <span class="num-accent">1 860 тестов</span>, выгрузка в Турбосметчик и МГЭ.</p>
+          <a class="arrow-link" href="smeta.html">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="stats">
+          <div class="row"><span>Доменов</span><span>13</span></div>
+          <div class="row"><span>Норм. позиций</span><span>290 000+</span></div>
+          <div class="row"><span>Mapping rules</span><span>440</span></div>
+          <div class="row"><span>Тестов</span><span>1 860</span></div>
+          <div class="row"><span>Типов смет</span><span>13</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="block" style="border-bottom:none">
+    <div class="wrap">
+      <div class="cta-strip">
+        <div>
+          <h2>Хотите увидеть продукт вживую?</h2>
+          <p>Покажем работу на ваших данных, не на слайдах. 30 минут с инженером, который ведёт продукт.</p>
+        </div>
+        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col"><a class="brand" href="../index.html" style="margin-bottom:14px"><span class="brand-mark"></span><span>bit</span></a><div class="foot-tag">Технологии для бизнеса. Делаем системы, которые продолжают работать после нашего ухода.</div></div>
+      <div class="foot-col"><h4>Контакты</h4><ul><li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li><li class="muted num">+7 (___) ___-__-__</li><li>Москва, ул. Староалексеевская, 5</li></ul></div>
+      <div class="foot-col"><h4>Реквизиты</h4><ul class="reqs"><li>ООО «БИТ»</li><li class="num">ИНН 9717191718</li><li class="num">КПП 771701001</li><li class="num">ОГРН 1267700141257</li></ul></div>
+    </div>
+    <div class="foot-bottom"><div>© 2026 ООО «БИТ» <span class="sep">·</span> Все права защищены</div><div class="right">Бизнес Информационные Технологии</div></div>
+  </div>
+</footer>
+
+<script src="../assets/app.js"></script>
+</body>
+</html>

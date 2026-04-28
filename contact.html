@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Контакты — bit</title>
+<meta name="description" content="Свяжитесь с командой bit. Без скриптованных продаж — сразу с инженером." />
+<meta property="og:title" content="Контакты — bit" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html"><span class="brand-mark"></span><span>bit</span></a>
+    <nav class="nav-links">
+      <a href="products/index.html" data-nav="/products">Продукты</a>
+      <a href="services/index.html" data-nav="/services">Услуги</a>
+      <a href="about.html" data-nav="/about">О компании</a>
+      <a href="contact.html" data-nav="/contact">Контакты</a>
+    </nav>
+    <a href="#contact-form" class="btn btn-primary">К форме</a>
+  </div>
+</header>
+<main>
+  <div class="wrap"><div class="crumbs"><a href="index.html">Главная</a><span class="sep">/</span><span class="here">Контакты</span></div></div>
+
+  <section class="hero compact">
+    <div class="bg-layer" aria-hidden="true"><div class="dotgrid"></div><div class="circles"><svg viewBox="0 0 1200 1200" fill="none" stroke="rgba(110,138,250,0.5)" stroke-width="1"><circle cx="600" cy="600" r="200"/><circle cx="600" cy="600" r="320"/><circle cx="600" cy="600" r="440"/></svg></div></div>
+    <div class="wrap">
+      <div class="eyebrow"><span class="dot"></span><span>Связаться · ответ в течение 24 часов</span></div>
+      <h1>Поговорим о задаче.</h1>
+      <p class="sub">Без скриптованных продаж. Сразу с инженером, который будет вести проект — расскажем, что реально, что нет, во сколько встанет.</p>
+    </div>
+  </section>
+
+  <section class="block" id="contact-form">
+    <div class="wrap">
+      <div class="contact">
+        <div>
+          <div class="label">01 / Связаться</div>
+          <h2>Напишите — ответим лично.</h2>
+          <p class="sub">Кратко опишите задачу: какие системы, какие данные, что не работает или чего не хватает. Чем конкретнее — тем точнее ответ. NDA подписываем до начала Discovery.</p>
+          <div class="contact-meta">
+            <div class="row"><span>Email</span><span><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></span></div>
+            <div class="row"><span>Телефон</span><span class="num">+7 (___) ___-__-__</span></div>
+            <div class="row"><span>Адрес</span><span>Москва, ул. Староалексеевская, 5</span></div>
+            <div class="row"><span>Время ответа</span><span>до 24 часов</span></div>
+          </div>
+        </div>
+
+        <div id="form-mount">
+          <form class="bit-form" id="bit-form" novalidate>
+            <div class="form-row-2">
+              <div class="field" data-field="name" data-required="1" data-msg="Укажите имя."><label for="f-name">Имя</label><input id="f-name" name="name" type="text" autocomplete="name" /><div class="field-err" data-err></div></div>
+              <div class="field" data-field="company"><label for="f-company">Компания</label><input id="f-company" name="company" type="text" autocomplete="organization" /><div class="field-err" data-err></div></div>
+            </div>
+            <div class="form-row-2">
+              <div class="field" data-field="email" data-required="1" data-msg="Укажите email."><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" /><div class="field-err" data-err></div></div>
+              <div class="field" data-field="phone"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" /><div class="field-err" data-err></div></div>
+            </div>
+            <div class="field" data-field="topic">
+              <label for="f-topic">Тема</label>
+              <select id="f-topic" name="topic">
+                <option value="Финансовая платформа">Финансовая платформа</option>
+                <option value="Цифровой табель">Цифровой табель</option>
+                <option value="ЭПЛ/ЭТрН">Система ЭПЛ/ЭТрН</option>
+                <option value="Сметная автоматизация">Сметная автоматизация</option>
+                <option value="AI-агенты">AI-агенты</option>
+                <option value="Интеграции">Интеграции</option>
+                <option value="Заказная разработка">Заказная разработка</option>
+                <option value="Другое">Другое</option>
+              </select>
+            </div>
+            <div class="field" data-field="message" data-required="1" data-minlen="10" data-msg="Опишите задачу."><label for="f-msg">Сообщение</label><textarea id="f-msg" name="message" rows="5"></textarea><div class="field-err" data-err></div></div>
+            <div class="form-foot">
+              <button type="submit" id="submit-btn" class="btn btn-primary btn-lg"><span data-label>Отправить</span></button>
+              <div class="form-error-line" id="form-error" role="alert"></div>
+              <div class="form-meta">Отправляя форму, вы соглашаетесь с обработкой персональных данных. NDA подписываем по запросу до Discovery.</div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">02 / Реквизиты</div></div></div>
+      <div class="specs">
+        <div class="specs-row"><div class="key">Юр. лицо</div><div class="val">ООО «БИТ» (Бизнес Информационные Технологии)</div></div>
+        <div class="specs-row"><div class="key">ИНН</div><div class="val num">9717191718</div></div>
+        <div class="specs-row"><div class="key">КПП</div><div class="val num">771701001</div></div>
+        <div class="specs-row"><div class="key">ОГРН</div><div class="val num">1267700141257</div></div>
+        <div class="specs-row"><div class="key">Адрес</div><div class="val">г. Москва, ул. Староалексеевская, 5</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col"><a class="brand" href="index.html" style="margin-bottom:14px"><span class="brand-mark"></span><span>bit</span></a><div class="foot-tag">Технологии для бизнеса. Делаем системы, которые продолжают работать после нашего ухода.</div></div>
+      <div class="foot-col"><h4>Контакты</h4><ul><li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li><li class="muted num">+7 (___) ___-__-__</li><li>Москва, ул. Староалексеевская, 5</li></ul></div>
+      <div class="foot-col"><h4>Реквизиты</h4><ul class="reqs"><li>ООО «БИТ»</li><li class="num">ИНН 9717191718</li><li class="num">КПП 771701001</li><li class="num">ОГРН 1267700141257</li></ul></div>
+    </div>
+    <div class="foot-bottom"><div>© 2026 ООО «БИТ» <span class="sep">·</span> Все права защищены</div><div class="right">Бизнес Информационные Технологии</div></div>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

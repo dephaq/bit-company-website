@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Автоматизация сметной документации — bit</title>
+<meta name="description" content="Генерация черновых смет из PDF проектной документации. 290 000+ нормативных позиций, 1 860 тестов." />
+<meta property="og:title" content="Сметная автоматизация — bit" />
+<meta property="og:description" content="13 доменов, 440 mapping rules, выгрузка в Турбосметчик и МГЭ." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark"></span><span>bit</span></a>
+    <nav class="nav-links">
+      <a href="../products/index.html" data-nav="/products">Продукты</a>
+      <a href="../services/index.html" data-nav="/services">Услуги</a>
+      <a href="../about.html" data-nav="/about">О компании</a>
+      <a href="../contact.html" data-nav="/contact">Контакты</a>
+    </nav>
+    <a href="../contact.html" class="btn btn-primary">Связаться</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap"><div class="crumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="index.html">Продукты</a><span class="sep">/</span><span class="here">Сметная автоматизация</span></div></div>
+
+  <section class="hero compact">
+    <div class="bg-layer" aria-hidden="true">
+      <div class="dotgrid"></div>
+      <div class="circles"><svg viewBox="0 0 1200 1200" fill="none" stroke="rgba(110,138,250,0.5)" stroke-width="1"><circle cx="600" cy="600" r="200"/><circle cx="600" cy="600" r="320"/><circle cx="600" cy="600" r="440"/></svg></div>
+      <div class="scanlines"></div>
+    </div>
+    <div class="wrap">
+      <div class="hero-badges"><span class="badge pre">Pre-release</span><span class="badge">On-premise</span><span class="badge pre">Реестр ПО — готовится</span></div>
+      <h1>Автоматизация сметной документации</h1>
+      <p class="sub">Генерация черновых строительных смет из PDF проектной документации с маппингом на актуальные нормативные базы.</p>
+      <div class="hero-cta">
+        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
+        <a href="#tech" class="btn btn-ghost btn-lg">Технические детали</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block tight">
+    <div class="wrap">
+      <div class="epigraph" style="margin-bottom:32px">«Ручная работа сметчика — 3-5 рабочих дней на проект.<br>Pipeline bit делает черновую смету за 30 минут.<br>Сметчик правит 10-20% и сдаёт заказчику.»</div>
+      <div class="mockup">
+        <div class="mockup-bar"><span class="dots"><span></span><span></span><span></span></span><span class="ttl">~ bit/smeta — pipeline run</span></div>
+        <div class="mockup-body">
+          <div class="line"><span class="arrow">►</span><span>parse PDF проекта</span><span class="right">7 разделов</span></div>
+          <div class="line"><span class="arrow">►</span><span>extract VOR (объёмы работ)</span><span class="right">184 позиции</span></div>
+          <div class="line"><span class="arrow">►</span><span>classify section</span><span class="right">раздел 22 (водопровод)</span></div>
+          <div class="line"><span class="arrow">►</span><span>search ФСНБ-2022</span><span class="right">FTS5 · 47ms</span></div>
+          <div class="line"><span class="arrow">►</span><span>apply mapping library</span><span class="right">440 rules · 100% precision</span></div>
+          <div class="line"><span class="arrow">►</span><span>price + overhead</span><span class="right num">₽ 837 651</span></div>
+          <div class="line"><span class="arrow">►</span><span>generate GGE</span><span class="right ok">✓ veshnyakovsky_water.gge</span></div>
+          <div class="footline">─ Coverage: 93.3% <span class="sep">·</span> Zero prices: 0 <span class="sep">·</span> QC: pass</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">01 / Задача</div><div class="prose">
+      <p>Сметчик получает PDF-проект — 50-200 страниц чертежей и спецификаций. Из них нужно извлечь объёмы работ, замаппить на ФСНБ-2022 или ТСН-2001, собрать GGE-файл для Турбосметчика. Ручная работа — 3-5 рабочих дней на проект.</p>
+      <p>Pipeline bit делает черновую смету за 30 минут. Сметчик правит 10-20% и сдаёт заказчику. Coverage по эталонным проектам — <span class="num-accent">90%+</span>.</p>
+    </div></div></div>
+  </section>
+
+  <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">02 / Решение</div><div>
+      <ul class="bullets" style="font-size:14px">
+        <li>Парсеры PDF для всех типов разделов проекта (ПОС, ТКР, ООС)</li>
+        <li>Полная нормативная база с FTS5-индексом — старт 0.1 сек</li>
+        <li>Mapping library с precision 100%, recall 81.6%</li>
+        <li>Expansion modules для типовых работ (земляные, дорожные, упоры)</li>
+        <li>Conditional pricing по разделам проекта</li>
+        <li>Выгрузка в форматы Турбосметчика (GGE) и МГЭ (MGE)</li>
+      </ul>
+    </div></div></div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">03 / Функциональные домены</div><h2>13 доменов: от парсинга PDF до GGE.</h2></div></div>
+      <div class="domains">
+        <div class="domain-card"><div class="head"><span class="num">01</span><h3>Парсеры PDF</h3></div><ul class="bullets"><li>ПОС / ПОС1 / ПОС2</li><li>ТКР.ТР / ТКР.НК / ТКР.КР / ТКР.СН</li><li>ООС1-3</li><li>Извлечение таблиц и спецификаций</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">02</span><h3>Классификатор разделов</h3></div><ul class="bullets"><li>Regex-паттерны имён файлов</li><li>Эвристики по содержимому</li><li>Ручное переопределение</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">03</span><h3>Нормативная база</h3></div><ul class="bullets"><li>55 987 ФСНБ-2022 позиций</li><li>43 250 ТСН-2001 позиций</li><li>191 207 сплит-форм</li><li>Регулярные обновления</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">04</span><h3>SQLite + FTS5 индекс</h3></div><ul class="bullets"><li>Старт 0.1 сек</li><li>Поиск миллисекунды</li><li>Embedded в pipeline</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">05</span><h3>Mapping library</h3></div><ul class="bullets"><li>440 правил</li><li>Precision 100%, recall 81.6%</li><li>Версионирование</li><li>Тестовое покрытие</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">06</span><h3>Pricing engine</h3></div><ul class="bullets"><li>Ресурсно-индексный метод</li><li>Коэффициенты пересчёта</li><li>Регионные индексы</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">07</span><h3>Expansion modules</h3></div><ul class="bullets"><li>Земляные работы</li><li>Дорожные покрытия</li><li>Упоры и крепления</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">08</span><h3>Conditional pricing</h3></div><ul class="bullets"><li>Раздел 22 (водопровод)</li><li>Раздел 23 (канализация)</li><li>Свои правила на раздел</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">09</span><h3>Section-aware fuzzy search</h3></div><ul class="bullets"><li>Фильтр по разделу проекта</li><li>Контекстный поиск</li><li>Учёт синонимов</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">10</span><h3>VOR builders</h3></div><ul class="bullets"><li>13 канонических типов смет</li><li>Шаблоны структур</li><li>Валидация полноты</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">11</span><h3>GGE generator</h3></div><ul class="bullets"><li>Для Турбосметчика</li><li>ФСНБ-индексный формат</li><li>Совместимость с актуальной версией</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">12</span><h3>MGE generator</h3></div><ul class="bullets"><li>Для МГЭ</li><li>Базисно-индексный формат</li><li>Соответствие XSD</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">13</span><h3>Reference validation</h3></div><ul class="bullets"><li>Сверка с эталонами</li><li>Метрики coverage</li><li>QC-отчёты по сметам</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="tech">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">04 / Технические характеристики</div></div></div>
+      <div class="specs">
+        <div class="specs-row"><div class="key">Стек</div><div class="val">Python 3.13 · pdfplumber · lxml · SQLite + FTS5 · pytest</div></div>
+        <div class="specs-row"><div class="key">Объём кода</div><div class="val">39 .py модулей · 37 тест-файлов</div></div>
+        <div class="specs-row"><div class="key">Тестов</div><div class="val">1 860</div></div>
+        <div class="specs-row"><div class="key">Парсеров</div><div class="val">7 типов PDF-разделов</div></div>
+        <div class="specs-row"><div class="key">Билдеров</div><div class="val">13 типов смет</div></div>
+        <div class="specs-row"><div class="key">Норм</div><div class="val">290 000+ позиций в базе</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block tight">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:24px"><div><div class="label">05 / Интеграции</div></div></div>
+      <div class="integrations-row">ФСНБ-2022<span class="sep">·</span>ТСН-2001<span class="sep">·</span>Турбосметчик (GGE)<span class="sep">·</span>МГЭ XSD</div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">06 / Условия</div><h2>Три варианта поставки.</h2></div></div>
+      <div class="options-3">
+        <div class="opt-card"><div class="opt-sub">SaaS</div><h3>Управляемый сервис</h3><p>Загружаете PDF проекта в личный кабинет, получаете GGE/MGE через 30 минут. Подписка с лимитом по проектам.</p></div>
+        <div class="opt-card"><div class="opt-sub">On-premise</div><h3>Внутренний контур</h3><p>Развёртывание в инфраструктуре заказчика. Astra Linux совместимо. Документация и исходники у клиента.</p></div>
+        <div class="opt-card"><div class="opt-sub">Кастомизация</div><h3>Под процессы</h3><p>Свои правила маппинга, дополнительные expansion modules, кастомные форматы выгрузки. Фикс-цена за релиз.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="border-bottom:none">
+    <div class="wrap">
+      <div class="cta-strip">
+        <div><h2>Прогоним ваш проект через pipeline.</h2><p>Загрузите PDF — получите черновую GGE с метриками coverage за 30 минут.</p></div>
+        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="border-bottom:none">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">07 / Другие продукты</div></div></div>
+      <div class="grid-2" style="grid-template-columns:repeat(3,1fr)">
+        <a class="card linked" href="finance.html"><div class="card-top"><span class="card-idx num">01</span><span class="badge production">Production</span></div><h3>Финансовая платформа</h3><p class="desc">ЭДО · CRM · 1С · AI-распознавание в одном контуре.</p><div class="divider"></div><div class="card-foot"><span class="mono">finance</span><span class="arrow-link">Открыть →</span></div></a>
+        <a class="card linked" href="timesheet.html"><div class="card-top"><span class="card-idx num">02</span><span class="badge production">Production</span></div><h3>Цифровой табель</h3><p class="desc">Электронный табель для распределённых бригад.</p><div class="divider"></div><div class="card-foot"><span class="mono">timesheet</span><span class="arrow-link">Открыть →</span></div></a>
+        <a class="card linked" href="logistics.html"><div class="card-top"><span class="card-idx num">03</span><span class="badge beta">Beta</span></div><h3>Система ЭПЛ/ЭТрН</h3><p class="desc">Электронные путевые листы для транспортных компаний.</p><div class="divider"></div><div class="card-foot"><span class="mono">logistics</span><span class="arrow-link">Открыть →</span></div></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col"><a class="brand" href="../index.html" style="margin-bottom:14px"><span class="brand-mark"></span><span>bit</span></a><div class="foot-tag">Технологии для бизнеса. Делаем системы, которые продолжают работать после нашего ухода.</div></div>
+      <div class="foot-col"><h4>Контакты</h4><ul><li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li><li class="muted num">+7 (___) ___-__-__</li><li>Москва, ул. Староалексеевская, 5</li></ul></div>
+      <div class="foot-col"><h4>Реквизиты</h4><ul class="reqs"><li>ООО «БИТ»</li><li class="num">ИНН 9717191718</li><li class="num">КПП 771701001</li><li class="num">ОГРН 1267700141257</li></ul></div>
+    </div>
+    <div class="foot-bottom"><div>© 2026 ООО «БИТ» <span class="sep">·</span> Все права защищены</div><div class="right">Бизнес Информационные Технологии</div></div>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

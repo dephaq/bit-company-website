@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI-агенты под задачу — bit</title>
+<meta name="description" content="Внедрение AI-агентов в корпоративные процессы. RAG, чат-боты, классификация обращений." />
+<meta property="og:title" content="AI-агенты — bit" />
+<meta property="og:description" content="LangChain · LlamaIndex · pluggable LLM. От прототипа до прода." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark"></span><span>bit</span></a>
+    <nav class="nav-links">
+      <a href="../products/index.html" data-nav="/products">Продукты</a>
+      <a href="../services/index.html" data-nav="/services">Услуги</a>
+      <a href="../about.html" data-nav="/about">О компании</a>
+      <a href="../contact.html" data-nav="/contact">Контакты</a>
+    </nav>
+    <a href="../contact.html" class="btn btn-primary">Связаться</a>
+  </div>
+</header>
+<main>
+  <div class="wrap"><div class="crumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="index.html">Услуги</a><span class="sep">/</span><span class="here">AI-агенты</span></div></div>
+  <section class="hero compact">
+    <div class="bg-layer" aria-hidden="true"><div class="dotgrid"></div><div class="circles"><svg viewBox="0 0 1200 1200" fill="none" stroke="rgba(110,138,250,0.5)" stroke-width="1"><circle cx="600" cy="600" r="200"/><circle cx="600" cy="600" r="320"/><circle cx="600" cy="600" r="440"/></svg></div></div>
+    <div class="wrap">
+      <div class="eyebrow"><span class="dot"></span><span>Услуги · AI-агенты</span></div>
+      <h1>AI-агенты под задачу.</h1>
+      <p class="sub">Внедрение AI-агентов в корпоративные процессы. От чат-бота техподдержки на корпоративной базе знаний до агента-аналитика для разработческой команды.</p>
+      <div class="hero-cta"><a href="../contact.html" class="btn btn-primary btn-lg">Обсудить задачу</a></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">01 / Что входит</div><div class="prose">
+      <p>Внедрение AI-агентов в корпоративные процессы. Каждый агент — это связка LLM, корпоративных данных, инструментов и сценариев под конкретную задачу. Не «универсальный ChatGPT для всего», а сфокусированный инструмент с измеримым результатом.</p>
+      <p>Каждое решение объяснимо, каждая ошибка трассируется. <strong>Pluggable провайдеры</strong> — заменяемы без переписывания: Gemini, YandexGPT, GigaChat, локальные LLM через Ollama.</p>
+    </div></div></div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">02 / Сценарии</div><h2>Где AI-агент окупается.</h2></div></div>
+      <div class="domains">
+        <div class="domain-card"><div class="head"><span class="num">01</span><h3>Чат-бот техподдержки на корпоративной базе знаний</h3></div><ul class="bullets"><li>RAG поверх документации, тикетов, регламентов</li><li>Цитирование источника</li><li>Эскалация на оператора</li><li>Метрики deflection rate</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">02</span><h3>Агент-аналитик в Slack/MAX</h3></div><ul class="bullets"><li>Запросы к BI на естественном языке</li><li>Генерация SQL и графиков</li><li>Sandbox-окружение</li><li>Доступ по ролям</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">03</span><h3>Автообработка входящих обращений</h3></div><ul class="bullets"><li>Классификация по типу</li><li>Маршрутизация к ответственному</li><li>Извлечение реквизитов</li><li>Автоответы по типовым кейсам</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">04</span><h3>Голосовой ассистент в колл-центре</h3></div><ul class="bullets"><li>STT + LLM + TTS pipeline</li><li>Скрипт диалога с состояниями</li><li>Интеграция с CRM</li><li>Транскрипты звонков</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">05</span><h3>Внутренний агент для документооборота</h3></div><ul class="bullets"><li>Распознавание реквизитов</li><li>Маршрутизация на согласование</li><li>Контроль сроков</li><li>Связь с ЭДО</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">03 / Стек</div></div></div>
+      <div class="stack-row">LangChain<span class="sep">·</span>LlamaIndex<span class="sep">·</span>Pluggable LLM (Gemini · YandexGPT · GigaChat · локальные через Ollama)<span class="sep">·</span>pgvector<span class="sep">·</span>Chroma<span class="sep">·</span>FastAPI<span class="sep">·</span>Celery<span class="sep">·</span>Redis</div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">04 / Этапы</div><h2>От Discovery до прода.</h2></div></div>
+      <div class="steps">
+        <div class="step"><span class="num">01</span><h3>Discovery</h3><p>1 неделя. Фиксируем сценарий, источники данных, метрики качества.</p></div>
+        <div class="step"><span class="num">02</span><h3>Прототип</h3><p>2-3 недели. Работающий агент на ваших данных, оценка качества на тестовом наборе.</p></div>
+        <div class="step"><span class="num">03</span><h3>Пилот</h3><p>1 месяц. Ограниченный круг пользователей, сбор фидбэка, дообучение.</p></div>
+        <div class="step"><span class="num">04</span><h3>Прод</h3><p>1-2 месяца. Развёртывание, мониторинг, SLA, документация.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">05 / Условия</div><div class="prose">
+      <p><strong>Фикс-цена за прототип.</strong> Подписка на эксплуатацию. Исходники у клиента — отдаём в репозиторий заказчика после приёмки.</p>
+      <p>Без vendor lock-in: pluggable LLM-провайдеры можно заменить без переписывания агента.</p>
+    </div></div></div>
+  </section>
+
+  <section class="block" style="border-bottom:none">
+    <div class="wrap">
+      <div class="cta-strip">
+        <div><h2>Расскажите задачу.</h2><p>Покажем, как агент будет работать на ваших данных.</p></div>
+        <a href="../contact.html" class="btn btn-primary btn-lg">Обсудить</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col"><a class="brand" href="../index.html" style="margin-bottom:14px"><span class="brand-mark"></span><span>bit</span></a><div class="foot-tag">Технологии для бизнеса. Делаем системы, которые продолжают работать после нашего ухода.</div></div>
+      <div class="foot-col"><h4>Контакты</h4><ul><li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li><li class="muted num">+7 (___) ___-__-__</li><li>Москва, ул. Староалексеевская, 5</li></ul></div>
+      <div class="foot-col"><h4>Реквизиты</h4><ul class="reqs"><li>ООО «БИТ»</li><li class="num">ИНН 9717191718</li><li class="num">КПП 771701001</li><li class="num">ОГРН 1267700141257</li></ul></div>
+    </div>
+    <div class="foot-bottom"><div>© 2026 ООО «БИТ» <span class="sep">·</span> Все права защищены</div><div class="right">Бизнес Информационные Технологии</div></div>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>
