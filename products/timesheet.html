@@ -10,8 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="icon" type="image/png" href="../assets/logo_only_picture.png" />
-<link rel="apple-touch-icon" href="../assets/logo_only_picture.png" />
+<link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg" />
+<link rel="apple-touch-icon" href="../assets/icon.svg" />
 <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
@@ -109,10 +110,10 @@
     <div class="wrap">
       <div class="section-head"><div><div class="label">04 / Технические характеристики</div></div></div>
       <div class="specs">
-        <div class="specs-row"><div class="key">Backend</div><div class="val">Python 3.13 · FastAPI · SQLModel · APScheduler · alembic</div></div>
-        <div class="specs-row"><div class="key">Хранилище</div><div class="val">SQLite (MVP) / PostgreSQL (production)</div></div>
-        <div class="specs-row"><div class="key">Развёртывание</div><div class="val">Docker · VPS · автоматический бэкап · health-check</div></div>
-        <div class="specs-row"><div class="key">Мессенджер</div><div class="val">МАКС Bot API</div></div>
+        <div class="specs-row"><div class="key">Backend</div><div class="val">Python 3.13 · FastAPI · SQLAlchemy 2 · APScheduler · alembic</div></div>
+        <div class="specs-row"><div class="key">Хранилище</div><div class="val">PostgreSQL 16 · Redis · TimescaleDB (для гео-треков)</div></div>
+        <div class="specs-row"><div class="key">Развёртывание</div><div class="val">Docker · Kubernetes · автоматический бэкап · health-check · OpenTelemetry</div></div>
+        <div class="specs-row"><div class="key">Мессенджер</div><div class="val">МАКС Bot API · Telegram Bot API (опционально)</div></div>
       </div>
     </div>
   </section>
@@ -120,7 +121,7 @@
   <section class="block tight">
     <div class="wrap">
       <div class="section-head" style="margin-bottom:24px"><div><div class="label">05 / Интеграции</div></div></div>
-      <div class="integrations-row">МАКС<span class="sep">·</span>1С ЗУП<span class="sep">·</span>Google Sheets<span class="sep">·</span>Google Drive</div>
+      <div class="integrations-row">МАКС Bot API<span class="sep">·</span>Telegram Bot API<span class="sep">·</span>1С ЗУП (OData)<span class="sep">·</span>1С УПП<span class="sep">·</span>Битрикс24<span class="sep">·</span>Google Sheets<span class="sep">·</span>Google Drive<span class="sep">·</span>Yandex Maps API (геоверификация)<span class="sep">·</span>2GIS API</div>
     </div>
   </section>
 

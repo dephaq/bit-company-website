@@ -10,8 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="icon" type="image/png" href="../assets/logo_only_picture.png" />
-<link rel="apple-touch-icon" href="../assets/logo_only_picture.png" />
+<link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg" />
+<link rel="apple-touch-icon" href="../assets/icon.svg" />
 <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
@@ -113,7 +114,8 @@
     <div class="wrap">
       <div class="section-head"><div><div class="label">04 / Технические характеристики</div></div></div>
       <div class="specs">
-        <div class="specs-row"><div class="key">Стек</div><div class="val">Python 3.13 · pdfplumber · lxml · SQLite + FTS5 · pytest</div></div>
+        <div class="specs-row"><div class="key">Стек</div><div class="val">Python 3.13 · pdfplumber · lxml · DuckDB · SQLite + FTS5 (embedded поиск по 290k норм) · Polars · Tantivy · pytest</div></div>
+        <div class="specs-row"><div class="key">AI / ML</div><div class="val">PyTorch · BGE embeddings · pgvector · Ollama (для маппинга работ → нормы)</div></div>
         <div class="specs-row"><div class="key">Объём кода</div><div class="val">39 .py модулей · 37 тест-файлов</div></div>
         <div class="specs-row"><div class="key">Тестов</div><div class="val">1 860</div></div>
         <div class="specs-row"><div class="key">Парсеров</div><div class="val">7 типов PDF-разделов</div></div>
@@ -126,7 +128,7 @@
   <section class="block tight">
     <div class="wrap">
       <div class="section-head" style="margin-bottom:24px"><div><div class="label">05 / Интеграции</div></div></div>
-      <div class="integrations-row">ФСНБ-2022<span class="sep">·</span>ТСН-2001<span class="sep">·</span>Турбосметчик (GGE)<span class="sep">·</span>МГЭ XSD</div>
+      <div class="integrations-row">ФСНБ-2022<span class="sep">·</span>ТСН-2001<span class="sep">·</span>МГЭ XSD<span class="sep">·</span>Турбосметчик (GGE/MGE)<span class="sep">·</span>Гранд-Смета<span class="sep">·</span>ABC-4<span class="sep">·</span>РИК (РИК-Авто)<span class="sep">·</span>Госэкспертиза (ЕГРЗ)<span class="sep">·</span>ФАУ Главгосэкспертиза</div>
     </div>
   </section>
 

@@ -10,8 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="icon" type="image/png" href="../assets/logo_only_picture.png" />
-<link rel="apple-touch-icon" href="../assets/logo_only_picture.png" />
+<link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg" />
+<link rel="apple-touch-icon" href="../assets/icon.svg" />
 <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
@@ -116,7 +117,7 @@
         <div class="domain-card"><div class="head"><span class="num">08</span><h3>Договоры и спецификации</h3></div><ul class="bullets"><li>Реестр договоров с реквизитами</li><li>Спецификации к рамочным договорам</li><li>Связь входящих документов с договорами</li><li>Контроль сроков и автонапоминания</li></ul></div>
         <div class="domain-card"><div class="head"><span class="num">09</span><h3>AI-распознавание и классификация</h3></div><ul class="bullets"><li>Pluggable провайдер (Gemini / YandexGPT / GigaChat / локальные)</li><li>Классификация типа документа</li><li>Извлечение реквизитов и табличных данных</li><li>Самообучение на корректировках</li></ul></div>
         <div class="domain-card"><div class="head"><span class="num">10</span><h3>Дашборд для C-level</h3></div><ul class="bullets"><li>7 разделов · 37+ виджетов</li><li>ECharts 6 + Vue 3 + Vben Admin</li><li>Materialized views в PostgreSQL</li><li>Drill-down от итогов к первичке</li><li>Экспорт в Excel/PDF</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">11</span><h3>Интеграции</h3></div><ul class="bullets"><li>Диадок (OIDC, событийный feed)</li><li>Битрикс24 (REST, batch до 50 запросов)</li><li>1С (OData, atom+xml, payment orders)</li><li>DaData (контрагенты, банки, ОКВЭД)</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">11</span><h3>Интеграции</h3></div><ul class="bullets"><li>ЭДО: Диадок · СБИС · Такском · 1С-ЭДО · Synerdocs · ЭДО Лайт</li><li>Битрикс24 (REST, batch до 50 запросов)</li><li>1С (OData, atom+xml, COM, payment orders)</li><li>DaData · Контур.Эльба · Контур.Бухгалтерия</li><li>Банки: Тинькофф · Сбер · Альфа-Банк · ВТБ · Райффайзен</li><li>Госключ · ЕСИА · ФНС API</li></ul></div>
       </div>
     </div>
   </section>
@@ -126,9 +127,12 @@
     <div class="wrap">
       <div class="section-head"><div><div class="label">04 / Технические характеристики</div><h2>Стек, архитектура, развёртывание.</h2></div></div>
       <div class="specs">
-        <div class="specs-row"><div class="key">Backend</div><div class="val">Django 6 · Django Ninja · Celery + Redis Beat · PostgreSQL</div></div>
+        <div class="specs-row"><div class="key">Backend</div><div class="val">Django 6 · Django Ninja · Celery + Redis Beat · gRPC · WebSocket</div></div>
+        <div class="specs-row"><div class="key">Хранилище</div><div class="val">PostgreSQL 16 · ClickHouse (аналитика) · MongoDB (документы) · Redis</div></div>
+        <div class="specs-row"><div class="key">AI / ML</div><div class="val">PyTorch · vLLM · LangGraph · pgvector · BGE embeddings · Pluggable LLM</div></div>
         <div class="specs-row"><div class="key">Frontend</div><div class="val">Vue 3.5 · Vben Admin v5 · NaiveUI · ECharts 6 · TypeScript</div></div>
-        <div class="specs-row"><div class="key">Развёртывание</div><div class="val">Docker · nginx · Astra Linux совместимо · on-premise или managed</div></div>
+        <div class="specs-row"><div class="key">Развёртывание</div><div class="val">Docker · Kubernetes · ArgoCD · Astra Linux · РЕД ОС · on-premise или managed</div></div>
+        <div class="specs-row"><div class="key">Observability</div><div class="val">Prometheus · Grafana · Loki · OpenTelemetry · Sentry</div></div>
         <div class="specs-row"><div class="key">Эндпоинтов</div><div class="val">200+</div></div>
         <div class="specs-row"><div class="key">Воркеров</div><div class="val">100+ Celery-задач</div></div>
         <div class="specs-row"><div class="key">Виджетов</div><div class="val">37 на C-level дашборде, 7 разделов</div></div>
@@ -140,7 +144,7 @@
   <section class="block tight">
     <div class="wrap">
       <div class="section-head" style="margin-bottom:24px"><div><div class="label">05 / Интеграции</div></div></div>
-      <div class="integrations-row">Диадок<span class="sep">·</span>Битрикс24<span class="sep">·</span>1С (Бухгалтерия / ЗУП / УТ)<span class="sep">·</span>DaData<span class="sep">·</span>Gemini<span class="sep">·</span>YandexGPT<span class="sep">·</span>GigaChat</div>
+      <div class="integrations-row">Контур.Диадок<span class="sep">·</span>СБИС (Тензор)<span class="sep">·</span>Такском<span class="sep">·</span>1С-ЭДО (Калуга Астрал)<span class="sep">·</span>Synerdocs<span class="sep">·</span>ЭДО Лайт<span class="sep">·</span>ЭкспрессЭДО<span class="sep">·</span>Битрикс24<span class="sep">·</span>1С (Бухгалтерия / ЗУП / УТ / ERP)<span class="sep">·</span>AmoCRM<span class="sep">·</span>DaData<span class="sep">·</span>Контур.Эльба<span class="sep">·</span>Тинькофф API<span class="sep">·</span>Сбер API<span class="sep">·</span>Альфа-Банк API<span class="sep">·</span>ВТБ API<span class="sep">·</span>Госключ<span class="sep">·</span>ЕСИА<span class="sep">·</span>ФНС API<span class="sep">·</span>Gemini<span class="sep">·</span>YandexGPT<span class="sep">·</span>GigaChat<span class="sep">·</span>Saiga<span class="sep">·</span>Ollama</div>
     </div>
   </section>
 

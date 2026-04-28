@@ -10,8 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="icon" type="image/png" href="../assets/logo_only_picture.png" />
-<link rel="apple-touch-icon" href="../assets/logo_only_picture.png" />
+<link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg" />
+<link rel="apple-touch-icon" href="../assets/icon.svg" />
 <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
@@ -110,10 +111,12 @@
     <div class="wrap">
       <div class="section-head"><div><div class="label">04 / Технические характеристики</div></div></div>
       <div class="specs">
-        <div class="specs-row"><div class="key">Backend</div><div class="val">Python 3.12 · FastAPI · SQLModel · httpx · APScheduler</div></div>
-        <div class="specs-row"><div class="key">Подписи</div><div class="val">Контур ПЭП · Госключ УНЭП · КриптоПро КЭП</div></div>
-        <div class="specs-row"><div class="key">Формат XML</div><div class="val">ФНС ЕД-7-26/116@ версия 5.01</div></div>
-        <div class="specs-row"><div class="key">Развёртывание</div><div class="val">Docker · on-premise или managed · Astra Linux совместимо</div></div>
+        <div class="specs-row"><div class="key">Backend</div><div class="val">Python 3.12 · FastAPI · SQLAlchemy 2 · httpx · APScheduler · gRPC</div></div>
+        <div class="specs-row"><div class="key">Хранилище</div><div class="val">PostgreSQL 16 · TimescaleDB (трекинг) · MongoDB (XML-архив) · Redis</div></div>
+        <div class="specs-row"><div class="key">Подписи</div><div class="val">Контур ПЭП · Госключ УНЭП · КриптоПро КЭП · ViPNet CSP</div></div>
+        <div class="specs-row"><div class="key">Формат XML</div><div class="val">ФНС ЕД-7-26/116@ версия 5.01 · защита от XXE (defusedxml)</div></div>
+        <div class="specs-row"><div class="key">Телематика</div><div class="val">Wialon · ГЛОНАСС · Yandex Maps API</div></div>
+        <div class="specs-row"><div class="key">Развёртывание</div><div class="val">Docker · Kubernetes · on-premise или managed · Astra Linux · РЕД ОС</div></div>
       </div>
     </div>
   </section>
@@ -121,7 +124,7 @@
   <section class="block tight">
     <div class="wrap">
       <div class="section-head" style="margin-bottom:24px"><div><div class="label">05 / Интеграции</div></div></div>
-      <div class="integrations-row">МАКС<span class="sep">·</span>Контур.Логистика<span class="sep">·</span>ФГИС ЭПД<span class="sep">·</span>Госключ<span class="sep">·</span>КриптоПро<span class="sep">·</span>ЕГРЮЛ</div>
+      <div class="integrations-row">МАКС Bot API<span class="sep">·</span>Контур.Логистика<span class="sep">·</span>СБИС ЭПД<span class="sep">·</span>Такском<span class="sep">·</span>1С-ЭДО<span class="sep">·</span>ФГИС ЭПД<span class="sep">·</span>РТ-Инвест Транспортные Системы<span class="sep">·</span>Платон<span class="sep">·</span>Госключ (УНЭП)<span class="sep">·</span>КриптоПро (КЭП)<span class="sep">·</span>ЕГРЮЛ<span class="sep">·</span>ФНС API<span class="sep">·</span>Yandex Maps API<span class="sep">·</span>Wialon (телематика)</div>
     </div>
   </section>
 

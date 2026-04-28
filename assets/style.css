@@ -198,7 +198,7 @@ header.nav {
 .brand-mark {
   width: 22px; height: 22px;
   display: inline-block;
-  background-image: url("logo_only_picture.png");
+  background-image: url("icon.svg");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -560,12 +560,39 @@ section.block.tight { padding: 64px 0; }
 .stack-row {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
-  line-height: 2;
+  line-height: 1.85;
   color: var(--fg-2);
-  opacity: 0.75;
+  opacity: 0.85;
   word-spacing: 0.04em;
 }
 .stack-row .sep { color: var(--fg-4); margin: 0 6px; }
+.stack-bands { display: flex; flex-direction: column; }
+.stack-band {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  align-items: start;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.stack-band:first-child { border-top: none; padding-top: 0; }
+.stack-band-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-3);
+  padding-top: 6px;
+  font-weight: 400;
+}
+@media (max-width: 880px) {
+  .stack-band {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 16px 0;
+  }
+  .stack-band-label { padding-top: 0; }
+}
 
 /* ───────────── CTA strip ───────────── */
 .cta-strip {
