@@ -196,18 +196,13 @@ header.nav {
   gap: 8px;
 }
 .brand-mark {
-  width: 18px; height: 18px;
-  border-radius: 4px;
-  background: var(--fg);
+  width: 22px; height: 22px;
   display: inline-block;
-  position: relative;
-}
-.brand-mark::after {
-  content: "";
-  position: absolute;
-  inset: 4px 4px 4px 4px;
-  border-left: 2px solid var(--bg);
-  border-bottom: 2px solid var(--bg);
+  background-image: url("logo_only_picture.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex: 0 0 auto;
 }
 .nav-links {
   display: flex;
@@ -1064,7 +1059,25 @@ footer.foot {
   pointer-events: none;
   overflow: hidden;
   z-index: 0;
+  transform: translate(calc(var(--mx, 0) * 30px), calc(var(--my, 0) * 30px));
+  transition: transform 600ms ease-out;
 }
+.aurora .spotlight {
+  position: absolute;
+  width: 700px; height: 700px;
+  left: 50%; top: 50%;
+  margin-left: -350px;
+  margin-top: -350px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(110,138,250,0.35), rgba(110,138,250,0.1) 40%, transparent 70%);
+  filter: blur(40px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transform: translate(calc(var(--sx, 0) * 1px), calc(var(--sy, 0) * 1px));
+  transition: transform 200ms ease-out;
+  opacity: 0;
+}
+.hero.is-hover .aurora .spotlight { opacity: 1; transition: opacity 400ms ease-out, transform 200ms ease-out; }
 .aurora .blob {
   position: absolute;
   border-radius: 50%;

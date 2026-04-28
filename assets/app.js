@@ -172,9 +172,48 @@
     });
   }
 
+  // ───── Hero mouse-tracking aurora ─────
+  function initHeroParallax() {
+    var hero = document.querySelector('.hero');
+    if (!hero) return;
+    var spotlight = hero.querySelector('.aurora .spotlight');
+    var rafId = null;
+    var nx = 0, ny = 0, sx = 0, sy = 0;
+
+    function update() {
+      hero.style.setProperty('--mx', nx.toFixed(3));
+      hero.style.setProperty('--my', ny.toFixed(3));
+      if (spotlight) {
+        hero.style.setProperty('--sx', sx.toFixed(0));
+        hero.style.setProperty('--sy', sy.toFixed(0));
+      }
+      rafId = null;
+    }
+
+    hero.addEventListener('mousemove', function (e) {
+      var rect = hero.getBoundingClientRect();
+      var w = rect.width, h = rect.height;
+      // Normalized -1..1 for parallax
+      nx = ((e.clientX - rect.left) / w) * 2 - 1;
+      ny = ((e.clientY - rect.top) / h) * 2 - 1;
+      // Pixel offset for spotlight (relative to hero center)
+      sx = (e.clientX - rect.left) - w / 2;
+      sy = (e.clientY - rect.top) - h / 2;
+      hero.classList.add('is-hover');
+      if (rafId === null) rafId = requestAnimationFrame(update);
+    });
+
+    hero.addEventListener('mouseleave', function () {
+      hero.classList.remove('is-hover');
+      nx = 0; ny = 0; sx = 0; sy = 0;
+      if (rafId === null) rafId = requestAnimationFrame(update);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     setActiveNav();
     initReveal();
     initForm();
+    initHeroParallax();
   });
 })();
