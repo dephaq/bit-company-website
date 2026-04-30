@@ -1,360 +1,1319 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>bit — Системы, которые работают за вас</title>
-<meta name="description" content="ООО «БИТ» — корпоративные AI-агенты, интеграции и заказная разработка. Платформы в промышленной эксплуатации." />
-<meta property="og:title" content="bit — Системы, которые работают за вас" />
-<meta property="og:description" content="AI-агенты, интеграции и автоматизация для среднего и крупного бизнеса." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-<link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
-<link rel="apple-touch-icon" href="assets/icon.svg" />
-<link rel="stylesheet" href="assets/style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0A0A0B">
+  <title>Развитие продуктов — BIT</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0A0A0B;
+      --bg-elev: #111113;
+      --bg-elev-2: #161618;
+      --line: #1F1F23;
+      --line-2: #2A2A2F;
+      --fg: #E6E6E8;
+      --fg-2: #A0A0A8;
+      --fg-3: #6E6E76;
+      --accent: #6E8AFA;
+      --accent-2: #4F7DFF;
+      --accent-soft: rgba(110, 138, 250, 0.12);
+      --danger: #C25B5B;
+      --font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --radius: 5px;
+      --radius-sm: 4px;
+      --radius-lg: 6px;
+      --t: 200ms ease-out;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; width: 100%; }
+    html { background: var(--bg); }
+    body {
+      font-family: var(--font-sans);
+      font-feature-settings: 'cv11', 'ss01';
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+    code, pre, kbd, samp { font-family: var(--font-mono); }
+    ::selection { background: var(--accent); color: var(--bg); }
+    button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+    a { color: var(--accent); text-decoration: none; transition: color var(--t); }
+    a:hover { color: var(--accent-2); }
+    h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+    p { margin: 0; }
+    strong { font-weight: 600; color: var(--fg); }
+
+    #deck { position: relative; width: 100%; height: 100%; }
+
+    .slide {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity var(--t), transform var(--t);
+      background: var(--bg);
+      overflow: hidden;
+      z-index: 1;
+    }
+    .slide.entering { opacity: 0; transform: translateY(8px); }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      z-index: 2;
+    }
+
+    .slide-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      z-index: 1;
+    }
+    .slide-inner-wide { max-width: 1280px; }
+    @media (max-width: 880px) { .slide-inner { padding: 20px; } }
+
+    /* Cover */
+    .cover-fx { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .aurora { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); opacity: 0.22; will-change: transform; }
+    .aurora-1 { top: -10%; left: -10%; background: var(--accent); animation: drift1 60s ease-in-out infinite alternate; }
+    .aurora-2 { bottom: -15%; right: -10%; background: var(--accent-2); animation: drift2 75s ease-in-out infinite alternate; }
+    .aurora-3 { top: 30%; left: 40%; background: var(--accent); opacity: 0.15; animation: drift3 50s ease-in-out infinite alternate; }
+    @keyframes drift1 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px,40px) scale(1.08); } 100% { transform: translate(120px,80px) scale(1.15); } }
+    @keyframes drift2 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(-80px,-30px) scale(1.1); } 100% { transform: translate(-140px,-60px) scale(0.95); } }
+    @keyframes drift3 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(-40px,50px) scale(1.12); } 100% { transform: translate(40px,-50px) scale(0.9); } }
+    .dotgrid {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, var(--line-2) 1px, transparent 1px);
+      background-size: 24px 24px;
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+              mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+      opacity: 0.6;
+    }
+    .cover-inner { position: relative; z-index: 1; text-align: center; }
+    .cover-eyebrow { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-3); margin-bottom: 32px; }
+    .cover-title { font-family: var(--font-sans); font-weight: 500; font-size: clamp(40px, 6.4vw, 72px); line-height: 1.05; letter-spacing: -0.04em; color: var(--fg); }
+    .cover-sub { font-family: var(--font-sans); font-size: 17px; line-height: 1.55; color: var(--fg-2); margin-top: 32px; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+    /* Typography */
+    .eyebrow { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-3); margin-bottom: 16px; }
+    .slide-title { font-family: var(--font-sans); font-weight: 500; font-size: clamp(28px, 3.4vw, 38px); line-height: 1.1; color: var(--fg); margin-bottom: 36px; max-width: 880px; letter-spacing: -0.02em; }
+
+    /* Two-col */
+    .two-col { display: grid; grid-template-columns: 3fr 2fr; gap: 48px; align-items: start; max-width: 1180px; }
+    .col-text p { font-family: var(--font-sans); font-size: 16px; line-height: 1.55; color: var(--fg); margin: 0 0 14px; }
+    .col-text p:last-child { margin-bottom: 0; }
+    .col-list { border-left: 1px solid var(--line); padding-left: 28px; }
+    .list-eyebrow { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--fg-3); letter-spacing: 0.08em; margin-bottom: 14px; }
+    .bullet-list { list-style: none; padding: 0; margin: 0; }
+    .bullet-list li { font-family: var(--font-sans); font-size: 13.5px; line-height: 1.5; color: var(--fg-2); padding: 7px 0; border-bottom: 1px solid var(--line); }
+    .bullet-list li:last-child { border-bottom: none; }
+
+    /* Todo list */
+    .todo-list { list-style: none; padding: 0; margin: 0; max-width: 1080px; }
+    .todo-list li { display: flex; align-items: baseline; gap: 20px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+    .todo-list li:last-child { border-bottom: none; }
+    .todo-num { font-family: var(--font-mono); font-size: 13px; color: var(--fg-3); letter-spacing: 0.04em; min-width: 28px; }
+    .todo-text { font-family: var(--font-sans); font-size: 14px; color: var(--fg-2); line-height: 1.5; }
+    .todo-text strong { color: var(--fg); font-weight: 600; }
+
+    /* Compare grid */
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1080px; }
+    .compare-block { position: relative; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 6px; padding: 26px; }
+    .compare-block::before { content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; border-top-left-radius: 6px; border-bottom-left-radius: 6px; }
+    .compare-block-was::before { background: var(--fg-3); }
+    .compare-block-now::before { background: var(--accent); }
+    .compare-eyebrow { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; }
+    .compare-block-was .compare-eyebrow { color: var(--fg-3); }
+    .compare-block-now .compare-eyebrow { color: var(--accent); }
+    .compare-list { list-style: none; padding: 0; margin: 0; }
+    .compare-list li { font-family: var(--font-sans); font-size: 13.5px; line-height: 1.5; color: var(--fg-2); padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .compare-block-now .compare-list li { color: var(--fg); }
+    .compare-list li:last-child { border-bottom: none; }
+
+    /* Flow diagram */
+    .flow-diagram { display: flex; align-items: stretch; gap: 8px; max-width: 100%; overflow-x: auto; padding-bottom: 8px; }
+    .flow-step { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 10px; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 6px; padding: 18px; transition: border-color 200ms; }
+    .flow-step:hover { border-color: var(--line-2); }
+    .flow-num { font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.04em; color: var(--accent); }
+    .flow-title { font-family: var(--font-sans); font-size: 15px; font-weight: 500; line-height: 1.3; color: var(--fg); }
+    .flow-desc { font-family: var(--font-sans); font-size: 12px; line-height: 1.5; color: var(--fg-2); margin: 0; }
+    .flow-arrow { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; padding: 0 4px; font-family: var(--font-mono); font-size: 18px; color: var(--fg-3); }
+
+    /* Timeline */
+    .timeline { list-style: none; padding: 0; margin: 0; position: relative; max-width: 960px; }
+    .timeline::before { content: ''; position: absolute; left: 14px; top: 8px; bottom: 8px; width: 1px; background: var(--line); }
+    .tl-step { display: flex; align-items: baseline; gap: 20px; padding: 7px 0; position: relative; }
+    .tl-num { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--accent); letter-spacing: 0.04em; min-width: 28px; position: relative; background: var(--bg); padding: 0 4px 0 0; z-index: 1; }
+    .tl-text { font-family: var(--font-sans); font-size: 14px; line-height: 1.55; color: var(--fg); }
+
+    /* Glossary */
+    .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; max-width: 1180px; border-top: 1px solid var(--line); }
+    .gl-item { display: grid; grid-template-columns: 140px 1fr; gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+    .gl-term { font-family: var(--font-mono); font-size: 13px; color: var(--accent); letter-spacing: 0.02em; }
+    .gl-def { font-family: var(--font-sans); font-size: 14px; line-height: 1.55; color: var(--fg-2); }
+
+    /* Map */
+    .map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 1080px; }
+    .map-card { display: block; background: var(--bg-elev); border: 1px solid var(--line); border-radius: 6px; padding: 24px; text-decoration: none; color: inherit; transition: border-color 200ms, transform 200ms, box-shadow 200ms; cursor: pointer; }
+    .map-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 24px 48px -24px rgba(110, 138, 250, 0.18); }
+    .map-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+    .map-num { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--fg-3); letter-spacing: 0.08em; }
+    .map-title { font-family: var(--font-sans); font-weight: 500; font-size: 22px; color: var(--fg); margin: 0 0 12px; }
+    .map-desc { font-family: var(--font-sans); font-size: 14px; line-height: 1.5; color: var(--fg-2); margin: 0 0 16px; }
+    .map-meta { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--fg-3); letter-spacing: 0.08em; padding-top: 12px; border-top: 1px solid var(--line); }
+
+    /* Badges */
+    .badge { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; border: 1px solid; letter-spacing: 0.06em; white-space: nowrap; }
+    .badge-production { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .badge-beta { border-color: var(--fg-2); color: var(--fg-2); background: transparent; }
+    .badge-pre { border-color: var(--fg-2); color: var(--fg-2); background: transparent; }
+
+    /* Services */
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1180px; }
+    .service-card-wide { grid-column: 1 / -1; }
+    .service-card { background: var(--bg-elev); border: 1px solid var(--line); border-radius: 6px; padding: 22px; transition: border-color 200ms, transform 200ms, box-shadow 200ms; }
+    .service-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 24px 48px -24px rgba(110, 138, 250, 0.18); }
+    .service-title { font-family: var(--font-sans); font-weight: 500; font-size: 16px; color: var(--fg); margin: 0 0 8px; }
+    .service-desc { font-family: var(--font-sans); font-size: 13px; line-height: 1.5; color: var(--fg-2); margin: 0; }
+
+    /* Overlay UI */
+    .progress { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: var(--line); z-index: 100; }
+    .progress-fill { height: 100%; width: 0%; background: var(--accent); transition: width var(--t); }
+
+    .logo { position: fixed; bottom: 24px; left: 32px; display: flex; align-items: center; gap: 8px; z-index: 90; user-select: none; transition: opacity var(--t); }
+    .logo svg { width: 22px; height: 22px; display: block; }
+    .logo span { font-family: var(--font-sans); font-size: 17px; font-weight: 600; color: var(--fg); letter-spacing: -0.01em; }
+    .logo.is-hidden { opacity: 0; pointer-events: none; }
+
+    .counter { position: fixed; bottom: 24px; right: 32px; z-index: 90; font-family: var(--font-mono); font-size: 12px; color: var(--fg-3); display: inline-flex; align-items: center; cursor: pointer; user-select: none; transition: color var(--t); padding: 6px 8px; border-radius: var(--radius-sm); }
+    .counter:hover { color: var(--accent); }
+    .counter-current, .counter-total, .counter-sep { pointer-events: none; }
+    .counter-sep { margin: 0 4px; color: var(--fg-3); }
+    .counter-select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-family: var(--font-mono); font-size: 12px; appearance: none; -webkit-appearance: none; -moz-appearance: none; background: transparent; border: 0; color: transparent; }
+    .counter-select option { background: var(--bg-elev-2); color: var(--fg); font-family: var(--font-mono); font-size: 12px; padding: 6px 8px; border: 0; }
+    .counter-select:focus { outline: none; }
+
+    .nav-btn { position: fixed; bottom: 24px; width: 32px; height: 32px; background: transparent; border: 1px solid var(--line-2); border-radius: var(--radius-sm); color: var(--fg-2); display: inline-flex; align-items: center; justify-content: center; z-index: 90; transition: border-color var(--t), color var(--t), opacity var(--t); }
+    .nav-btn svg { width: 12px; height: 12px; display: block; stroke: currentColor; fill: none; }
+    .nav-prev { left: calc(50% - 60px); }
+    .nav-next { left: calc(50% + 28px); }
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-btn.disabled, .nav-btn:disabled { opacity: 0.3; pointer-events: none; }
+
+    .fs-btn { position: fixed; top: 16px; right: 32px; width: 28px; height: 28px; background: transparent; border: 1px solid var(--line-2); border-radius: var(--radius-sm); color: var(--fg-2); display: inline-flex; align-items: center; justify-content: center; z-index: 100; transition: border-color var(--t), color var(--t); }
+    .fs-btn svg { width: 14px; height: 14px; display: block; stroke: currentColor; fill: none; }
+    .fs-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    @media (max-width: 1100px) {
+      .two-col { grid-template-columns: 1fr; gap: 32px; }
+      .col-list { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 24px; }
+      .glossary-grid { grid-template-columns: 1fr; }
+      .map-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 880px) {
+      .compare-grid { grid-template-columns: 1fr; }
+      .flow-diagram { flex-direction: column; overflow-x: visible; }
+      .flow-arrow { display: none; }
+      .nav-prev { left: calc(50% - 56px); }
+      .nav-next { left: calc(50% + 24px); }
+      .logo { left: 20px; } .counter { right: 20px; } .fs-btn { right: 20px; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .slide, .progress-fill, .nav-btn, .fs-btn, .logo, .counter { transition: none; }
+      .aurora { animation: none; }
+    }
+  </style>
 </head>
 <body>
 
-<header class="nav">
-  <div class="wrap nav-inner">
-    <a class="brand" href="index.html" aria-label="bit, главная">
-      <span class="brand-mark" aria-hidden="true"></span><span>bit</span>
-    </a>
-    <nav class="nav-links" aria-label="Главная навигация">
-      <a href="products/index.html" data-nav="/products">Продукты</a>
-      <a href="services/index.html" data-nav="/services">Услуги</a>
-      <a href="about.html" data-nav="/about">О компании</a>
-      <a href="contact.html" data-nav="/contact">Контакты</a>
-    </nav>
-    <a href="contact.html" class="btn btn-primary">Связаться</a>
+  <div class="progress" role="progressbar" aria-label="Прогресс презентации">
+    <div class="progress-fill"></div>
   </div>
-</header>
 
-<main id="top">
+  <button class="fs-btn" type="button" aria-label="Полноэкранный режим" title="Полноэкранный режим (F)">
+    <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 9V4h5"></path><path d="M20 9V4h-5"></path><path d="M4 15v5h5"></path><path d="M20 15v5h-5"></path>
+    </svg>
+  </button>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="bg-layer" aria-hidden="true">
-      <div class="aurora">
-        <div class="blob b1"></div>
-        <div class="blob b2"></div>
-        <div class="blob b3"></div>
-        <div class="blob b4"></div>
-        <div class="blob b5"></div>
-        <div class="spotlight"></div>
-      </div>
-      <div class="grain"></div>
-      <div class="dotgrid"></div>
-    </div>
-    <div class="wrap">
-      <div class="eyebrow">
-        <span class="dot" aria-hidden="true"></span>
-        <span>ООО «БИТ» · Москва · 2026</span>
-      </div>
-      <h1>Системы, которые работают за вас.</h1>
-      <p class="sub">AI-агенты, интеграции и автоматизация для среднего и крупного бизнеса.</p>
-      <div class="hero-cta">
-        <a href="contact.html" class="btn btn-primary btn-lg">Обсудить задачу</a>
-        <a href="products/index.html" class="btn btn-ghost btn-lg">Посмотреть продукты</a>
-      </div>
-      <div class="hero-meta">
-        <span>Москва</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- B. WHAT WE DO -->
-  <section class="block" id="services">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="label">01 / Что мы делаем</div>
-          <h2>Три направления, одна команда.</h2>
-        </div>
-        <div class="right">От разовой автоматизации до длинных продуктовых обязательств — собираем под задачу заказчика.</div>
-      </div>
-      <div class="triad">
-        <div class="triad-item">
-          <span class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></span>
-          <h3>AI-агенты под задачу</h3>
-          <p>Встраиваются в процессы и забирают рутину у сотрудников — от обработки документов до диалогов с клиентами.</p>
-        </div>
-        <div class="triad-item">
-          <span class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg></span>
-          <h3>Интеграции систем</h3>
-          <p>Связываем CRM, 1С, ERP и мессенджеры в единый поток данных. Без ручных выгрузок, без потерь между шагами.</p>
-        </div>
-        <div class="triad-item">
-          <span class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg></span>
-          <h3>Заказная разработка</h3>
-          <p>Продукты под бизнес — от MVP до промышленных систем. Долгая поддержка, документация, передача на сторону клиента.</p>
-        </div>
-      </div>
-      <div class="section-foot-link"><a class="arrow-link" href="services/index.html">Все услуги <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
-    </div>
-  </section>
-
-  <!-- C. PRODUCTS -->
-  <section class="block" id="products">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="label">02 / Готовые решения</div>
-          <h2>Продукты, которые уже работают на клиентов.</h2>
-        </div>
-        <div class="right">Часть тиражируется как SaaS, часть собирается под инфраструктуру заказчика. Готовы показать вживую.</div>
-      </div>
-      <div class="grid-2">
-        <a class="card linked" href="products/finance.html">
-          <div class="card-top"><span class="card-idx num">01</span><span class="badge production">Production</span></div>
-          <h3>Платформа автоматизации финансово-учётной работы</h3>
-          <p class="desc">Бесшовная интеграция CRM, 1С (бухгалтерия и ЗУП), ЭДО и AI-распознавания документов в одном контуре.</p>
-          <div class="divider"></div>
-          <ul class="bullets">
-            <li>Связка CRM ↔ 1С ↔ ЭДО</li>
-            <li>AI-распознавание счетов и актов</li>
-            <li>Дашборд для C-level с drill-down</li>
-            <li>11 функциональных доменов · 200+ эндпоинтов</li>
-          </ul>
-          <div class="card-foot"><span class="mono">finance</span><span class="arrow-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div>
-        </a>
-        <a class="card linked" href="products/timesheet.html">
-          <div class="card-top"><span class="card-idx num">02</span><span class="badge production">Production</span></div>
-          <h3>Цифровой табель учёта рабочего времени</h3>
-          <p class="desc">Электронный табель для распределённых бригад через корпоративные мессенджеры. Без приложений, без логинов.</p>
-          <div class="divider"></div>
-          <ul class="bullets">
-            <li>Бот в МАКС с inline-кнопками</li>
-            <li>Учёт по объектам и бригадам</li>
-            <li>Экспорт в 1С ЗУП через OData</li>
-            <li>Гео-привязка явки · 10 доменов</li>
-          </ul>
-          <div class="card-foot"><span class="mono">timesheet</span><span class="arrow-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div>
-        </a>
-        <a class="card linked" href="products/logistics.html">
-          <div class="card-top"><span class="card-idx num">03</span><span class="badge beta">Beta</span></div>
-          <h3>Система электронных путевых листов (ЭПЛ/ЭТрН)</h3>
-          <p class="desc">Для транспортных компаний — связка с Контур.Логистика и ФГИС ЭПД, подпись прямо в мессенджере.</p>
-          <div class="divider"></div>
-          <ul class="bullets">
-            <li>6 титулов ЭПЛ · 11 доменов</li>
-            <li>Подпись ПЭП/УНЭП/КЭП в мессенджере</li>
-            <li>ФГИС ЭПД, формат ФНС 5.01</li>
-            <li>Live-monitoring смен</li>
-          </ul>
-          <div class="card-foot"><span class="mono">logistics</span><span class="arrow-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div>
-        </a>
-        <a class="card linked" href="products/smeta.html">
-          <div class="card-top"><span class="card-idx num">04</span><span class="badge pre">Pre-release</span></div>
-          <h3>Автоматизация сметной документации</h3>
-          <p class="desc">Генерация черновых строительных смет из PDF проектной документации с маппингом на нормативные базы.</p>
-          <div class="divider"></div>
-          <ul class="bullets">
-            <li>13 доменов · 1 860 тестов</li>
-            <li>290 000+ нормативных позиций</li>
-            <li>440 mapping rules · precision 100%</li>
-            <li>Выгрузка в Турбосметчик и МГЭ</li>
-          </ul>
-          <div class="card-foot"><span class="mono">smeta</span><span class="arrow-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div>
-        </a>
-      </div>
-      <div class="section-foot-link"><a class="arrow-link" href="products/index.html">Все продукты <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
-    </div>
-  </section>
-
-  <!-- D. SCALE -->
-  <section class="block">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="label">03 / Масштаб</div>
-          <h2>Каждый продукт — это платформа из десятков модулей.</h2>
-        </div>
-        <div class="right">Не одна функция. Закрывает весь процесс end-to-end.</div>
-      </div>
-      <div class="scale-list">
-        <div class="scale-row">
-          <div class="name">Финансовая платформа</div>
-          <div class="body">11 функциональных доменов<span class="sep">·</span>17 типов первичных документов<span class="sep">·</span>200+ API-эндпоинтов<span class="sep">·</span>100+ Celery-воркеров<span class="sep">·</span>40+ материализованных представлений<span class="sep">·</span>Vue-дашборд с 37 виджетами</div>
-        </div>
-        <div class="scale-row">
-          <div class="name">Цифровой табель</div>
-          <div class="body">10 функциональных доменов<span class="sep">·</span>бот в МАКС<span class="sep">·</span>экспорт в 1С ЗУП<span class="sep">·</span>гео-привязка явки<span class="sep">·</span>ежедневные сводки<span class="sep">·</span>аудит в Google Sheets</div>
-        </div>
-        <div class="scale-row">
-          <div class="name">Система ЭПЛ/ЭТрН</div>
-          <div class="body">11 доменов<span class="sep">·</span>6 титулов ЭПЛ<span class="sep">·</span>подпись ПЭП/УНЭП/КЭП<span class="sep">·</span>живой мониторинг смен<span class="sep">·</span>архив подписанных XML<span class="sep">·</span>ФГИС ЭПД</div>
-        </div>
-        <div class="scale-row">
-          <div class="name">Сметная автоматизация</div>
-          <div class="body">13 доменов<span class="sep">·</span>290 000+ нормативных позиций<span class="sep">·</span>440 mapping rules<span class="sep">·</span>1 860 тестов<span class="sep">·</span>13 типов смет<span class="sep">·</span>выгрузка в Турбосметчик</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- E. NUMBERS -->
-  <section class="block section-edge">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="label">04 / В цифрах</div>
-          <h2>Глубина продуктов и объём потока.</h2>
-        </div>
-        <div class="right">Цифры про возможности платформ, не про количество клиентов.</div>
-      </div>
-      <div class="metrics-3">
-        <div class="metric-cell"><div class="k num">100+</div><div class="v">модулей в проде</div></div>
-        <div class="metric-cell"><div class="k num">12</div><div class="v">интеграций с внешними системами</div></div>
-        <div class="metric-cell"><div class="k num">4</div><div class="v">платформы в эксплуатации</div></div>
-      </div>
-      <div class="metrics-4">
-        <div class="metric-cell sm"><div class="k num">17</div><div class="v">типов документов</div></div>
-        <div class="metric-cell sm"><div class="k">десятки тысяч</div><div class="v">документов в год</div></div>
-        <div class="metric-cell sm"><div class="k">несколько</div><div class="v">корпоративных контуров в эксплуатации</div></div>
-        <div class="metric-cell sm"><div class="k num">1 860+</div><div class="v">тестов в продакшене</div></div>
-      </div>
-      <div class="doc-types">
-        <span class="label">Типы документов в обороте платформ:</span>
-        УПД<span class="sep">·</span>Счёт-фактура<span class="sep">·</span>Счёт на оплату<span class="sep">·</span>Акт<span class="sep">·</span>Платёжное поручение<span class="sep">·</span>Авансовый отчёт<span class="sep">·</span>Кассовый ордер<span class="sep">·</span>Табель Т-13<span class="sep">·</span>Расчётный листок<span class="sep">·</span>ЭПЛ<span class="sep">·</span>ЭТрН<span class="sep">·</span>Сметы (GGE/MGE)<span class="sep">·</span>Заявка на оплату<span class="sep">·</span>Заявка на ТМЦ<span class="sep">·</span>Бухгалтерская справка<span class="sep">·</span>Договор<span class="sep">·</span>Спецификация
-      </div>
-    </div>
-  </section>
-
-  <!-- F. PROCESS -->
-  <section class="block">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="label">05 / Процесс</div>
-          <h2>Понятный процесс, фиксированные точки.</h2>
-        </div>
-        <div class="right">Без длинных пресейлов. Сразу к работе на ваших данных.</div>
-      </div>
-      <div class="steps">
-        <div class="step"><span class="num">01</span><h3>Брифинг</h3><p>30-минутная встреча. Фиксируем задачу, ограничения, метрики успеха.</p></div>
-        <div class="step"><span class="num">02</span><h3>Прототип</h3><p>1-2 недели. Показываем работающий MVP на ваших данных, не на слайдах.</p></div>
-        <div class="step"><span class="num">03</span><h3>Внедрение</h3><p>1-3 месяца. Передаём в эксплуатацию с документацией, обучением, исходным кодом. Контроль остаётся у клиента.</p></div>
-        <div class="step"><span class="num">04</span><h3>Поддержка</h3><p>SLA, развитие, добавление модулей. Долгие отношения.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- G. STACK -->
-  <section class="block tight">
-    <div class="wrap">
-      <div class="section-head" style="margin-bottom:32px">
-        <div>
-          <div class="label">06 / Стек</div>
-          <h2 style="margin-top:14px">Технологии для серьёзной нагрузки.</h2>
-        </div>
-        <div class="right">Подбираем под задачу — от standalone-скриптов до распределённых систем с миллионами событий в сутки.</div>
-      </div>
-      <div class="stack-bands">
-
-        <div class="stack-band">
-          <div class="stack-band-label">Backend & Runtime</div>
-          <div class="stack-row">Python 3.13 · Go · Rust · TypeScript · Django 6 · FastAPI · Django Ninja · Celery · APScheduler · gRPC · WebSocket · Pydantic · SQLModel · Alembic · uvicorn · gunicorn</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">Data & Storage</div>
-          <div class="stack-row">PostgreSQL 16 · ClickHouse · MongoDB · Redis · TimescaleDB · Neo4j · GraphRAG · pgvector · Qdrant · OpenSearch · Apache Kafka · Apache Flink · Apache Iceberg · Trino · dbt · Debezium (CDC) · DuckDB · S3-совместимое</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">AI / ML / агенты</div>
-          <div class="stack-row">OpenAI · Anthropic Claude · Google Gemini · Gemma · YandexGPT · GigaChat · Saiga · Llama · Ollama · LiteLLM · PyTorch · tinygrad · JAX · ONNX Runtime · vLLM · Triton Inference Server · Ray · LangGraph · LangChain · LlamaIndex · DSPy · Instructor · Haystack · BGE embeddings · Qdrant · Weaviate · Milvus</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">Frontend</div>
-          <div class="stack-row">Vue 3.5 · Vben Admin v5 · NaiveUI · ECharts 6 · React 19 · Vite · TypeScript · TailwindCSS · WebGL / Three.js · GridStack</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">DevOps & Infra</div>
-          <div class="stack-row">Docker · Kubernetes · Helm · Terraform · ArgoCD · GitHub Actions · GitLab CI · Nginx · HAProxy · Prometheus · Grafana · Loki · OpenTelemetry · Sentry · Astra Linux · РЕД ОС · Альт Сервер</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">ЭДО — операторы</div>
-          <div class="stack-row">Контур.Диадок · СБИС (Тензор) · Такском · 1С-ЭДО (Калуга Астрал) · Synerdocs · ЭДО Лайт · ЭкспрессЭДО · ЭТП ГПБ · Сбербанк ЭДО</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">Государственные системы</div>
-          <div class="stack-row">ФГИС ЭПД · Меркурий (Россельхознадзор) · Честный знак · ЕГАИС · ГИС ЖКХ · ЕГРЮЛ / ЕГРИП · ФНС API · ЕСИА · Госуслуги · Госключ · ФССП · Росстат</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">Финансы и учёт</div>
-          <div class="stack-row">1С (OData · atom+xml · COM · v8.runtime) · 1С-Битрикс · Битрикс24 REST · AmoCRM · DaData · Контур.Эльба · Контур.Бухгалтерия · Тинькофф API · Сбер API · Альфа-Банк API · ВТБ API · Райффайзен API · ЮKassa · CloudPayments</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">Мессенджеры и связь</div>
-          <div class="stack-row">МАКС Bot API · Telegram Bot API · ВКонтакте · WhatsApp Business · Mattermost · Slack · SMS.ru · MTS Communicator · УЦСБ</div>
-        </div>
-
-        <div class="stack-band">
-          <div class="stack-band-label">Криптография и подпись</div>
-          <div class="stack-row">КриптоПро CSP · КриптоПро Browser Plug-in · ViPNet CSP · РутКЕЙ · Госключ (УНЭП) · ПЭП через Контур · УКЭП через УЦ</div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- H. CTA -->
-  <section class="block" style="border-bottom:none">
-    <div class="wrap">
-      <div class="cta-strip">
-        <div>
-          <h2>Расскажите про задачу.</h2>
-          <p>Свяжемся в течение 24 часов. Без скриптованных продаж — сразу с человеком, который будет вести проект.</p>
-        </div>
-        <a href="contact.html" class="btn btn-primary btn-lg">Связаться</a>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="foot">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-col">
-        <a class="brand" href="index.html" style="margin-bottom:14px"><span class="brand-mark" aria-hidden="true"></span><span>bit</span></a>
-        <div class="foot-tag">Технологии для бизнеса. Делаем системы, которые продолжают работать после нашего ухода.</div>
-      </div>
-      <div class="foot-col">
-        <h4>Контакты</h4>
-        <ul>
-          <li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li>
-          <li class="muted num">+7 (___) ___-__-__</li>
-          <li>Москва, ул. Староалексеевская, 5</li>
-        </ul>
-      </div>
-      <div class="foot-col">
-        <h4>Реквизиты</h4>
-        <ul class="reqs">
-          <li>ООО «БИТ»</li>
-          <li class="num">ИНН 9717191718</li>
-          <li class="num">КПП 771701001</li>
-          <li class="num">ОГРН 1267700141257</li>
-        </ul>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <div>© 2026 ООО «БИТ» <span class="sep">·</span> Все права защищены</div>
-      <div class="right">Бизнес Информационные Технологии</div>
-    </div>
+  <div class="logo" aria-label="BIT">
+    <svg viewBox="0 0 22 22" aria-hidden="true">
+      <polygon points="11,2 20,6.5 11,11 2,6.5" fill="#6E8AFA"></polygon>
+      <polygon points="20,6.5 20,15.5 11,20 11,11" fill="#A0A0A8"></polygon>
+      <polygon points="2,6.5 2,15.5 11,20 11,11" fill="#6E6E76"></polygon>
+    </svg>
+    <span>bit</span>
   </div>
-</footer>
 
-<script src="assets/app.js"></script>
+  <button class="nav-btn nav-prev" type="button" aria-label="Предыдущий слайд" title="Назад (←)">
+    <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="14,6 8,12 14,18"></polyline></svg>
+  </button>
+  <button class="nav-btn nav-next" type="button" aria-label="Следующий слайд" title="Вперёд (→ или Пробел)">
+    <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="10,6 16,12 10,18"></polyline></svg>
+  </button>
+
+  <div class="counter" role="group" aria-label="Текущий слайд">
+    <span class="counter-current">01</span><span class="counter-sep"> / </span><span class="counter-total">28</span>
+    <select class="counter-select" aria-label="Перейти к слайду"></select>
+  </div>
+
+  <main id="deck">
+
+    <!-- ====== 1. Cover ====== -->
+    <section class="slide" data-slide="1">
+      <div class="cover-fx">
+        <div class="aurora aurora-1"></div>
+        <div class="aurora aurora-2"></div>
+        <div class="aurora aurora-3"></div>
+        <div class="dotgrid"></div>
+      </div>
+      <div class="slide-inner cover-inner">
+        <div class="cover-eyebrow">BIT · ВНУТРЕННИЙ ДОКУМЕНТ · АПРЕЛЬ 2026</div>
+        <h1 class="cover-title">Развитие продуктов на примере четырёх наработок</h1>
+        <p class="cover-sub">Куда движемся и как из внутренних систем холдинга получаются продукты для рынка.</p>
+      </div>
+    </section>
+
+    <!-- ====== 2. Контекст ====== -->
+    <section class="slide" data-slide="2">
+      <div class="slide-inner slide-inner-wide">
+        <div class="eyebrow">КОНТЕКСТ</div>
+        <h2 class="slide-title">Откуда стартуем</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <p>У нас есть четыре системы, которые мы делали под задачи холдинга: финансы, табели, электронные путевые листы и сметы.</p>
+            <p>По каждой написан код. Готовность разная: финансы — в проде, табели — в проде, ЭПЛ — в бете без пользователей, сметы — в режиме разработки, пользователей пока нет.</p>
+            <p>Дальше задача — превратить эти наработки в SaaS-продукты для рынка. Аудитория шире, чем стройка: финансы — любая компания на 1С с ЭДО, табели — стройка, монтаж, охрана, клининг, кейтеринг, промышленность, ЭПЛ — любые юрлица с транспортом, сметы — проектные институты и сметные отделы. Эта презентация — про то, как мы это делаем и что у нас уже есть.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">ПОРЯДОК В ПРЕЗЕ</div>
+            <ul class="bullet-list">
+              <li>Глоссарий — короткий словарь IT-терминов</li>
+              <li>Карта четырёх продуктов</li>
+              <li>По каждому продукту: проблема, что построили, как работает, было/стало, что осталось доделать</li>
+              <li>Финал: каналы продаж и доп. услуги</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 3. Глоссарий ====== -->
+    <section class="slide" data-slide="3">
+      <div class="slide-inner slide-inner-wide">
+        <div class="eyebrow">СЛОВАРЬ</div>
+        <h2 class="slide-title">Что значат термины из айти</h2>
+        <div class="glossary-grid">
+          <div class="gl-item">
+            <div class="gl-term">Маппинг</div>
+            <div class="gl-def">Автоматическое сопоставление записей одной системы с записями другой по правилам. Пример: «Цемент М-500 50кг» из счёта поставщика сам подтягивается к «Цемент портландский ПЦ500 Д0 50кг» из 1С — без ручной сверки.</div>
+          </div>
+          <div class="gl-item">
+            <div class="gl-term">SaaS</div>
+            <div class="gl-def">Продукт по подписке. Клиент ничего не ставит на свой компьютер — заходит в браузер и работает. Платит ежемесячно или ежегодно.</div>
+          </div>
+          <div class="gl-item">
+            <div class="gl-term">Multi-tenant</div>
+            <div class="gl-def">Один сервер обслуживает много клиентов сразу. Каждый видит только свои данные, но код и инфраструктура общие. Стандарт для SaaS — без этого продукт не масштабируется.</div>
+          </div>
+          <div class="gl-item">
+            <div class="gl-term">DevOps</div>
+            <div class="gl-def">Отдельная инженерная роль (или подрядчик), которая отвечает за серверы, развёртывание новых версий, мониторинг, бэкапы. Без неё SaaS-продукт у клиентов в любой момент может встать — и никто этого не заметит, пока не пойдут жалобы.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 4. Карта продуктов ====== -->
+    <section class="slide" data-slide="4">
+      <div class="slide-inner slide-inner-wide">
+        <div class="eyebrow">КАРТА</div>
+        <h2 class="slide-title">Четыре продукта</h2>
+        <div class="map-grid">
+          <a class="map-card" href="#" data-target="6">
+            <div class="map-top">
+              <div class="map-num">01</div>
+              <span class="badge badge-production">В ПРОДЕ</span>
+            </div>
+            <div class="map-title">Финансы</div>
+            <div class="map-desc">Входящие документы из Диадока разбираются автоматически: УПД, счёт-фактура, накладная сами раскладываются по статьям и проектам. Бухгалтер видит готовое, а не вбивает руками.</div>
+            <div class="map-meta">Диадок · 1С Бухгалтерия · Битрикс24</div>
+          </a>
+          <a class="map-card" href="#" data-target="11">
+            <div class="map-top">
+              <div class="map-num">02</div>
+              <span class="badge badge-production">В ПРОДЕ</span>
+            </div>
+            <div class="map-title">Табели</div>
+            <div class="map-desc">Бригадир отмечает выходы в чате МАКС, прораб подтверждает, в 1С ЗУП уходит готовый табель. Никаких бумажек на участке и пересчётов в конце месяца.</div>
+            <div class="map-meta">МАКС-бот · 1С ЗУП · Google Sheets</div>
+          </a>
+          <a class="map-card" href="#" data-target="16">
+            <div class="map-top">
+              <div class="map-num">03</div>
+              <span class="badge badge-beta">БЕТА</span>
+            </div>
+            <div class="map-title">ЭПЛ + ЭТрН</div>
+            <div class="map-desc">Электронный путевой лист и транспортная накладная с подписями всех ответственных прямо в чате. Никаких бумаг, фотографий путёвок и калькулятора в конце месяца.</div>
+            <div class="map-meta">ФГИС ЭПД · Госключ · Контур.Логистика</div>
+          </a>
+          <a class="map-card" href="#" data-target="21">
+            <div class="map-top">
+              <div class="map-num">04</div>
+              <span class="badge badge-pre">PRE-RELEASE</span>
+            </div>
+            <div class="map-title">Сметы</div>
+            <div class="map-desc">Из PDF проекта — готовый комплект ГГЭ и МГЭ за один клик. ФСНБ-2022, ТСН-2001, выгрузка в Турбосметчик и Гранд-Смету.</div>
+            <div class="map-meta">ФСНБ-2022 · ТСН-2001 · Турбосметчик · Гранд-Смета</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 5. План ====== -->
+    <section class="slide" data-slide="5">
+      <div class="slide-inner slide-inner-wide">
+        <div class="eyebrow">ПЛАН</div>
+        <h2 class="slide-title">Что мы делаем</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Три параллельные линии работы. Первая — упаковка четырёх существующих наработок в SaaS-продукты. Вторая — корпоративные AI-агенты как отдельное направление, в которое сейчас идут крупные компании. Третья — заказная разработка под клиентов, из которой потом будут расти новые продукты.</p>
+            <p>Упаковка в SaaS — пять шагов на каждый продукт. Личный кабинет клиента, multi-tenant архитектура, мастер подключения, биллинг и DevOps. Без этих пяти шагов внутренняя система не превращается в коробку, которую можно продавать.</p>
+            <p>AI-агенты и заказная разработка — это отдельная выручка прямо сейчас, без необходимости ждать упаковки коробок. Часть клиентских проектов будет превращаться в новые SaaS-продукты — так и появились наши текущие четыре.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">ШАГИ УПАКОВКИ ПРОДУКТА</div>
+            <ul class="bullet-list">
+              <li>Личный кабинет клиента — регистрация, профиль, доступы</li>
+              <li>Multi-tenant — изоляция данных клиентов на одном сервере</li>
+              <li>Мастер подключения — клиент сам цепляет свою 1С, ЭДО, Битрикс24</li>
+              <li>Биллинг — тарифы, оплата, продление подписки, акты</li>
+              <li>DevOps — серверы, мониторинг, бэкапы, дежурство 24/7</li>
+            </ul>
+            <div class="list-eyebrow" style="margin-top: 24px;">ПАРАЛЛЕЛЬНЫЕ ЛИНИИ</div>
+            <ul class="bullet-list">
+              <li>AI-агенты для бизнеса — отдельный продукт</li>
+              <li>Заказная разработка — выручка и питательная среда для новых продуктов</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 6. Финансы — что упаковываем ====== -->
+    <section class="slide" data-slide="6">
+      <div class="slide-inner">
+        <div class="eyebrow">01 / ФИНАНСЫ — ЧТО УПАКОВЫВАЕМ В SAAS</div>
+        <h1 class="slide-title">Что именно идёт в коробку</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Мы продаём не «программу» и не «модуль». Мы упаковываем готовую связку 1С + Битрикс24 + ЭДО под ключ.</p>
+            <p>Клиент получает работающий контур документооборота: документы из ЭДО автоматически доходят до 1С, бухгалтер работает в Битрикс24, руководитель видит цифры в личном кабинете.</p>
+            <p>Внутри — наработанная база соответствий номенклатуры, готовые сценарии под типовые документы, преднастроенные роли и права. Клиенту не надо это собирать самому.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">СОСТАВ КОРОБКИ</div>
+            <ul class="bullet-list">
+              <li>Бесшовная связка 1С — Битрикс24 — ЭДО</li>
+              <li>AI-маппинг номенклатуры на 1С клиента</li>
+              <li>Сценарии для бухгалтера: счета, УПД, акты, накладные</li>
+              <li>Личный кабинет руководителя с метриками</li>
+              <li>База соответствий, которая учится на проверках</li>
+              <li>Преднастроенные роли, права, маршруты согласования</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 7. Финансы — текущее состояние ====== -->
+    <section class="slide" data-slide="7">
+      <div class="slide-inner">
+        <div class="eyebrow">01 / ФИНАНСЫ — ТЕКУЩЕЕ СОСТОЯНИЕ</div>
+        <h1 class="slide-title">Что в системе работает прямо сейчас</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Документ из ЭДО приходит уже структурированным — поставщик, дата, суммы, позиции, реквизиты лежат в полях XML/JSON. Магии тут нет, оператор отдаёт это через свой API.</p>
+            <p>Скрипты разбирают документ и складывают данные в нашу систему. Это не AI, это обычный парсинг — но он экономит первые часы ручной работы.</p>
+            <p>Главное узкое место — сопоставление позиций счёта с номенклатурой клиента в 1С. Раньше тут бухгалтер сидел часами. Сейчас этим занимается AI-маппинг: он сопоставляет «Цемент М-500 50кг» поставщика с «Цемент портландский ПЦ500 Д0 50кг» в 1С клиента. База соответствий учится с каждой проверкой.</p>
+            <p>После маппинга система создаёт документ в 1С нужного типа — поступление, акт, накладная.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">МЕТРИКИ ПРОДА</div>
+            <ul class="bullet-list">
+              <li>95.9% точность маппинга</li>
+              <li>41 488 позиций номенклатуры в базе соответствий</li>
+              <li>1 741 автоматический тест</li>
+              <li>~8 130 документов в год через систему</li>
+              <li>Документ от прихода до 1С — 2 минуты</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1080px;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.04em; margin-bottom: 6px;">XML / JSON</div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--fg-2); line-height: 1.5;">Стандартные форматы, в которых программы передают данные друг другу. Документ — это набор именованных полей, понятных и человеку, и машине.</div>
+          </div>
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.04em; margin-bottom: 6px;">API</div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--fg-2); line-height: 1.5;">Программный интерфейс, через который одна система запрашивает данные у другой по сети — без участия человека.</div>
+          </div>
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.04em; margin-bottom: 6px;">Парсинг</div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--fg-2); line-height: 1.5;">Разбор такого документа на составные части — извлечь поставщика, сумму, позиции и положить в базу.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 8. Финансы — путь документа ====== -->
+    <section class="slide" data-slide="8">
+      <div class="slide-inner slide-inner-wide">
+        <div class="eyebrow">01 / ФИНАНСЫ — ПУТЬ ДОКУМЕНТА</div>
+        <h1 class="slide-title">Как двигается документ</h1>
+        <div class="flow-diagram">
+          <div class="flow-step">
+            <div class="flow-num">01</div>
+            <div class="flow-title">ЭДО присылает</div>
+            <div class="flow-desc">Поставщик отправляет документ через Диадок, СБИС или ЭДО.Лайт. Структурированный документ автоматически попадает к нам в систему.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">02</div>
+            <div class="flow-title">Скрипты вытягивают</div>
+            <div class="flow-desc">Берём поставщика, суммы, позиции, реквизиты, договор. Без AI — обычный разбор структурированных полей.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">03</div>
+            <div class="flow-title">AI-маппинг позиций</div>
+            <div class="flow-desc">Каждая позиция счёта сопоставляется с номенклатурой клиента в 1С. База соответствий учится с каждой проверкой бухгалтером.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">04</div>
+            <div class="flow-title">Создаём в 1С</div>
+            <div class="flow-desc">Поступление товаров, акт или накладная — нужный тип документа создаётся автоматически.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">05</div>
+            <div class="flow-title">Бухгалтер проверяет</div>
+            <div class="flow-desc">Открывает в Битрикс24 готовую карточку, проверяет за минуту, нажимает «провести».</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 9. Финансы — было/стало ====== -->
+    <section class="slide" data-slide="9">
+      <div class="slide-inner">
+        <div class="eyebrow">01 / ФИНАНСЫ — РЕЗУЛЬТАТ</div>
+        <h1 class="slide-title">Как было и как стало</h1>
+        <div class="compare-grid">
+          <div class="compare-block compare-block-was">
+            <div class="compare-eyebrow">КАК БЫЛО</div>
+            <ul class="compare-list">
+              <li>Документ открыл, прочитал глазами</li>
+              <li>Сверил с договором руками</li>
+              <li>Каждую позицию ищет в 1С</li>
+              <li>10–15 минут на документ</li>
+              <li>Каждая ошибка ввода — расхождение в учёте</li>
+            </ul>
+          </div>
+          <div class="compare-block compare-block-now">
+            <div class="compare-eyebrow">КАК СТАЛО</div>
+            <ul class="compare-list">
+              <li>Документ забирается сам из ЭДО</li>
+              <li>Скрипты разобрали данные, договор подтянут</li>
+              <li>Позиции уже сопоставлены с 1С через AI-маппинг</li>
+              <li>2 минуты от прихода до 1С</li>
+              <li>Маппинг учится — точнее с каждым месяцем</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 10. Финансы — что доделать ====== -->
+    <section class="slide" data-slide="10">
+      <div class="slide-inner">
+        <div class="eyebrow">01 / ФИНАНСЫ — ЧТО ДОДЕЛАТЬ ДЛЯ ПРОДАЖ</div>
+        <h1 class="slide-title">Что доделать, чтобы продавать</h1>
+        <ol class="todo-list">
+          <li>
+            <span class="todo-num">01</span>
+            <span class="todo-text"><strong>Личный кабинет клиента в браузере.</strong> Сейчас интерфейса нет — управление в Битрикс24 и 1С. Нужен кабинет, чтобы клиент сам подключил свои системы, видел статусы и оплатил подписку.</span>
+          </li>
+          <li>
+            <span class="todo-num">02</span>
+            <span class="todo-text"><strong>Один сервер на много клиентов.</strong> Сейчас система обслуживает один холдинг. Нужно перевести на multi-tenant архитектуру, чтобы 100 клиентов работали на одной инфраструктуре, каждый видел только свои данные.</span>
+          </li>
+          <li>
+            <span class="todo-num">03</span>
+            <span class="todo-text"><strong>Мастер подключения за 15 минут.</strong> Сейчас на онбординг нового клиента уходят недели работы инженеров. Нужен пошаговый мастер: подключи 1С → подключи ЭДО → подключи Битрикс24 → готов.</span>
+          </li>
+          <li>
+            <span class="todo-num">04</span>
+            <span class="todo-text"><strong>Поддержка других ЭДО — СБИС, ЭДО.Лайт, Тензор.</strong> Сейчас работает только с Контур.Диадок. Часть клиентов сидит на других операторах — без этих интеграций мы их не подключим.</span>
+          </li>
+          <li>
+            <span class="todo-num">05</span>
+            <span class="todo-text"><strong>Поддержка других CRM и систем задач — amoCRM, RetailCRM, Planfix, SAP, Jira, Яндекс.Трекер.</strong> Сейчас завязка только на Битрикс24. Расширение даёт ещё десятки тысяч компаний за пределами Битрикс-аудитории.</span>
+          </li>
+          <li>
+            <span class="todo-num">06</span>
+            <span class="todo-text"><strong>Биллинг и тарифы.</strong> Подписка списывается автоматически, не оплатил — функции отключаются. Тарифные планы, продление, история платежей.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ====== 11. Табели — что в коробке ====== -->
+    <section class="slide" data-slide="11">
+      <div class="slide-inner">
+        <div class="eyebrow">02 / ТАБЕЛИ — ЧТО В КОРОБКЕ</div>
+        <h1 class="slide-title">Что упаковываем в SaaS</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Внутри холдинга это уже работает как набор сервисов, склеенных под нашу компанию. Для рынка собираем коробку — то же самое, но с самообслуживанием и изоляцией клиентов.</p>
+            <p>В коробке пять составляющих. Первое — бот в МАКС: вся работа бригадира и прораба идёт через мессенджер, без приложений и логинов. Второе — личный кабинет руководства: веб-страница, где видно холдинг по сменам, объектам и бригадам. Третье — Google Sheets как витрина для бухгалтерии: данные туда уходят автоматически, никто ничего не перепечатывает.</p>
+            <p>Четвёртое — выгрузка в 1С ЗУП: ежемесячный пакет данных в зарплатный модуль. Пятое — каскад приглашений: руководство заводит начальников участков, те заводят прорабов и бригадиров, без админа.</p>
+            <p>Целевые отрасли — не только стройка. Тот же контур закрывает монтаж сетей, охранные предприятия, клининг, кейтеринг с многосменной работой, промышленность с вахтой.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">МОДУЛИ В КОРОБКЕ</div>
+            <ul class="bullet-list">
+              <li>Бот в МАКС — рабочее место бригадира и прораба</li>
+              <li>Веб-кабинет — сводка для руководства и кадров</li>
+              <li>Google Sheets — витрина для бухгалтерии</li>
+              <li>1С ЗУП — автоматическая выгрузка табелей</li>
+              <li>Каскад приглашений — без админа на стороне клиента</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 12. Табели — что сейчас ====== -->
+    <section class="slide" data-slide="12">
+      <div class="slide-inner">
+        <div class="eyebrow">02 / ТАБЕЛИ — ЧТО В СИСТЕМЕ СЕЙЧАС</div>
+        <h1 class="slide-title">Что в системе сейчас</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Бригадир каждое утро в чате МАКС отмечает состав бригады и объект — три кнопки. Прораб одной кнопкой подписывает табель за свою бригаду. Если бригада работает на объекте, где прораб и начальник участка — разные люди, оба видят табель, подписывает первый, кто открыл, второй — видит, что уже подписано.</p>
+            <p>Каждое изменение пишется в историю — кто, когда, что менял. Если в конце месяца кто-то спорит про часы — открыли историю, посмотрели, кто и в какой момент поставил эту цифру. Никаких «я не ставил» — всё видно.</p>
+            <p>Готовый табель сразу попадает в Google-таблицу, которую читает бухгалтерия — без перепечатки. Раз в месяц система автоматически отдаёт пакет в 1С ЗУП, оттуда считается зарплата.</p>
+            <p>Работает на 27 бригадах внутри холдинга. На разработке покрыто примерно 400 автоматических проверок — это значит, что каждое изменение в коде проверяется машиной, прежде чем попасть к пользователям.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">ЦИФРЫ ПО СИСТЕМЕ</div>
+            <ul class="bullet-list">
+              <li>27 бригад в проде</li>
+              <li>~400 автоматических проверок</li>
+              <li>Бригадир — 2 минуты в день</li>
+              <li>Прораб — 1 минута на подпись</li>
+              <li>Закрытие табелей — день в день</li>
+              <li>История изменений по каждому табелю</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 13. Табели — поток данных ====== -->
+    <section class="slide" data-slide="13">
+      <div class="slide-inner slide-inner-wide">
+        <div class="eyebrow">02 / ТАБЕЛИ — ПОТОК ДАННЫХ</div>
+        <h1 class="slide-title">Как ходят данные внутри</h1>
+        <div class="flow-diagram">
+          <div class="flow-step">
+            <div class="flow-num">01</div>
+            <div class="flow-title">МАКС-бот</div>
+            <div class="flow-desc">Webhook принимает нажатия из чата. FSM ведёт пользователя по шагам и пишет события в базу.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">02</div>
+            <div class="flow-title">База данных</div>
+            <div class="flow-desc">Postgres хранит состав бригад, объекты, табели, историю подписей. SQLModel-схема, миграции через Alembic.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">03</div>
+            <div class="flow-title">Подпись прораба</div>
+            <div class="flow-desc">Оптимистичная блокировка по версии записи. Двойная подпись одного табеля не проходит.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">04</div>
+            <div class="flow-title">Google Sheets</div>
+            <div class="flow-desc">При подписании витрина обновляется через Sheets API. Бухгалтерия видит актуальные данные без перепечаток.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">05</div>
+            <div class="flow-title">1С ЗУП</div>
+            <div class="flow-desc">APScheduler собирает пакет за период и кладёт в обмен. Зарплатный модуль подхватывает готовое.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 14. Табели — было/стало ====== -->
+    <section class="slide" data-slide="14">
+      <div class="slide-inner">
+        <div class="eyebrow">02 / ТАБЕЛИ — ТЕХНИЧЕСКИЙ КОНТУР</div>
+        <h1 class="slide-title">Как было и как стало — по делу</h1>
+        <div class="compare-grid">
+          <div class="compare-block compare-block-was">
+            <div class="compare-eyebrow">КАК БЫЛО</div>
+            <ul class="compare-list">
+              <li>Бумажный табель в блокноте у бригадира</li>
+              <li>Прораб расписывается на бумаге</li>
+              <li>Бумагу везут в офис, переписывают в Excel</li>
+              <li>Из Excel вручную переносят в 1С ЗУП</li>
+              <li>Нет истории — кто и когда менял часы</li>
+              <li>Доступ к данным только из офиса</li>
+            </ul>
+          </div>
+          <div class="compare-block compare-block-now">
+            <div class="compare-eyebrow">КАК СТАЛО</div>
+            <ul class="compare-list">
+              <li>Бригадир — три кнопки в чате</li>
+              <li>Прораб подписывает в чате одной кнопкой</li>
+              <li>Готовый табель сразу в Google-таблице</li>
+              <li>В 1С ЗУП уходит автоматически по расписанию</li>
+              <li>История изменений по каждому табелю — кто, когда, что менял</li>
+              <li>Доступ с телефона — без VPN и без админки</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 15. Табели — что доделать ====== -->
+    <section class="slide" data-slide="15">
+      <div class="slide-inner">
+        <div class="eyebrow">02 / ТАБЕЛИ — ЧТО ДОДЕЛАТЬ ДЛЯ ПРОДАЖ</div>
+        <h1 class="slide-title">Что доделать, чтобы продавать</h1>
+        <ol class="todo-list">
+          <li>
+            <span class="todo-num">01</span>
+            <span class="todo-text"><strong>Веб-кабинет для отдела кадров и руководства.</strong> Сейчас бригады в чате, начальство ходит в Google-таблицу. Нужна страница, где директор видит весь холдинг по сменам, объектам, бригадам, отсутствиям.</span>
+          </li>
+          <li>
+            <span class="todo-num">02</span>
+            <span class="todo-text"><strong>Multi-tenant — один сервер на много клиентов.</strong> Сейчас система обслуживает один холдинг. Нужно перевести на multi-tenant: изоляция данных по клиентам в одной базе, общая инфраструктура, никаких перекрёстных утечек.</span>
+          </li>
+          <li>
+            <span class="todo-num">03</span>
+            <span class="todo-text"><strong>Сводки и уведомления руководству.</strong> Сейчас вся работа в чате бригадира и прораба. Нужны автосводки за день в МАКС руководителю и кадровику, уведомления по отклонениям — бригада не отметилась к 10:00, объект без подписи прораба, расхождение план/факт по часам.</span>
+          </li>
+          <li>
+            <span class="todo-num">04</span>
+            <span class="todo-text"><strong>Связка со СКУД для офисов.</strong> На стройке СКУД нет, а в офисах есть. Сейчас СКУД отдаёт табличку «кто пришёл — кто ушёл», а HR или зарплатник вбивает табель в 1С руками. Нужен коннектор: данные с турникета сами падают в табель сотрудника, дальше — в 1С ЗУП без перепечатки. Закрывает офисный сегмент клиентов, у которых рабочие места в одном здании.</span>
+          </li>
+          <li>
+            <span class="todo-num">05</span>
+            <span class="todo-text"><strong>Выгрузка в SAP и Парус.</strong> Сейчас только 1С ЗУП. Под крупный сегмент нужны коннекторы к SAP HCM и Парус-Кадры — отдельные модули выгрузки с маппингом справочников.</span>
+          </li>
+          <li>
+            <span class="todo-num">06</span>
+            <span class="todo-text"><strong>Биллинг и тарифы.</strong> Подписка по числу рабочих в системе, автоматическое продление, акты и счета по запросу. Личный кабинет — оплата, история платежей, смена тарифа.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ====== 16. ЭПЛ — что упаковываем ====== -->
+    <section class="slide" data-slide="16">
+      <div class="slide-inner">
+        <div class="eyebrow">03 / ЭПЛ + ЭТрН — ЧТО УПАКОВЫВАЕМ</div>
+        <h1 class="slide-title">ЭПЛ, ЭТрН, заказы и заявки — единый контур перевозок</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Закон с 01.09.2026 переводит в электронный вид и путевой лист, и транспортную накладную. Это две разные сущности: ЭПЛ — на машину и смену, ЭТрН — на каждую перевозку. Мы упаковываем их в один контур и сверху добавляем то, что у заказчиков всё равно болит — заказы и заявки на перевозку.</p>
+            <p>В коробке: ЭПЛ со всеми шестью разделами и подписями ответственных через Госключ; ЭТрН на каждую перевозку с подписями грузоотправителя, перевозчика и грузополучателя; модуль заказов на перевозку — заказчик ставит заказ, перевозчик берёт в работу, ЭПЛ и ЭТрН формируются автоматически; модуль заявок на перевозку — диспетчер видит заявку, распределяет машины и водителей, отправляет в работу.</p>
+            <p>Связка с медтерминалами на проходной. Для транспорта на перевозках — выгрузка в ФГИС ЭПД через Контур.Логистику. Для самоходной техники — кранов, экскаваторов, асфальтоукладчиков — путевые листы оформляются как внутренние документы в Диадоке: ФГИС ЭПД самоходку не принимает, она только на перевозки. У нас обе ветки в одной системе. До 01.09.2026 нужно вывести ЭПЛ и ЭТрН в боевой режим — после этой даты бумажный формат уже не принимается.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">ЧТО ВХОДИТ В КОРОБКУ</div>
+            <ul class="bullet-list">
+              <li>ЭПЛ — все 6 разделов путевого листа</li>
+              <li>ЭТрН — формирование, подписи, передача в ФГИС</li>
+              <li>Заказы на перевозку — заказчик → перевозчик</li>
+              <li>Заявки на перевозку — диспетчерский модуль</li>
+              <li>Подписи через Госключ — ПЭП / УНЭП / УКЭП</li>
+              <li>Связка с медтерминалами на проходной</li>
+              <li>Поддержка самоходной техники в общем потоке</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 17. ЭПЛ — текущее состояние ====== -->
+    <section class="slide" data-slide="17">
+      <div class="slide-inner">
+        <div class="eyebrow">03 / ЭПЛ + ЭТрН — ТЕКУЩЕЕ СОСТОЯНИЕ</div>
+        <h1 class="slide-title">Что в системе сейчас</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Стек выбран — Python, FastAPI, SQLModel, SQLite на разработке, async httpx для внешних вызовов. Спроектирован каркас, схема данных, обмен через очереди, история подписей.</p>
+            <p>Спроектирована оркестрация подписей всех ответственных — диспетчера, механика, медика, водителя, прораба, контрагента. Выбраны механизмы: ПЭП в боте по кнопке, УНЭП и УКЭП через Госключ deep-link.</p>
+            <p>Разведаны API и протоколы — Контур.Логистика и через него ФГИС ЭПД для транспорта на перевозках, Диадок для самоходной техники как внутренний документооборот, Госключ без USB-токенов, медтерминалы, которые реально стоят на проходных.</p>
+            <p>В работе сейчас — выводим архитектуру в код. Все 6 разделов ЭПЛ, ЭТрН как новая сущность, модули заказов и заявок на перевозку.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">ГОТОВНОСТЬ ПО БЛОКАМ</div>
+            <ul class="bullet-list">
+              <li>Архитектура и схема данных — готовы</li>
+              <li>Стек выбран — Python / FastAPI / SQLModel</li>
+              <li>Оркестрация подписей — спроектирована</li>
+              <li>API Контур.Логистики и ФГИС ЭПД — разведаны</li>
+              <li>Поддержка самоходной техники — заложена</li>
+              <li>Кода в боевом режиме пока нет</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 18. ЭПЛ — день водителя ====== -->
+    <section class="slide" data-slide="18">
+      <div class="slide-inner slide-inner-wide">
+        <div class="eyebrow">03 / ЭПЛ — ДЕНЬ ВОДИТЕЛЯ</div>
+        <h1 class="slide-title">Как это работает</h1>
+        <ol class="timeline">
+          <li class="tl-step"><span class="tl-num">01</span><span class="tl-text">Утро. Диспетчер двумя кнопками выпускает листы на смену — водителей и машинистов самоходки одним списком.</span></li>
+          <li class="tl-step"><span class="tl-num">02</span><span class="tl-text">Водитель проходит медосвидетельствование в терминале на проходной — давление, температура, алкоголь сами падают в раздел листа.</span></li>
+          <li class="tl-step"><span class="tl-num">03</span><span class="tl-text">Механику в МАКС приходит уведомление — подписывает выпуск одной кнопкой.</span></li>
+          <li class="tl-step"><span class="tl-num">04</span><span class="tl-text">Водителю в МАКС прилетает QR — сел и поехал. Бумаги в кабине нет.</span></li>
+          <li class="tl-step"><span class="tl-num">05</span><span class="tl-text">На объекте показывает QR прорабу с телефона — тот в своём боте подтверждает прибытие.</span></li>
+          <li class="tl-step"><span class="tl-num">06</span><span class="tl-text">Машинист самоходки — тот же сценарий, те же кнопки, тот же QR. Разница только под капотом: путёвка крана или экскаватора уходит не в ФГИС ЭПД (он только на перевозки), а в Диадок как внутренний документ. Для пользователя — никакой разницы.</span></li>
+          <li class="tl-step"><span class="tl-num">07</span><span class="tl-text">Вечером лист закрывается. Транспортные ЭПЛ и ЭТрН уходят в ФГИС ЭПД, путёвки самоходки — в Диадок. Километры, часы и моточасы — в 1С УАТ.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ====== 19. ЭПЛ — было/стало ====== -->
+    <section class="slide" data-slide="19">
+      <div class="slide-inner">
+        <div class="eyebrow">03 / ЭПЛ + ЭТрН — РЕЗУЛЬТАТ</div>
+        <h1 class="slide-title">Как было и как стало</h1>
+        <div class="compare-grid">
+          <div class="compare-block compare-block-was">
+            <div class="compare-eyebrow">КАК БЫЛО</div>
+            <ul class="compare-list">
+              <li>Бумажные путёвки утром, ручное выписывание</li>
+              <li>Бумажный журнал ЭТрН до конца месяца</li>
+              <li>Калькулятор и фото путёвок в конце месяца</li>
+              <li>Очереди к медработнику на проходной</li>
+              <li>Споры о пробеге и часах работы по бумаге</li>
+              <li>Самоходную технику оформить нечем</li>
+            </ul>
+          </div>
+          <div class="compare-block compare-block-now">
+            <div class="compare-eyebrow">КАК СТАЛО</div>
+            <ul class="compare-list">
+              <li>ЭПЛ и ЭТрН формируются автоматически</li>
+              <li>Заказы и заявки на перевозку — в системе, не на бумаге</li>
+              <li>Каждый километр и час сразу в 1С УАТ</li>
+              <li>Медтерминал заменяет очередь на проходной</li>
+              <li>История подписей и переходов видна в системе</li>
+              <li>Самоходка идёт тем же потоком, что транспорт</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 20. ЭПЛ — что доделать ====== -->
+    <section class="slide" data-slide="20">
+      <div class="slide-inner">
+        <div class="eyebrow">03 / ЭПЛ + ЭТрН — ЧТО ДОДЕЛАТЬ ДЛЯ ПРОДАЖ</div>
+        <h1 class="slide-title">Что доделать, чтобы продавать</h1>
+        <ol class="todo-list">
+          <li>
+            <span class="todo-num">01</span>
+            <span class="todo-text"><strong>Все 6 разделов ЭПЛ в боевом режиме.</strong> Сейчас готова только архитектура — проработана структура данных, заложен каркас, разведаны API Контур.Логистики, ФГИС ЭПД и Диадока, спроектирована оркестрация подписей, спроектирована поддержка самоходной техники. Кода в боевом режиме пока нет — это и предстоит сделать: довести все 6 разделов ЭПЛ до рабочего состояния у клиентов, реальная связка с Контур.Логистикой и Диадоком, реальная подача в ФГИС ЭПД через API для транспорта и оформление в Диадоке для самоходки.</span>
+          </li>
+          <li>
+            <span class="todo-num">02</span>
+            <span class="todo-text"><strong>ЭТрН — формирование и передача в ФГИС.</strong> Новая сущность по тому же закону: на каждую перевозку формируется накладная на основе данных рейса, оркестрируются подписи грузоотправителя, перевозчика и грузополучателя, готовый документ уходит в ФГИС.</span>
+          </li>
+          <li>
+            <span class="todo-num">03</span>
+            <span class="todo-text"><strong>Модуль заказов на перевозку.</strong> Заказчик оформляет заказ — перевозчик принимает — из заказа автоматически формируются ЭПЛ и ЭТрН. Закрывает B2B-логистику в одном окне.</span>
+          </li>
+          <li>
+            <span class="todo-num">04</span>
+            <span class="todo-text"><strong>Модуль заявок на перевозку.</strong> Диспетчер получает заявку, распределяет по водителям и машинам, ставит в работу, закрывает по факту. На выходе — те же ЭПЛ и ЭТрН.</span>
+          </li>
+          <li>
+            <span class="todo-num">05</span>
+            <span class="todo-text"><strong>Связка с медтерминалами в боевом режиме.</strong> Переводим коннектор из проектного состояния в прод — поддержка моделей, которые реально стоят на проходных у клиентов.</span>
+          </li>
+          <li>
+            <span class="todo-num">06</span>
+            <span class="todo-text"><strong>Личный кабинет диспетчера в браузере.</strong> Дашборд парка, маршрутов, статусов листов, заказов и заявок. Нужен там, где парк 30+ единиц и чат уже не справляется.</span>
+          </li>
+          <li>
+            <span class="todo-num">07</span>
+            <span class="todo-text"><strong>Связка с 1С УАТ.</strong> Пробег, расход топлива, ремонты, ТО автоматически в 1С Управление Автотранспортом.</span>
+          </li>
+          <li>
+            <span class="todo-num">08</span>
+            <span class="todo-text"><strong>Биллинг.</strong> Подписка по числу машин в парке, автосписание, история платежей.</span>
+          </li>
+          <li>
+            <span class="todo-num">09</span>
+            <span class="todo-text"><strong>Тайминг — 01.09.2026.</strong> К этой дате ЭПЛ и ЭТрН должны быть в боевом режиме. После 1 сентября начинается массовый переход — если мы к нему не готовы, на рынок не зайдём.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ====== 21. Сметы — что упаковываем ====== -->
+    <section class="slide" data-slide="21">
+      <div class="slide-inner">
+        <div class="eyebrow">04 / СМЕТЫ — ЧТО УПАКОВЫВАЕМ В SAAS</div>
+        <h1 class="slide-title">Что именно идёт в коробку</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Продаём не «программу для сметчика» — рядом с Турбосметчиком и Гранд-Сметой ему ничего не нужно. Продаём конвейер, который из проектной документации делает черновик сметы в нужном формате.</p>
+            <p>Внутри коробки — четыре связанных блока. Первый разбирает разделы проекта (ПОС, ТКР, ООС) и вытаскивает оттуда работы и объёмы. Второй — растущая библиотека правил сопоставления, которая привязывает каждую работу к расценке из ФСНБ. Каждый новый прогнанный проект добавляет правила — со временем библиотека покроет основной объём типовых позиций. Третий считает ресурсы, материалы, накладные. Четвёртый — сериализатор: превращает результат в готовый файл в формате Турбосметчика, Гранд-Сметы или для Главгосэкспертизы.</p>
+            <p style="font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); margin-top: 16px; line-height: 1.55;"><span style="color: var(--accent);">СЕРИАЛИЗАТОР</span> — техническое слово. Внутри у системы смета лежит как объект в памяти со связями между работами, расценками, объёмами. Сериализация — это «упаковка» этого объекта в плоский файл строго определённого формата, который понимают другие программы. Один объект — несколько форматов на выходе.</p>
+            <p>Архитектура data-driven: правила сопоставления лежат отдельно от программного кода — в простых текстовых файлах. Это значит — под каждого нового клиента (со своими нестандартными позициями и привычками института) правила добавляются без переписывания программы, силами аналитика.</p>
+            <p style="font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); margin-top: 16px; line-height: 1.55;"><span style="color: var(--accent);">DATA-DRIVEN</span> — буквально «управляемое данными». Обычно поведение программы зашито внутрь — что-то поменять может только программист через код, тесты и обновление. У data-driven архитектуры всё наоборот: код это «движок», а правила лежат снаружи в текстовых файлах. Не нравится результат — поправил файл, запустил заново, получил новый результат. Программиста дёргать не надо.</p>
+            <p>На вход — только PDF проекта. На первом прогоне получаем смету: сметчик её дорабатывает (правит спорные позиции, проставляет коэффициенты), прогоняет ещё раз — и на выходе уже готовый комплект, соответствующий требованиям Минстроя и готовый к отправке в Главгосэкспертизу.</p>
+            <p>Отдельный момент — рынок прямо сейчас массово переходит с МГЭ на ГГЭ. У проектных и строительных компаний возникают проблемы с новым форматом документов: что было привычно, теперь не принимается, что было правильно — теперь нужно переделать. Готовое решение по новым требованиям сейчас ищут многие.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">СОСТАВ КОРОБКИ</div>
+            <ul class="bullet-list">
+              <li>Парсеры ПОС / ТКР / ООС</li>
+              <li>Растущая библиотека правил сопоставления</li>
+              <li>Fuzzy fallback на справочник 290 000 позиций</li>
+              <li>Расчёт ресурсов, материалов, накладных</li>
+              <li>Сериализаторы GGE и MGE — один клик</li>
+              <li>Расширение под нового клиента — без релиза</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 22. Сметы — текущее состояние ====== -->
+    <section class="slide" data-slide="22">
+      <div class="slide-inner">
+        <div class="eyebrow">04 / СМЕТЫ — ТЕКУЩЕЕ СОСТОЯНИЕ</div>
+        <h1 class="slide-title">Что в системе сейчас</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>ГГЭ — это формат для отправки сметы в Главгосэкспертизу. У неё много требований к структуре, оформлению, заполнению полей. Сейчас сметчик нарисовал смету в Турбосметчике или Гранд-Смете — и дальше начинается «танцы с бубном»: правит структуру, переименовывает разделы, проверяет коды, переделывает по замечаниям эксперта. Это часть работы, которая отдельно от собственно сметы.</p>
+            <p>Мы автоматизируем именно эти требования. На выходе — готовый комплект ГГЭ и МГЭ за один клик: ткнул, скачал, отправил. Не два прогона, не отдельная конвертация под Мосгосэкспертизу и Главгосэкспертизу. Сериализаторы работают параллельно из одной модели сметы.</p>
+            <p>Три формата выхода: ФСНБ-2022 в базисных ценах, ФСНБ со сплит-формой пересчёта в текущие цены, ТСН-2001 для московских объектов. Один и тот же проект собирается во все три без перезапуска.</p>
+            <p>Разбор PDF калиброван под форматы ТМ-Инжиниринг и аналогичных проектных институтов. Библиотека правил обкатана на референсных проектах — реальные сметы, на которых правила сопоставления подкручены под текущую практику ФСНБ-2022.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">ЦИФРЫ ПО СИСТЕМЕ</div>
+            <ul class="bullet-list">
+              <li>290 000+ нормативных позиций ФСНБ-2022</li>
+              <li>База правил сопоставления — растёт с каждым проектом</li>
+              <li>1 860 автоматических тестов</li>
+              <li>3 пилотных проекта Мосводоканала — Вешняковский, Говорово, Скобелевская</li>
+              <li>Поддержка ФСНБ-2022 и ТСН-2001</li>
+              <li>Coverage 93%+ по позициям пилотов</li>
+              <li>В боевом ещё не запущено — только архитектура и пилоты</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 23. Сметы — путь проекта ====== -->
+    <section class="slide" data-slide="23">
+      <div class="slide-inner slide-inner-wide">
+        <div class="eyebrow">04 / СМЕТЫ — ПУТЬ ПРОЕКТА</div>
+        <h1 class="slide-title">Как двигается смета</h1>
+        <div class="flow-diagram">
+          <div class="flow-step">
+            <div class="flow-num">01</div>
+            <div class="flow-title">PDF проекта</div>
+            <div class="flow-desc">На вход — разделы ПОС, ТКР, ООС. Парсеры разбирают каждый раздел отдельно: своя логика под чертежи, спецификации, пояснительные записки.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">02</div>
+            <div class="flow-title">Извлечение работ</div>
+            <div class="flow-desc">После разбора — готовая ведомость работ, спецификации материалов, ведомость отходов. Объёмы привязаны к разделам и подсистемам.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">03</div>
+            <div class="flow-title">Mapping library</div>
+            <div class="flow-desc">Накопленные правила сопоставления перекрывают типовые позиции. Что не легло на правило — отправляем в AI (ChatGPT, Claude, Gemini) с контекстом справочника 290 000 расценок ФСНБ. Ответ AI становится новым правилом — библиотека растёт сама.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">04</div>
+            <div class="flow-title">Расчёт</div>
+            <div class="flow-desc">Объёмы × расценка × индексы пересчёта. Накладные расходы и сметная прибыль по нормативам, разбивка по разделам сметы.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-num">05</div>
+            <div class="flow-title">Сериализация</div>
+            <div class="flow-desc">GGE — для Турбосметчика и Гранд-Сметы. MGE — для Мосгосэкспертизы. Оба формата генерируются из одной модели сметы.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 24. Сметы — было/станет ====== -->
+    <section class="slide" data-slide="24">
+      <div class="slide-inner">
+        <div class="eyebrow">04 / СМЕТЫ — РЕЗУЛЬТАТ</div>
+        <h1 class="slide-title">Как сейчас и как станет</h1>
+        <div class="compare-grid">
+          <div class="compare-block compare-block-was">
+            <div class="compare-eyebrow">КАК СЕЙЧАС</div>
+            <ul class="compare-list">
+              <li>Один сметчик ведёт один проект целиком руками</li>
+              <li>Сметный отдел — узкое место всего института</li>
+              <li>Mapping-знания у каждого в голове, передавать сложно</li>
+              <li>Мосгосэкспертиза — отдельный заход, формат переделывается</li>
+              <li>Ошибки маппинга позиций находят на сдаче</li>
+              <li>Региональные нормативы — отдельный учебный курс</li>
+            </ul>
+          </div>
+          <div class="compare-block compare-block-now">
+            <div class="compare-eyebrow">КАК СТАНЕТ</div>
+            <ul class="compare-list">
+              <li>Один сметчик ведёт несколько проектов параллельно</li>
+              <li>Узкое место расширилось — пропускная способность отдела выросла</li>
+              <li>Mapping-правила накапливаются в системе и используются всеми</li>
+              <li>ГГЭ и МГЭ — один клик из одной модели</li>
+              <li>Маппинг проверяется машиной до сдачи</li>
+              <li>Региональные базы подключаются как новый набор правил</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 25. Сметы — что доделать ====== -->
+    <section class="slide" data-slide="25">
+      <div class="slide-inner">
+        <div class="eyebrow">04 / СМЕТЫ — ЧТО ДОДЕЛАТЬ ДЛЯ ПРОДАЖ</div>
+        <h1 class="slide-title">Что доделать, чтобы продавать</h1>
+        <ol class="todo-list">
+          <li>
+            <span class="todo-num">01</span>
+            <span class="todo-text"><strong>Довести до боевого режима внутри холдинга.</strong> Сейчас работает только на пилотах: архитектура, разбор проекта, расчётный модуль. До рабочего состояния — минимум месяц работы. Главное — добить библиотеку правил: что на какие позиции из проекта переходит в смету. Это самое объёмное.</span>
+          </li>
+          <li>
+            <span class="todo-num">02</span>
+            <span class="todo-text"><strong>Веб-интерфейс вместо запуска инженером.</strong> Сейчас конвейер запускается из командной строки. Нужен браузерный кабинет: сметчик заливает PDF проекта, через минуту скачивает ГГЭ и МГЭ. Это выводит систему из режима «инженерного инструмента» в режим продукта.</span>
+          </li>
+          <li>
+            <span class="todo-num">03</span>
+            <span class="todo-text"><strong>Личный кабинет с историей проектов.</strong> Хранение черновиков, версии расчётов, возврат к предыдущим итерациям, шаринг между сметчиками одного института. Возможность вести проект больше одной итерации и работать командой.</span>
+          </li>
+          <li>
+            <span class="todo-num">04</span>
+            <span class="todo-text"><strong>Региональные нормативные базы.</strong> Сейчас в системе ФСНБ-2022 (федеральная) и ТСН-2001 (Москва). Нужны Санкт-Петербург, Татарстан, Краснодарский край, Свердловская область — региональные ТСН и территориальные сборники. Каждый регион — отдельный набор правил поверх общей библиотеки.</span>
+          </li>
+          <li>
+            <span class="todo-num">05</span>
+            <span class="todo-text"><strong>Связка с Гранд-Сметой и Smeta.RU.</strong> Сейчас сериализатор настроен под Турбосметчик. Гранд-Смета и Smeta.RU — другие форматы файлов, свои особенности структуры разделов и индексов. Это новые сериализаторы поверх той же модели сметы.</span>
+          </li>
+          <li>
+            <span class="todo-num">06</span>
+            <span class="todo-text"><strong>Память правил под клиента.</strong> Институт правит спорные позиции по-своему. Система запоминает эти правки и при следующем проекте маппит так же. Это превращает 10% ручной правки в накапливаемое знание клиента.</span>
+          </li>
+          <li>
+            <span class="todo-num">07</span>
+            <span class="todo-text"><strong>Биллинг и тарифы.</strong> Подписка по объёму обработанных проектов или по числу сметчиков. Автоматическое продление, история платежей, отключение функций при просрочке.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ====== 26. AI-агенты для бизнеса ====== -->
+    <section class="slide" data-slide="26">
+      <div class="slide-inner">
+        <div class="eyebrow">05 / AI-АГЕНТЫ — ОТДЕЛЬНОЕ НАПРАВЛЕНИЕ</div>
+        <h1 class="slide-title">Корпоративные AI-агенты</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>AI-агент — это программа поверх большой языковой модели, которой ставишь задачу человеческими словами, а она сама ходит по системам, читает документы, отвечает в почте, делает выводы и предлагает действия. Это не «чат-бот для FAQ» — это сотрудник, который не уходит и не устаёт.</p>
+            <p>Где это работает в бизнесе: отдел снабжения тонет в типовых письмах от поставщиков — «где оплата», «уточните реквизиты», «когда привезёте». Юристы вычитывают каждый договор на риски руками. Сметный отдел отвечает на однотипные вопросы по позициям. AI-агент закрывает рутину, человек занимается тем, где нужно реально думать.</p>
+            <p>Что мы умеем: строим таких агентов под конкретную задачу клиента. Подключаем к его 1С, почте, Битрикс24, базе документов. Учим под его регламенты и тон общения. Дальше агент работает в его контуре — отвечает поставщикам, читает договоры, помогает сотрудникам искать ответы в накопленных документах.</p>
+            <p>Это сейчас самое горячее направление в IT, крупные компании запускают по 5–10 пилотов одновременно. Бизнес-модель — разовая разработка под задачу плюс ежемесячный абонемент за поддержку и доработки.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">ТИПОВЫЕ КЕЙСЫ</div>
+            <ul class="bullet-list">
+              <li>Ответы поставщикам по типовым вопросам</li>
+              <li>Анализ договоров — поиск рисков и отклонений</li>
+              <li>Помощник сотрудников — ответы по регламентам и документам</li>
+              <li>Обработка входящих заявок и заказов</li>
+              <li>Подбор контрагентов и их предварительная проверка</li>
+              <li>Сводки и отчёты на естественном языке</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 27. Заказная разработка ====== -->
+    <section class="slide" data-slide="27">
+      <div class="slide-inner">
+        <div class="eyebrow">06 / ЗАКАЗНАЯ РАЗРАБОТКА</div>
+        <h1 class="slide-title">Полноценное направление с двойной отдачей</h1>
+        <div class="two-col">
+          <div class="col-text">
+            <p>Все четыре наших нынешних продукта выросли из задач холдинга. Заказная разработка — продолжение этой логики, но как самостоятельное направление с понятной экономикой.</p>
+            <p>Клиент оплачивает разработку под свою задачу — это разовая выручка плюс абонемент за поддержку и доработки. Параллельно у нас появляется потенциальная коробка, если задача типовая для рынка — её упаковываем в SaaS или IaaS и продаём дальше. Один проект — два источника денег: сейчас и потом.</p>
+          </div>
+          <div class="col-list">
+            <div class="list-eyebrow">ТИПЫ ЗАКАЗОВ</div>
+            <ul class="bullet-list">
+              <li>Интеграции между системами клиента</li>
+              <li>AI-агенты под конкретную задачу</li>
+              <li>Веб-сервисы и личные кабинеты</li>
+              <li>Мобильные боты и автоматизация коммуникаций</li>
+              <li>Кастомная аналитика и дашборды</li>
+              <li>Внутренние инструменты для отделов</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 28. Финал — доп. услуги ====== -->
+    <section class="slide" data-slide="28">
+      <div class="slide-inner">
+        <div class="eyebrow">ДОП. ВЫРУЧКА</div>
+        <h1 class="slide-title">Что продаём поверх подписки</h1>
+        <div class="services-grid">
+          <div class="service-card">
+            <h3 class="service-title">Битрикс24 Маркетплейс</h3>
+            <p class="service-desc">По состоянию на [дата] на платформе Битрикс24 зарегистрировано более [N] млн компаний — источник: <a href="https://www.bitrix24.ru" target="_blank" rel="noopener" style="color: var(--accent);">bitrix24.ru</a>. Клиенты находят коробку в каталоге сами — это входящий канал, который работает без активных продаж.</p>
+          </div>
+          <div class="service-card">
+            <h3 class="service-title">Партнёрства с поставщиками IT</h3>
+            <p class="service-desc">Двусторонние интеграции с другими IT-сервисами. Мы внутри своих продуктов предлагаем подключить их инструменты — например, проверку контрагентов по ИНН/ОГРН. Они в своих каталогах и базах клиентов предлагают наши коробки. Каждая такая партнёрка — взаимный поток лидов и расширение чека.</p>
+          </div>
+          <div class="service-card">
+            <h3 class="service-title">Кастомные интеграции</h3>
+            <p class="service-desc">Связки с внутренними системами клиента, которых нет в коробке. Биллинг по часам инженеров.</p>
+          </div>
+          <div class="service-card">
+            <h3 class="service-title">AI-агенты под задачу</h3>
+            <p class="service-desc">Бот, который сам отвечает контрагентам по почте. AI, который читает договоры и подсвечивает риски. Отдельный проект поверх подписки.</p>
+          </div>
+          <div class="service-card">
+            <h3 class="service-title">Дашборды и отчёты</h3>
+            <p class="service-desc">Кастомная аналитика поверх данных подписки. Свои разрезы по проектам, объектам, контрагентам.</p>
+          </div>
+          <div class="service-card">
+            <h3 class="service-title">DevOps под on-premise</h3>
+            <p class="service-desc">Для клиентов, которым нужна установка в собственный контур: развёртывание, обновления, мониторинг, бэкапы. Разовый запуск + абонемент за поддержку.</p>
+          </div>
+          <div class="service-card service-card-wide">
+            <h3 class="service-title">Часы инженеров на абонементе</h3>
+            <p class="service-desc">Постоянная команда поддержки, которая ведёт контур клиента. Месячный абонемент — расширение чека на тех, кто уже подключён.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+      var TOTAL = 28;
+      var state = { current: 1, total: TOTAL, isAnimating: false, slides: [] };
+      var els = {};
+      function pad2(n) { return (n < 10 ? '0' : '') + n; }
+      function $(s, r) { return (r || document).querySelector(s); }
+      function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+
+      function init() {
+        els.deck = $('#deck');
+        els.progressFill = $('.progress-fill');
+        els.logo = $('.logo');
+        els.counter = $('.counter');
+        els.counterCurrent = $('.counter-current');
+        els.counterTotal = $('.counter-total');
+        els.counterSelect = $('.counter-select');
+        els.prev = $('.nav-prev');
+        els.next = $('.nav-next');
+        els.fs = $('.fs-btn');
+        state.slides = $$('#deck .slide');
+        if (state.slides.length) state.total = state.slides.length;
+        if (els.counterTotal) els.counterTotal.textContent = pad2(TOTAL);
+        populateSelect();
+        attachEvents();
+        attachMapCards();
+        if (state.slides.length) activate(1, true); else updateOverlay();
+      }
+      function populateSelect() {
+        if (!els.counterSelect) return;
+        els.counterSelect.innerHTML = '';
+        for (var i = 1; i <= TOTAL; i++) {
+          var opt = document.createElement('option');
+          opt.value = String(i);
+          opt.textContent = 'Slide ' + pad2(i);
+          els.counterSelect.appendChild(opt);
+        }
+        els.counterSelect.value = '1';
+      }
+      function activate(n, immediate) {
+        if (!state.slides.length) return;
+        if (n < 1) n = 1;
+        if (n > state.slides.length) n = state.slides.length;
+        if (n === state.current && !immediate) return;
+        if (state.isAnimating && !immediate) return;
+        state.isAnimating = true;
+        var prevSlide = state.slides[state.current - 1];
+        var nextSlide = state.slides[n - 1];
+        if (prevSlide && prevSlide !== nextSlide) prevSlide.classList.remove('active');
+        if (nextSlide) {
+          nextSlide.classList.add('entering');
+          nextSlide.offsetHeight;
+          requestAnimationFrame(function () {
+            nextSlide.classList.add('active');
+            nextSlide.classList.remove('entering');
+          });
+        }
+        state.current = n;
+        updateOverlay();
+        window.setTimeout(function () { state.isAnimating = false; }, 220);
+      }
+      function next() { if (state.current < state.slides.length) activate(state.current + 1); }
+      function prev() { if (state.current > 1) activate(state.current - 1); }
+      function updateOverlay() {
+        var totalForProgress = TOTAL > 1 ? TOTAL - 1 : 1;
+        var pct = ((state.current - 1) / totalForProgress) * 100;
+        if (els.progressFill) els.progressFill.style.width = pct + '%';
+        if (els.counterCurrent) els.counterCurrent.textContent = pad2(state.current);
+        if (els.counterSelect) els.counterSelect.value = String(state.current);
+        if (els.prev) {
+          if (state.current <= 1) { els.prev.classList.add('disabled'); els.prev.setAttribute('aria-disabled','true'); }
+          else { els.prev.classList.remove('disabled'); els.prev.removeAttribute('aria-disabled'); }
+        }
+        if (els.next) {
+          if (state.current >= state.slides.length || state.current >= TOTAL) { els.next.classList.add('disabled'); els.next.setAttribute('aria-disabled','true'); }
+          else { els.next.classList.remove('disabled'); els.next.removeAttribute('aria-disabled'); }
+        }
+        if (els.logo) {
+          if (state.current === 1) els.logo.classList.add('is-hidden');
+          else els.logo.classList.remove('is-hidden');
+        }
+      }
+      function attachMapCards() {
+        $$('.map-card[data-target], .product-card[data-target]').forEach(function (card) {
+          card.addEventListener('click', function (e) {
+            e.preventDefault();
+            var n = parseInt(card.getAttribute('data-target'), 10);
+            if (!isNaN(n)) activate(n);
+          });
+        });
+      }
+      function attachEvents() {
+        document.addEventListener('keydown', function (e) {
+          var t = e.target;
+          if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+          if (t && t.classList && t.classList.contains('counter-select')) return;
+          switch (e.key) {
+            case 'ArrowRight': case ' ': case 'Spacebar': case 'PageDown':
+              e.preventDefault(); next(); break;
+            case 'ArrowLeft': case 'PageUp':
+              e.preventDefault(); prev(); break;
+            case 'Home':
+              e.preventDefault(); activate(1); break;
+            case 'End':
+              e.preventDefault(); activate(state.slides.length); break;
+            case 'f': case 'F':
+              if (!e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); toggleFullscreen(); }
+              break;
+          }
+        });
+        if (els.prev) els.prev.addEventListener('click', function (e) { e.preventDefault(); prev(); });
+        if (els.next) els.next.addEventListener('click', function (e) { e.preventDefault(); next(); });
+        if (els.counterSelect) {
+          els.counterSelect.addEventListener('change', function (e) {
+            var n = parseInt(e.target.value, 10);
+            if (!isNaN(n)) activate(n);
+          });
+        }
+        if (els.counter) {
+          els.counter.addEventListener('click', function (e) {
+            if (e.target === els.counterSelect) return;
+            if (els.counterSelect && typeof els.counterSelect.showPicker === 'function') {
+              try { els.counterSelect.showPicker(); } catch (_) { els.counterSelect.focus(); }
+            } else if (els.counterSelect) { els.counterSelect.focus(); }
+          });
+        }
+        if (els.fs) els.fs.addEventListener('click', function (e) { e.preventDefault(); toggleFullscreen(); });
+        var tx = null, ty = null;
+        document.addEventListener('touchstart', function (e) {
+          if (!e.touches || !e.touches.length) return;
+          tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener('touchend', function (e) {
+          if (tx === null) return;
+          var t = e.changedTouches && e.changedTouches[0];
+          if (!t) { tx = null; return; }
+          var dx = t.clientX - tx, dy = t.clientY - ty;
+          tx = null; ty = null;
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) next(); else prev(); }
+        }, { passive: true });
+      }
+      function toggleFullscreen() {
+        var doc = document, el = document.documentElement;
+        var isFs = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.msFullscreenElement);
+        if (!isFs) {
+          var req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+          if (req) { try { var p = req.call(el); if (p && p.catch) p.catch(function(){}); } catch (_) {} }
+        } else {
+          var exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+          if (exit) { try { var p2 = exit.call(doc); if (p2 && p2.catch) p2.catch(function(){}); } catch (_) {} }
+        }
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+      else init();
+    })();
+  </script>
 </body>
 </html>
