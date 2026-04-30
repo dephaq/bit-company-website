@@ -44,8 +44,10 @@
       background: var(--bg);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      overflow: hidden;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
+    html { scroll-behavior: smooth; }
     code, pre, kbd, samp { font-family: var(--font-mono); }
     ::selection { background: var(--accent); color: var(--bg); }
     button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
@@ -55,35 +57,25 @@
     p { margin: 0; }
     strong { font-weight: 600; color: var(--fg); }
 
-    #deck { position: relative; width: 100%; height: 100%; }
+    #deck { position: relative; width: 100%; }
 
     .slide {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-8px);
-      transition: opacity var(--t), transform var(--t);
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
       background: var(--bg);
       overflow: hidden;
-      z-index: 1;
-    }
-    .slide.entering { opacity: 0; transform: translateY(8px); }
-    .slide.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-      z-index: 2;
+      scroll-snap-align: start;
+      scroll-margin-top: 0;
     }
 
     .slide-inner {
       position: relative;
       width: 100%;
-      height: 100%;
+      min-height: 100vh;
       max-width: 1180px;
       margin: 0 auto;
-      padding: 32px;
+      padding: 80px 32px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -242,7 +234,8 @@
       .services-grid { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .slide, .progress-fill, .nav-btn, .fs-btn, .logo, .counter { transition: none; }
+      html, body { scroll-behavior: auto; }
+      .progress-fill, .nav-btn, .fs-btn, .logo, .counter { transition: none; }
       .aurora { animation: none; }
     }
   </style>
@@ -1162,7 +1155,7 @@
     (function () {
       'use strict';
       var TOTAL = 28;
-      var state = { current: 1, total: TOTAL, isAnimating: false, slides: [] };
+      var state = { current: 1, total: TOTAL, slides: [] };
       var els = {};
       function pad2(n) { return (n < 10 ? '0' : '') + n; }
       function $(s, r) { return (r || document).querySelector(s); }
@@ -1185,8 +1178,11 @@
         populateSelect();
         attachEvents();
         attachMapCards();
-        if (state.slides.length) activate(1, true); else updateOverlay();
+        observeSlides();
+        updateProgress();
+        updateOverlay();
       }
+
       function populateSelect() {
         if (!els.counterSelect) return;
         els.counterSelect.innerHTML = '';
@@ -1198,34 +1194,50 @@
         }
         els.counterSelect.value = '1';
       }
-      function activate(n, immediate) {
+
+      function scrollToSlide(n) {
         if (!state.slides.length) return;
         if (n < 1) n = 1;
         if (n > state.slides.length) n = state.slides.length;
-        if (n === state.current && !immediate) return;
-        if (state.isAnimating && !immediate) return;
-        state.isAnimating = true;
-        var prevSlide = state.slides[state.current - 1];
-        var nextSlide = state.slides[n - 1];
-        if (prevSlide && prevSlide !== nextSlide) prevSlide.classList.remove('active');
-        if (nextSlide) {
-          nextSlide.classList.add('entering');
-          nextSlide.offsetHeight;
-          requestAnimationFrame(function () {
-            nextSlide.classList.add('active');
-            nextSlide.classList.remove('entering');
-          });
+        var target = state.slides[n - 1];
+        if (target) {
+          var top = target.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
         }
-        state.current = n;
-        updateOverlay();
-        window.setTimeout(function () { state.isAnimating = false; }, 220);
       }
-      function next() { if (state.current < state.slides.length) activate(state.current + 1); }
-      function prev() { if (state.current > 1) activate(state.current - 1); }
+      function next() { scrollToSlide(state.current + 1); }
+      function prev() { scrollToSlide(state.current - 1); }
+
+      function observeSlides() {
+        if (!('IntersectionObserver' in window)) return;
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+              var slide = entry.target;
+              var n = parseInt(slide.getAttribute('data-slide'), 10);
+              if (!isNaN(n) && n !== state.current) {
+                state.current = n;
+                updateOverlay();
+              }
+            }
+          });
+        }, { threshold: [0.5] });
+        state.slides.forEach(function (s) { io.observe(s); });
+      }
+
+      function updateProgress() {
+        function tick() {
+          var doc = document.documentElement;
+          var scrollTop = window.pageYOffset || doc.scrollTop;
+          var scrollHeight = doc.scrollHeight - doc.clientHeight;
+          var pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+          if (els.progressFill) els.progressFill.style.width = pct + '%';
+          requestAnimationFrame(tick);
+        }
+        tick();
+      }
+
       function updateOverlay() {
-        var totalForProgress = TOTAL > 1 ? TOTAL - 1 : 1;
-        var pct = ((state.current - 1) / totalForProgress) * 100;
-        if (els.progressFill) els.progressFill.style.width = pct + '%';
         if (els.counterCurrent) els.counterCurrent.textContent = pad2(state.current);
         if (els.counterSelect) els.counterSelect.value = String(state.current);
         if (els.prev) {
@@ -1233,7 +1245,7 @@
           else { els.prev.classList.remove('disabled'); els.prev.removeAttribute('aria-disabled'); }
         }
         if (els.next) {
-          if (state.current >= state.slides.length || state.current >= TOTAL) { els.next.classList.add('disabled'); els.next.setAttribute('aria-disabled','true'); }
+          if (state.current >= state.slides.length) { els.next.classList.add('disabled'); els.next.setAttribute('aria-disabled','true'); }
           else { els.next.classList.remove('disabled'); els.next.removeAttribute('aria-disabled'); }
         }
         if (els.logo) {
@@ -1241,29 +1253,31 @@
           else els.logo.classList.remove('is-hidden');
         }
       }
+
       function attachMapCards() {
         $$('.map-card[data-target], .product-card[data-target]').forEach(function (card) {
           card.addEventListener('click', function (e) {
             e.preventDefault();
             var n = parseInt(card.getAttribute('data-target'), 10);
-            if (!isNaN(n)) activate(n);
+            if (!isNaN(n)) scrollToSlide(n);
           });
         });
       }
+
       function attachEvents() {
         document.addEventListener('keydown', function (e) {
           var t = e.target;
           if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
           if (t && t.classList && t.classList.contains('counter-select')) return;
           switch (e.key) {
-            case 'ArrowRight': case ' ': case 'Spacebar': case 'PageDown':
+            case 'ArrowRight': case ' ': case 'Spacebar': case 'PageDown': case 'ArrowDown':
               e.preventDefault(); next(); break;
-            case 'ArrowLeft': case 'PageUp':
+            case 'ArrowLeft': case 'PageUp': case 'ArrowUp':
               e.preventDefault(); prev(); break;
             case 'Home':
-              e.preventDefault(); activate(1); break;
+              e.preventDefault(); scrollToSlide(1); break;
             case 'End':
-              e.preventDefault(); activate(state.slides.length); break;
+              e.preventDefault(); scrollToSlide(state.slides.length); break;
             case 'f': case 'F':
               if (!e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); toggleFullscreen(); }
               break;
@@ -1274,7 +1288,7 @@
         if (els.counterSelect) {
           els.counterSelect.addEventListener('change', function (e) {
             var n = parseInt(e.target.value, 10);
-            if (!isNaN(n)) activate(n);
+            if (!isNaN(n)) scrollToSlide(n);
           });
         }
         if (els.counter) {
@@ -1286,20 +1300,8 @@
           });
         }
         if (els.fs) els.fs.addEventListener('click', function (e) { e.preventDefault(); toggleFullscreen(); });
-        var tx = null, ty = null;
-        document.addEventListener('touchstart', function (e) {
-          if (!e.touches || !e.touches.length) return;
-          tx = e.touches[0].clientX; ty = e.touches[0].clientY;
-        }, { passive: true });
-        document.addEventListener('touchend', function (e) {
-          if (tx === null) return;
-          var t = e.changedTouches && e.changedTouches[0];
-          if (!t) { tx = null; return; }
-          var dx = t.clientX - tx, dy = t.clientY - ty;
-          tx = null; ty = null;
-          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) next(); else prev(); }
-        }, { passive: true });
       }
+
       function toggleFullscreen() {
         var doc = document, el = document.documentElement;
         var isFs = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.msFullscreenElement);
