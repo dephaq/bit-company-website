@@ -1,5 +1,18 @@
 # bit-company-website — контекст для Claude
 
+## ⚠️ Прежде чем что-либо делать — прочитай PRESENTATION.md
+
+Этот репо публикуется в **двух местах одновременно**, читающих **разные части** репо:
+
+| URL | Источник |
+|---|---|
+| https://bit-company.ru/ | корень репо (лендинг + страницы сайта) |
+| https://dephaq.github.io/bit-company-website/ | папка `presentation/` (GitHub Pages через Actions) |
+
+**Полный гайд:** [PRESENTATION.md](./PRESENTATION.md). Файловая структура, как править что, gotcha'и.
+
+**Категорический запрет:** не класть презентацию в корневой `index.html`. Прецедент 30.04.2026 (коммит `fb61599`) — презентация заехала на публичный домен `bit-company.ru` вместо лендинга. Разбирали 04.05.2026 (этот фикс). Презентация ВСЕГДА в `presentation/index.html`, корневой `index.html` ВСЕГДА маркет-лендинг.
+
 ## Что это
 
 Маркетинговый сайт **ООО «БИТ»** (Бизнес Информационные Технологии) — нового юр.лица под продуктовое направление. Сайт презентует SaaS-продукты, разработанные внутри **BTS Holding** (та же команда, та же экспертиза, отдельная контейнерная упаковка для b2b-рынка).
@@ -38,7 +51,7 @@ ssh deploy@bts "docker exec bts-nginx-1 nginx -t && docker exec bts-nginx-1 ngin
 
 Если `nginx -t` падает — НЕ делать reload, blackscope.ru продолжит работать на старом конфиге.
 
-## Когда правишь презентацию (`index.html`)
+## Когда правишь презентацию (`presentation/index.html`)
 
 Это длинный одностраничник со слайдами `<section class="slide" data-slide="N">`. Перед правкой одного абзаца — **проверять согласованность с соседними слайдами**: цифры/частоты/термины часто дублируются. Типичные точки рассинхрона:
 
@@ -46,7 +59,9 @@ ssh deploy@bts "docker exec bts-nginx-1 nginx -t && docker exec bts-nginx-1 ngin
 - Слайд 14 (`compare-grid` «КАК СЕЙЧАС / КАК СТАНЕТ`) — часто идёт парой со слайдом 12.
 - Хотлинки на отдельные продукты (`products/timesheet.html` etc.) — самостоятельные страницы, в них своя редакция.
 
-**Команда `grep -n "ключевое-слово" index.html`** перед правкой = must-do.
+**Команда `grep -n "ключевое-слово" presentation/index.html`** перед правкой = must-do.
+
+Деплой презентации — **полностью автоматический** через GitHub Actions (`.github/workflows/pages.yml`). Push в main с правкой `presentation/**` → через ~1 минуту обновится `dephaq.github.io/bit-company-website/`. Никаких ручных команд.
 
 ## Связанные заметки в Obsidian (vault main)
 
@@ -60,7 +75,7 @@ ssh deploy@bts "docker exec bts-nginx-1 nginx -t && docker exec bts-nginx-1 ngin
 
 1. **Не править nginx-конфиг через BTS-репо** — `/opt/sites-extra/bit-company.conf` живёт **отдельно** на сервере. `make deploy-back` его не затронет.
 2. **Не делать `--standalone` для certbot** — обязательно `--webroot` (auto-renewal через `/opt/bts/certbot-webroot/`), иначе nginx ляжет на 30-60 сек и blackscope/bit-company упадут вместе.
-3. **GH Pages** старый параллельный хост (`dephaq.github.io/bit-company-website/`) — задача отключить через UI владельца dephaq, jojoprison-токен не имеет admin-прав.
+3. **GH Pages** теперь — это **намеренное** второе место публикации, отдаёт презентацию из `presentation/` через GitHub Actions. НЕ отключать. Если нужно поменять source в Settings — это умеет только владелец dephaq, jojoprison-токен не имеет admin-прав на Settings.
 4. **Не использовать `location = /index.html { return 301 /; }`** — даёт infinite loop с `index index.html`. Только `if ($request_uri = "/index.html")`.
 
 ## SSL / DNS
