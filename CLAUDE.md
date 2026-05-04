@@ -65,11 +65,24 @@ ssh deploy@bts "docker exec bts-nginx-1 nginx -t && docker exec bts-nginx-1 ngin
 
 ## Связанные заметки в Obsidian (vault main)
 
+- `Session — 2026-05-04 bit-company.ru landing presentation split + branded 404 + Node 24` — **главный narrative-hub этого фикса** (читать первым)
+- `Atom — bit-company.ru landing presentation split via GitHub Actions (2026-05-04)` — детали разделения
+- `Atom — bit-company.ru presentation redirect to gh-pages (deferred 2026-05-04)` — backlog с триггерами
 - `Atom — bit-company.ru production hot paths (где править что и как)` — runbook deploy
 - `Molecule — bit-company.ru deploy + multi-tenant nginx (BTS prod)` — архитектура
 - `Atom — bit-company.ru deploy plan на BTS prod (nginx symlink gotcha)` — gotcha с symlink
-- `Session — 2026-04-30 bit-company.ru live + multi-tenant nginx complete` — chronicle
+- `Atom — index.html slides рассинхрон при точечной правке (grep-привычка)` — grep перед правкой `presentation/index.html`
+- `Atom — bit-company.ru prod sync drift (12 коммитов untouched после деплоя)` — урок про ручной `ssh git pull`
+- `Atom — YC CDN 14 гочей setup ourcdn 2026-05-01` — CDN edge перед origin (purge через `yc cdn`)
+- `Session — 2026-04-30 bit-company.ru live + multi-tenant nginx complete` — chronicle первого деплоя
+- `Session — 2026-05-01 bit-company.ru правки Лёни (5 правок + CLAUDE.md)` — правки презентации до split-фикса
 - `MOC — BTS Holding` — карта контента holding-связанных заметок
+
+## Auto-memory (Claude Code) — кросс-проектная
+
+- **bit-company-website project** (этот): `~/.claude/projects/-Users-jkaseq-Documents-projects-bit-company-website/memory/cross_project_bit_company.md` — полная карта файлов / runbook / гочи / связь с bts-holding и bts-max-bot. Читается автоматически при запуске Claude из этого проекта.
+- **bts-holding project** (соседний): `~/.claude/projects/-Users-jkaseq-Documents-projects-bts-holding/memory/bit_company_landing_presentation_split.md` — для BTS-сессий чтобы знать про этот сайт и не сломать его при `make deploy-back` или nginx-правках.
+- Обе memory файла **синхронизированы по содержанию** (создавались в одной сессии 04.05.2026), но **разные по фокусу:** этот — для работы внутри bit-company, тот — для bts-holding-сессий.
 
 ## Что НЕ делать
 
