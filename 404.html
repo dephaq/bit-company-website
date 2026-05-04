@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>404 — bit</title>
+<meta name="description" content="Такой страницы нет. Вернёмся на главную." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+<link rel="icon" type="image/svg+xml" href="/assets/icon.svg" />
+<link rel="apple-touch-icon" href="/assets/icon.svg" />
+<style>
+:root {
+  --bg:        #0A0A0B;
+  --bg-elev:   #111113;
+  --bg-elev-2: #161618;
+  --line:      #1F1F23;
+  --line-2:    #2A2A2F;
+  --fg:        #E6E6E8;
+  --fg-2:      #A0A0A8;
+  --fg-3:      #6E6E76;
+  --accent:    #6E8AFA;
+  --accent-2:  #4F7DFF;
+  --accent-3:  rgba(110,138,250,0.12);
+  --radius:    5px;
+  --radius-sm: 4px;
+  --maxw-narrow: 920px;
+  --pad: 32px;
+  --t: 200ms ease-out;
+  --h: 36px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; min-height: 100%; width: 100%; }
+html { background: var(--bg); }
+body {
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-feature-settings: 'cv11', 'ss01';
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--accent); text-decoration: none; transition: color var(--t); }
+a:hover { color: var(--accent-2); }
+
+/* Background — мягкий aurora-blob, как на лендинге */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.aurora { position: absolute; inset: -20%; filter: blur(80px); opacity: 0.45; }
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+}
+.b1 { width: 480px; height: 480px; background: #6E8AFA; top: -10%; left: 10%; opacity: 0.45; }
+.b2 { width: 360px; height: 360px; background: #4F7DFF; bottom: 5%; right: 15%; opacity: 0.35; }
+.b3 { width: 280px; height: 280px; background: #6E8AFA; top: 40%; right: -5%; opacity: 0.25; }
+.dotgrid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.5;
+}
+
+/* Header — minimal */
+header.nav {
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid var(--line);
+  background: rgba(10,10,11,0.7);
+  backdrop-filter: saturate(140%) blur(8px);
+}
+.nav-inner {
+  max-width: var(--maxw-narrow);
+  margin: 0 auto;
+  padding: 18px var(--pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--fg);
+}
+.brand-mark {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  background: var(--fg);
+  -webkit-mask: url('/assets/icon.svg') center/contain no-repeat;
+          mask: url('/assets/icon.svg') center/contain no-repeat;
+}
+.nav-links { display: flex; gap: 24px; }
+.nav-links a { color: var(--fg-2); font-size: 14px; }
+.nav-links a:hover { color: var(--fg); }
+
+/* Main — centered hero */
+main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px var(--pad) 60px;
+}
+.hero-404 {
+  max-width: var(--maxw-narrow);
+  width: 100%;
+  text-align: left;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--fg-2);
+  margin-bottom: 28px;
+}
+.eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+.code-404 {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(96px, 18vw, 220px);
+  line-height: 0.95;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, #E6E6E8 0%, #6E8AFA 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0 0 12px;
+  user-select: none;
+}
+h1 {
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  color: var(--fg);
+}
+.sub {
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--fg-2);
+  margin: 0 0 36px;
+  max-width: 560px;
+}
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 56px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--h);
+  padding: 0 18px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--t), border-color var(--t), color var(--t), transform var(--t);
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0A0A0B;
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: #0A0A0B; }
+.btn-ghost {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--line-2);
+}
+.btn-ghost:hover { background: var(--bg-elev); border-color: var(--line-2); color: var(--fg); }
+.btn svg { width: 14px; height: 14px; }
+
+/* Quick-links — вход на главные разделы */
+.quicklinks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+.ql-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+  transition: border-color var(--t), background var(--t);
+}
+.ql-item:hover {
+  border-color: var(--line-2);
+  background: var(--bg-elev-2);
+}
+.ql-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--fg-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ql-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--fg);
+}
+
+/* Footer */
+footer {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--line);
+  background: rgba(10,10,11,0.7);
+  backdrop-filter: saturate(140%) blur(8px);
+  padding: 24px var(--pad);
+  text-align: center;
+  font-size: 13px;
+  color: var(--fg-3);
+}
+footer a { color: var(--fg-2); }
+footer a:hover { color: var(--fg); }
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  main { padding: 40px var(--pad) 40px; }
+  .cta-row { flex-direction: column; align-items: stretch; }
+  .btn { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer" aria-hidden="true">
+  <div class="aurora">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <div class="dotgrid"></div>
+</div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="bit, главная">
+      <span class="brand-mark" aria-hidden="true"></span><span>bit</span>
+    </a>
+    <nav class="nav-links" aria-label="Главная навигация">
+      <a href="/products/">Продукты</a>
+      <a href="/services/">Услуги</a>
+      <a href="/about">О компании</a>
+      <a href="/contact">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero-404">
+    <div class="eyebrow">
+      <span class="dot" aria-hidden="true"></span>
+      <span>HTTP 404 · Страница не найдена</span>
+    </div>
+
+    <div class="code-404">404</div>
+
+    <h1>Кажется, такого адреса нет.</h1>
+    <p class="sub">Возможно, страница переехала или ссылка устарела. Вот что точно есть на месте.</p>
+
+    <div class="cta-row">
+      <a href="/" class="btn btn-primary">
+        На главную
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+      <a href="/contact" class="btn btn-ghost">Связаться с нами</a>
+    </div>
+
+    <div class="quicklinks">
+      <a class="ql-item" href="/products/">
+        <span class="ql-label">01 / Продукты</span>
+        <span class="ql-title">Финансы, Табели, ЭПЛ, Сметы</span>
+      </a>
+      <a class="ql-item" href="/services/">
+        <span class="ql-label">02 / Услуги</span>
+        <span class="ql-title">AI-агенты, интеграции, разработка</span>
+      </a>
+      <a class="ql-item" href="/about">
+        <span class="ql-label">03 / О компании</span>
+        <span class="ql-title">ООО «БИТ» — Москва</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>ООО «БИТ» · Москва · 2026 · </span>
+  <a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a>
+</footer>
+
+</body>
+</html>
