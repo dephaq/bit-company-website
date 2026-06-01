@@ -32,6 +32,14 @@ python -m http.server 8000
 # открыть http://localhost:8000
 ```
 
+## GitHub Pages
+
+GitHub Pages публикует тот же статический сайт, что и production:
+
+https://dephaq.github.io/bit-company-website/
+
+Деплой идёт через GitHub Actions из `.github/workflows/pages.yml`. Workflow собирает `_site` из публичных файлов: `*.html`, `assets/**`, `products/**`, `services/**`.
+
 ## Production hosting — bit-company.ru
 
 Сайт хостится на **production-сервере BTS Holding** (`89.169.128.195`) рядом с `blackscope.ru` через multi-tenant nginx.
