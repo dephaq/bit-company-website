@@ -4,9 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Автоматизация сметной документации — bit</title>
-<meta name="description" content="Генерация черновых смет из PDF проектной документации. 290 000+ нормативных позиций, coverage 90%+ на эталонных проектах." />
+<meta name="description" content="bit.smeta формирует проверяемый черновик строительной сметы из PDF проекта и архива старых смет заказчика." />
 <meta property="og:title" content="Сметная автоматизация — bit" />
-<meta property="og:description" content="Система учится на старых сметах заказчика и готовит черновики в привычном формате." />
+<meta property="og:description" content="Проверяемый черновик сметы, спорные строки для сметчика и экспортный пакет GGE/MGE." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -40,30 +40,28 @@
       <div class="scanlines"></div>
     </div>
     <div class="wrap">
-      <div class="hero-badges"><span class="badge pre">Pre-release</span><span class="badge">On-premise</span><span class="badge pre">Реестр ПО — готовится</span></div>
-      <h1>Автоматизация сметной документации</h1>
-      <p class="sub">Генерация черновых строительных смет для строительных компаний любого профиля: система учится на старых сметах заказчика, привычном формате и типовом выборе расценок.</p>
+      <div class="hero-badges"><span class="badge pre">Пилотная эксплуатация</span><span class="badge">On-premise</span><span class="badge pre">Реестр ПО — готовится</span></div>
+      <h1>Черновик сметы из проекта и старых смет заказчика</h1>
+      <p class="sub">bit.smeta извлекает работы и объёмы из PDF проектной документации, предлагает нормы по архиву заказчика, показывает источники в PDF и отправляет спорные строки сметчику на утверждение.</p>
       <div class="hero-cta">
-        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
-        <a href="#tech" class="btn btn-ghost btn-lg">Технические детали</a>
+        <a href="../contact.html" class="btn btn-primary btn-lg">Показать на нашем проекте</a>
+        <a href="#pilot" class="btn btn-ghost btn-lg">Как проходит пилот</a>
       </div>
     </div>
   </section>
 
   <section class="block tight">
     <div class="wrap">
-      <div class="epigraph" style="margin-bottom:32px">«Ручная работа сметчика — несколько рабочих дней на проект.<br>Pipeline bit учится на старых сметах заказчика и собирает черновик в привычном формате.<br>Сметчик видит спорные позиции, правит их в workbench и сдаёт заказчику.»</div>
+      <div class="epigraph" style="margin-bottom:32px">«Система не заменяет сметчика.<br>Она снимает первичный разбор проекта, собирает проверяемый черновик и показывает, какие решения надо подтвердить человеку.»</div>
       <div class="mockup">
-        <div class="mockup-bar"><span class="dots"><span></span><span></span><span></span></span><span class="ttl">~ bit/smeta — pipeline run</span></div>
+        <div class="mockup-bar"><span class="ttl">bit.smeta — рабочий сценарий</span></div>
         <div class="mockup-body">
-          <div class="line"><span class="arrow">►</span><span>parse PDF проекта</span><span class="right">7 разделов</span></div>
-          <div class="line"><span class="arrow">►</span><span>extract VOR (объёмы работ)</span><span class="right">184 позиции</span></div>
-          <div class="line"><span class="arrow">►</span><span>classify project section</span><span class="right">типовой раздел проекта</span></div>
-          <div class="line"><span class="arrow">►</span><span>search ФСНБ-2022</span><span class="right">FTS5 · 47ms</span></div>
-          <div class="line"><span class="arrow">►</span><span>learn customer estimate style</span><span class="right">формат · расценки · структура</span></div>
-          <div class="line"><span class="arrow">►</span><span>price + overhead</span><span class="right num">₽ 837 651</span></div>
-          <div class="line"><span class="arrow">►</span><span>export estimate package</span><span class="right ok">✓ GGE · MGE · XLSX</span></div>
-          <div class="footline">─ Coverage: 93.3% <span class="sep">·</span> Zero prices: 0 <span class="sep">·</span> QC: pass</div>
+          <div class="line"><span class="arrow">01</span><span>Проект загружен</span><span class="right">PDF · спецификации · ведомости</span></div>
+          <div class="line"><span class="arrow">02</span><span>Архив смет учтён</span><span class="right">структура · группировка · расценки</span></div>
+          <div class="line"><span class="arrow">03</span><span>Черновик сформирован</span><span class="right">строки связаны с источниками</span></div>
+          <div class="line"><span class="arrow">04</span><span>Сметчик проверяет спорные решения</span><span class="right">норма · объём · коэффициент</span></div>
+          <div class="line"><span class="arrow">05</span><span>Экспортный пакет готовится после проверки</span><span class="right ok">GGE · MGE · XLSX/XML</span></div>
+          <div class="footline">GGE — для Главгосэкспертизы <span class="sep">·</span> MGE — для МГЭ <span class="sep">·</span> итоговый формат согласуется на пилоте</div>
         </div>
       </div>
     </div>
@@ -71,90 +69,90 @@
 
   <section class="block">
     <div class="wrap"><div class="split"><div class="label-mono">01 / Задача</div><div class="prose">
-      <p>Сметчик получает PDF-проект — 50-200 страниц чертежей и спецификаций. Из них нужно извлечь объёмы работ, подобрать нормы и расценки ФСНБ-2022 или ТСН-2001, собрать проверяемую смету и экспортный пакет: GGE для Главгосэкспертизы, MGE для МГЭ или согласованный формат заказчика. Ручная работа — 3-5 рабочих дней на проект.</p>
-      <p>Pipeline bit берёт архив старых смет как обучающий контекст: как заказчик обычно группирует работы, какие расценки выбирает, как оформляет разделы и итоговую выдачу. На новых проектах система формирует проверяемый черновик в этом же стиле, а сметчик дорабатывает спорные позиции в workbench. Coverage по эталонным проектам — <span class="num-accent">90%+</span>.</p>
+      <p>Сметчик получает комплект проектной документации: чертежи, спецификации, ведомости объёмов, таблицы материалов. Вручную из этого надо собрать структуру сметы, найти подходящие нормы, проверить количества, коэффициенты и подготовить выгрузку для экспертизы или внутреннего контура заказчика.</p>
+      <p>bit.smeta превращает этот ручной разбор в проверяемый черновик. Каждая строка сохраняет связь с исходным фрагментом проекта, а спорные нормы, объёмы и коэффициенты остаются в списке решений для сметчика.</p>
     </div></div></div>
   </section>
 
   <section class="block">
-    <div class="wrap"><div class="split"><div class="label-mono">02 / Решение</div><div>
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">02 / Как работает</div><h2>От проекта к смете: понятный контур проверки.</h2></div></div>
+      <div class="options-3">
+        <div class="opt-card"><div class="opt-sub">01</div><h3>Загружаете проект</h3><p>Передаёте PDF проектной документации, спецификации и ведомости. Система извлекает работы, объёмы и контекст, а необработанные строки не теряются молча.</p></div>
+        <div class="opt-card"><div class="opt-sub">02</div><h3>Добавляете старые сметы</h3><p>Архив используется как справочный контекст: привычная структура, оформление и типовые решения по расценкам. Спорные решения не становятся финальными без проверки.</p></div>
+        <div class="opt-card"><div class="opt-sub">03</div><h3>Проверяете черновик</h3><p>Сметчик видит строки с источниками, альтернативы по нормам, предупреждения и список того, что надо подтвердить перед финальным экспортом.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">03 / Что видит сметчик</div><div>
       <ul class="bullets" style="font-size:14px">
-        <li>Парсеры PDF для всех типов разделов проекта (ПОС, ТКР, ООС)</li>
-        <li>Полная нормативная база с FTS5-индексом — старт 0.1 сек</li>
-        <li>Обучение на архиве старых смет заказчика: формат, структура, типовой выбор расценок</li>
-        <li>Expansion modules для типовых работ (земляные, дорожные, упоры)</li>
-        <li>Правила под типовые объекты, разделы и сметную логику заказчика</li>
-        <li>Экспорт в GGE для Главгосэкспертизы, MGE для МГЭ и согласованные форматы заказчика</li>
+        <li>Исходный фрагмент PDF рядом со строкой черновика</li>
+        <li>Подобранные кандидаты норм с основанием выбора</li>
+        <li>Похожие решения из старых смет заказчика</li>
+        <li>Статусы: готово к проверке, требуется выбор нормы, проверить коэффициент, нет объёма в проекте</li>
+        <li>Разделение чернового и финального экспортного пакета</li>
       </ul>
     </div></div></div>
   </section>
 
   <section class="block">
     <div class="wrap">
-      <div class="section-head"><div><div class="label">03 / Функциональные домены</div><h2>13 доменов: от парсинга PDF до проверяемого черновика.</h2></div></div>
+      <div class="section-head"><div><div class="label">04 / Что получает заказчик</div><h2>Не «чёрный ящик», а пакет для проверки и продолжения работы.</h2></div></div>
       <div class="domains">
-        <div class="domain-card"><div class="head"><span class="num">01</span><h3>Парсеры PDF</h3></div><ul class="bullets"><li>ПОС / ПОС1 / ПОС2</li><li>ТКР.ТР / ТКР.НК / ТКР.КР / ТКР.СН</li><li>ООС1-3</li><li>Извлечение таблиц и спецификаций</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">02</span><h3>Классификатор разделов</h3></div><ul class="bullets"><li>Regex-паттерны имён файлов</li><li>Эвристики по содержимому</li><li>Ручное переопределение</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">03</span><h3>Нормативная база</h3></div><ul class="bullets"><li>55 987 ФСНБ-2022 позиций</li><li>43 250 ТСН-2001 позиций</li><li>191 207 сплит-форм</li><li>Регулярные обновления</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">04</span><h3>SQLite + FTS5 индекс</h3></div><ul class="bullets"><li>Старт 0.1 сек</li><li>Поиск миллисекунды</li><li>Embedded в pipeline</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">05</span><h3>Профиль заказчика</h3></div><ul class="bullets"><li>Архив старых смет</li><li>Привычный формат выдачи</li><li>Типовой выбор расценок</li><li>Версионирование</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">06</span><h3>Pricing engine</h3></div><ul class="bullets"><li>Ресурсно-индексный метод</li><li>Коэффициенты пересчёта</li><li>Регионные индексы</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">07</span><h3>Expansion modules</h3></div><ul class="bullets"><li>Земляные работы</li><li>Дорожные покрытия</li><li>Упоры и крепления</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">08</span><h3>Project rules</h3></div><ul class="bullets"><li>Работы по разделам проекта</li><li>Сметная логика заказчика</li><li>Настройка под типовые объекты</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">09</span><h3>Section-aware fuzzy search</h3></div><ul class="bullets"><li>Фильтр по разделу проекта</li><li>Контекстный поиск</li><li>Учёт синонимов</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">10</span><h3>VOR builders</h3></div><ul class="bullets"><li>13 канонических типов смет</li><li>Шаблоны структур</li><li>Валидация полноты</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">11</span><h3>Export generator</h3></div><ul class="bullets"><li>GGE для Главгосэкспертизы</li><li>MGE для МГЭ</li><li>Форматы заказчика</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">12</span><h3>Report package</h3></div><ul class="bullets"><li>Черновик сметы</li><li>Список спорных строк</li><li>Отчёт по покрытию</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">13</span><h3>Reference validation</h3></div><ul class="bullets"><li>Сверка с эталонами</li><li>Метрики coverage</li><li>QC-отчёты по сметам</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">01</span><h3>Черновик сметы</h3></div><ul class="bullets"><li>Структура в привычном виде</li><li>Строки связаны с источниками</li><li>Можно проверять по разделам</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">02</span><h3>Список спорных строк</h3></div><ul class="bullets"><li>Неуверенные нормы</li><li>Вопросы по объёмам</li><li>Коэффициенты и исключения</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">03</span><h3>Пояснения</h3></div><ul class="bullets"><li>Почему предложена норма</li><li>Какие были альтернативы</li><li>Где найден источник в проекте</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">04</span><h3>Экспортный пакет</h3></div><ul class="bullets"><li>GGE для Главгосэкспертизы</li><li>MGE для МГЭ</li><li>XLSX/XML или формат заказчика</li></ul></div>
       </div>
-    </div>
-  </section>
-
-  <section class="block" id="tech">
-    <div class="wrap">
-      <div class="section-head"><div><div class="label">04 / Технические характеристики</div></div></div>
-      <div class="specs">
-        <div class="specs-row"><div class="key">Стек</div><div class="val">Python 3.13 · pdfplumber · lxml · DuckDB · SQLite + FTS5 (embedded поиск по 290k норм) · Polars · Tantivy · pytest</div></div>
-        <div class="specs-row"><div class="key">AI / ML</div><div class="val">PyTorch · BGE embeddings · pgvector · Ollama (для подбора норм, расценок и формата заказчика)</div></div>
-        <div class="specs-row"><div class="key">Объём кода</div><div class="val">39 .py модулей · 37 тест-файлов</div></div>
-        <div class="specs-row"><div class="key">Тестов</div><div class="val">1 860</div></div>
-        <div class="specs-row"><div class="key">Парсеров</div><div class="val">7 типов PDF-разделов</div></div>
-        <div class="specs-row"><div class="key">Билдеров</div><div class="val">13 типов смет</div></div>
-        <div class="specs-row"><div class="key">Норм</div><div class="val">290 000+ позиций в базе</div></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="block tight">
-    <div class="wrap">
-      <div class="section-head" style="margin-bottom:24px"><div><div class="label">05 / Интеграции</div></div></div>
-      <div class="integrations-row">ФСНБ-2022<span class="sep">·</span>ТСН-2001<span class="sep">·</span>GGE для Главгосэкспертизы<span class="sep">·</span>MGE для МГЭ<span class="sep">·</span>форматы заказчика<span class="sep">·</span>последующее открытие в Турбосметчик, Гранд-Смета, ABC-4, РИК</div>
     </div>
   </section>
 
   <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">05 / Для разных строителей</div><div class="prose">
+      <p>Продукт не привязан к одному виду работ или одному шаблону сметы. На пилоте система настраивается на проектную документацию, архив смет и правила оформления конкретного заказчика.</p>
+      <p>Подходит подрядчикам, проектным организациям, девелоперам и инжиниринговым компаниям, где есть повторяемая сметная практика и нужно быстрее проходить путь от проекта к проверяемому сметному пакету.</p>
+    </div></div></div>
+  </section>
+
+  <section class="block tight">
     <div class="wrap">
-      <div class="section-head"><div><div class="label">06 / Условия</div><h2>Три варианта поставки.</h2></div></div>
+      <div class="section-head" style="margin-bottom:24px"><div><div class="label">06 / Экспорт и сметные системы</div></div></div>
+      <div class="integrations-row">GGE для Главгосэкспертизы<span class="sep">·</span>MGE для МГЭ<span class="sep">·</span>XLSX/XML<span class="sep">·</span>форматы заказчика<span class="sep">·</span>последующее открытие в Турбосметчик, Гранд-Смета, ABC-4, РИК</div>
+    </div>
+  </section>
+
+  <section class="block" id="pilot">
+    <div class="wrap">
+      <div class="section-head"><div><div class="label">07 / Как внедряется</div><h2>Начинаем с пилота на реальном проекте.</h2></div></div>
       <div class="options-3">
-        <div class="opt-card"><div class="opt-sub">SaaS</div><h3>Управляемый сервис</h3><p>Загружаете PDF проекта в личный кабинет, получаете проверяемый черновик сметы и экспортный пакет GGE/MGE после прогона pipeline. Подписка с лимитом по проектам.</p></div>
-        <div class="opt-card"><div class="opt-sub">On-premise</div><h3>Внутренний контур</h3><p>Развёртывание в инфраструктуре заказчика. Astra Linux совместимо. Документация и исходники у клиента.</p></div>
-        <div class="opt-card"><div class="opt-sub">Кастомизация</div><h3>Под процессы</h3><p>Настройка по архиву старых смет, дополнительные expansion modules, кастомные форматы выгрузки. Фикс-цена за релиз.</p></div>
+        <div class="opt-card"><div class="opt-sub">Пилот</div><h3>1-2 проекта</h3><p>Берём проектную документацию и несколько старых смет. Показываем черновик, спорные строки и экспортный пакет.</p></div>
+        <div class="opt-card"><div class="opt-sub">Настройка</div><h3>Архив заказчика</h3><p>Фиксируем привычную структуру, правила оформления, типовые решения и ограничения по нормативной базе.</p></div>
+        <div class="opt-card"><div class="opt-sub">Контур</div><h3>SaaS или on-premise</h3><p>Разворачиваем в согласованном контуре. Для закрытых проектов возможна поставка внутри инфраструктуры заказчика.</p></div>
       </div>
     </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap"><div class="split"><div class="label-mono">08 / Технологичность</div><div class="prose">
+      <p>Внутри продукта — структурный разбор цифровых PDF, поиск кандидатов по нормативной базе, сопоставление с историческими сметами, журнал решений сметчика и повторный расчёт после утверждения. Модель не превращает спорную норму в финальную строку без проверки человеком.</p>
+      <p>Ключевые проверки закрывают отсутствие тихо потерянных строк, трассировку к PDF, корректность единиц и стабильность экспортного пакета.</p>
+    </div></div></div>
   </section>
 
   <section class="block" style="border-bottom:none">
     <div class="wrap">
       <div class="cta-strip">
-        <div><h2>Прогоним ваш проект через pipeline.</h2><p>Загрузите PDF и несколько старых смет — получите черновик в привычном формате, экспорт GGE/MGE, метрики coverage и список спорных строк.</p></div>
-        <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
+        <div><h2>Проведём ваш проект через систему.</h2><p>Возьмём проектную документацию и несколько старых смет, покажем черновик, спорные строки и экспортный пакет.</p></div>
+        <a href="../contact.html" class="btn btn-primary btn-lg">Обсудить пилот</a>
       </div>
     </div>
   </section>
 
   <section class="block" style="border-bottom:none">
     <div class="wrap">
-      <div class="section-head"><div><div class="label">07 / Другие продукты</div></div></div>
+      <div class="section-head"><div><div class="label">09 / Другие продукты</div></div></div>
       <div class="grid-2" style="grid-template-columns:repeat(3,1fr)">
         <a class="card linked" href="finance.html"><div class="card-top"><span class="card-idx num">01</span><span class="badge production">Production</span></div><h3>Финансовая платформа</h3><p class="desc">ЭДО · CRM · 1С · AI-распознавание в одном контуре.</p><div class="divider"></div><div class="card-foot"><span class="mono">finance</span><span class="arrow-link">Открыть →</span></div></a>
         <a class="card linked" href="timesheet.html"><div class="card-top"><span class="card-idx num">02</span><span class="badge production">Production</span></div><h3>Цифровой табель</h3><p class="desc">Электронный табель для распределённых бригад.</p><div class="divider"></div><div class="card-foot"><span class="mono">timesheet</span><span class="arrow-link">Открыть →</span></div></a>
