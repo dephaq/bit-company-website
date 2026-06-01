@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Автоматизация сметной документации — bit</title>
-<meta name="description" content="Генерация черновых смет из PDF проектной документации. 290 000+ нормативных позиций, 1 860 тестов." />
+<meta name="description" content="Генерация черновых смет из PDF проектной документации. 290 000+ нормативных позиций, coverage 90%+ на эталонных проектах." />
 <meta property="og:title" content="Сметная автоматизация — bit" />
 <meta property="og:description" content="13 доменов, 440 mapping rules, выгрузка в Турбосметчик и МГЭ." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,7 +52,7 @@
 
   <section class="block tight">
     <div class="wrap">
-      <div class="epigraph" style="margin-bottom:32px">«Ручная работа сметчика — 3-5 рабочих дней на проект.<br>Pipeline bit делает черновую смету за 30 минут.<br>Сметчик правит 10-20% и сдаёт заказчику.»</div>
+      <div class="epigraph" style="margin-bottom:32px">«Ручная работа сметчика — несколько рабочих дней на проект.<br>Pipeline bit формирует проверяемый черновик сметы за один прогон.<br>Сметчик видит спорные позиции, правит их в workbench и сдаёт заказчику.»</div>
       <div class="mockup">
         <div class="mockup-bar"><span class="dots"><span></span><span></span><span></span></span><span class="ttl">~ bit/smeta — pipeline run</span></div>
         <div class="mockup-body">
@@ -60,7 +60,7 @@
           <div class="line"><span class="arrow">►</span><span>extract VOR (объёмы работ)</span><span class="right">184 позиции</span></div>
           <div class="line"><span class="arrow">►</span><span>classify section</span><span class="right">раздел 22 (водопровод)</span></div>
           <div class="line"><span class="arrow">►</span><span>search ФСНБ-2022</span><span class="right">FTS5 · 47ms</span></div>
-          <div class="line"><span class="arrow">►</span><span>apply mapping library</span><span class="right">440 rules · 100% precision</span></div>
+          <div class="line"><span class="arrow">►</span><span>apply mapping library</span><span class="right">440 rules · coverage 90%+</span></div>
           <div class="line"><span class="arrow">►</span><span>price + overhead</span><span class="right num">₽ 837 651</span></div>
           <div class="line"><span class="arrow">►</span><span>generate GGE</span><span class="right ok">✓ veshnyakovsky_water.gge</span></div>
           <div class="footline">─ Coverage: 93.3% <span class="sep">·</span> Zero prices: 0 <span class="sep">·</span> QC: pass</div>
@@ -72,7 +72,7 @@
   <section class="block">
     <div class="wrap"><div class="split"><div class="label-mono">01 / Задача</div><div class="prose">
       <p>Сметчик получает PDF-проект — 50-200 страниц чертежей и спецификаций. Из них нужно извлечь объёмы работ, замаппить на ФСНБ-2022 или ТСН-2001, собрать GGE-файл для Турбосметчика. Ручная работа — 3-5 рабочих дней на проект.</p>
-      <p>Pipeline bit делает черновую смету за 30 минут. Сметчик правит 10-20% и сдаёт заказчику. Coverage по эталонным проектам — <span class="num-accent">90%+</span>.</p>
+      <p>Pipeline bit формирует проверяемый черновик сметы, а сметчик дорабатывает спорные позиции в workbench. Coverage по эталонным проектам — <span class="num-accent">90%+</span>.</p>
     </div></div></div>
   </section>
 
@@ -81,7 +81,7 @@
       <ul class="bullets" style="font-size:14px">
         <li>Парсеры PDF для всех типов разделов проекта (ПОС, ТКР, ООС)</li>
         <li>Полная нормативная база с FTS5-индексом — старт 0.1 сек</li>
-        <li>Mapping library с precision 100%, recall 81.6%</li>
+        <li>Mapping library с coverage 90%+ на эталонных проектах</li>
         <li>Expansion modules для типовых работ (земляные, дорожные, упоры)</li>
         <li>Conditional pricing по разделам проекта</li>
         <li>Выгрузка в форматы Турбосметчика (GGE) и МГЭ (MGE)</li>
@@ -97,7 +97,7 @@
         <div class="domain-card"><div class="head"><span class="num">02</span><h3>Классификатор разделов</h3></div><ul class="bullets"><li>Regex-паттерны имён файлов</li><li>Эвристики по содержимому</li><li>Ручное переопределение</li></ul></div>
         <div class="domain-card"><div class="head"><span class="num">03</span><h3>Нормативная база</h3></div><ul class="bullets"><li>55 987 ФСНБ-2022 позиций</li><li>43 250 ТСН-2001 позиций</li><li>191 207 сплит-форм</li><li>Регулярные обновления</li></ul></div>
         <div class="domain-card"><div class="head"><span class="num">04</span><h3>SQLite + FTS5 индекс</h3></div><ul class="bullets"><li>Старт 0.1 сек</li><li>Поиск миллисекунды</li><li>Embedded в pipeline</li></ul></div>
-        <div class="domain-card"><div class="head"><span class="num">05</span><h3>Mapping library</h3></div><ul class="bullets"><li>440 правил</li><li>Precision 100%, recall 81.6%</li><li>Версионирование</li><li>Тестовое покрытие</li></ul></div>
+        <div class="domain-card"><div class="head"><span class="num">05</span><h3>Mapping library</h3></div><ul class="bullets"><li>440 правил</li><li>Coverage 90%+ на эталонных проектах</li><li>Версионирование</li><li>Тестовое покрытие</li></ul></div>
         <div class="domain-card"><div class="head"><span class="num">06</span><h3>Pricing engine</h3></div><ul class="bullets"><li>Ресурсно-индексный метод</li><li>Коэффициенты пересчёта</li><li>Регионные индексы</li></ul></div>
         <div class="domain-card"><div class="head"><span class="num">07</span><h3>Expansion modules</h3></div><ul class="bullets"><li>Земляные работы</li><li>Дорожные покрытия</li><li>Упоры и крепления</li></ul></div>
         <div class="domain-card"><div class="head"><span class="num">08</span><h3>Conditional pricing</h3></div><ul class="bullets"><li>Раздел 22 (водопровод)</li><li>Раздел 23 (канализация)</li><li>Свои правила на раздел</li></ul></div>
@@ -136,7 +136,7 @@
     <div class="wrap">
       <div class="section-head"><div><div class="label">06 / Условия</div><h2>Три варианта поставки.</h2></div></div>
       <div class="options-3">
-        <div class="opt-card"><div class="opt-sub">SaaS</div><h3>Управляемый сервис</h3><p>Загружаете PDF проекта в личный кабинет, получаете GGE/MGE через 30 минут. Подписка с лимитом по проектам.</p></div>
+        <div class="opt-card"><div class="opt-sub">SaaS</div><h3>Управляемый сервис</h3><p>Загружаете PDF проекта в личный кабинет, получаете проверяемый черновик GGE/MGE после прогона pipeline. Подписка с лимитом по проектам.</p></div>
         <div class="opt-card"><div class="opt-sub">On-premise</div><h3>Внутренний контур</h3><p>Развёртывание в инфраструктуре заказчика. Astra Linux совместимо. Документация и исходники у клиента.</p></div>
         <div class="opt-card"><div class="opt-sub">Кастомизация</div><h3>Под процессы</h3><p>Свои правила маппинга, дополнительные expansion modules, кастомные форматы выгрузки. Фикс-цена за релиз.</p></div>
       </div>
@@ -146,7 +146,7 @@
   <section class="block" style="border-bottom:none">
     <div class="wrap">
       <div class="cta-strip">
-        <div><h2>Прогоним ваш проект через pipeline.</h2><p>Загрузите PDF — получите черновую GGE с метриками coverage за 30 минут.</p></div>
+        <div><h2>Прогоним ваш проект через pipeline.</h2><p>Загрузите PDF — получите черновую GGE с метриками coverage и списком спорных строк.</p></div>
         <a href="../contact.html" class="btn btn-primary btn-lg">Запросить демо</a>
       </div>
     </div>
@@ -168,7 +168,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-col"><a class="brand" href="../index.html" style="margin-bottom:14px"><span class="brand-mark"></span><span>bit</span></a><div class="foot-tag">Технологии для бизнеса. Делаем системы, которые продолжают работать после нашего ухода.</div></div>
-      <div class="foot-col"><h4>Контакты</h4><ul><li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li><li class="muted num">+7 (___) ___-__-__</li><li>Москва, ул. Староалексеевская, 5</li></ul></div>
+      <div class="foot-col"><h4>Контакты</h4><ul><li><a href="mailto:hello@bit-company.ru">hello@bit-company.ru</a></li><li class="muted num">+7 977 877-84-97</li><li>Москва, ул. Староалексеевская, 5</li></ul></div>
       <div class="foot-col"><h4>Реквизиты</h4><ul class="reqs"><li>ООО «БИТ»</li><li class="num">ИНН 9717191718</li><li class="num">КПП 771701001</li><li class="num">ОГРН 1267700141257</li></ul></div>
     </div>
     <div class="foot-bottom"><div>© 2026 ООО «БИТ» <span class="sep">·</span> Все права защищены</div><div class="right">Бизнес Информационные Технологии</div></div>
