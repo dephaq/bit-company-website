@@ -12,7 +12,7 @@
 <style>
   :root{
     --bg:#0a0e13; --panel:#121823; --panel2:#0e131c; --border:rgba(255,255,255,.08);
-    --text:#e7eef7; --muted:#8593a6; --dim:#5d6a7d;
+    --text:#e7eef7; --muted:#8593a6; --dim:#7a889e;
     --blue:#5b9dff; --teal:#2dd4bf; --green:#37d399;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -40,13 +40,11 @@
         background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--border);
         border-radius:16px;padding:22px 22px 20px;overflow:hidden;transition:.18s;min-height:172px;}
   .card:hover{transform:translateY(-3px);border-color:rgba(91,157,255,.4);box-shadow:0 14px 40px rgba(0,0,0,.4);}
-  .card .accent{position:absolute;left:0;top:0;bottom:0;width:3px;}
-  .card.ai .accent{background:var(--blue);} .card.prod .accent{background:var(--teal);}
+  .card .accent{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:16px 0 0 16px;background:var(--card-accent,var(--blue));}
   .card .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);}
   .card h2{font-size:21px;font-weight:600;letter-spacing:-.01em;margin-top:2px;}
   .card p{font-size:13px;color:var(--muted);line-height:1.5;flex:1;}
-  .card .open{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;margin-top:6px;}
-  .card.ai .open{color:var(--blue);} .card.prod .open{color:var(--teal);}
+  .card .open{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;margin-top:6px;color:var(--card-accent,var(--blue));}
   footer{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--dim);margin-top:34px;}
   @media(max-width:680px){.grid{grid-template-columns:1fr;} h1{font-size:30px;}}
 </style>
@@ -55,10 +53,10 @@
 <div class="wrap">
   <header>
     <a class="brand" href="/" aria-label="bit, на главную">
-      <span class="mark"><svg width="20" height="20" viewBox="0 0 360 360"><g fill="#0d0d0d"><rect x="36" y="34" width="72" height="156"/><rect x="134" y="34" width="178" height="60"/><rect x="252" y="34" width="60" height="172"/><rect x="134" y="212" width="140" height="60"/><polygon points="274,212 312,247 312,308 248,272"/><polygon points="252,152 312,206 312,247 252,206"/></g><rect x="36" y="212" width="72" height="72" fill="#0053ff"/></svg></span>
+      <span class="mark"><svg width="20" height="20" viewBox="0 0 360 360" aria-hidden="true" focusable="false"><g fill="#0d0d0d"><rect x="36" y="34" width="72" height="156"/><rect x="134" y="34" width="178" height="60"/><rect x="252" y="34" width="60" height="172"/><rect x="134" y="212" width="140" height="60"/><polygon points="274,212 312,247 312,308 248,272"/><polygon points="252,152 312,206 312,247 252,206"/></g><rect x="36" y="212" width="72" height="72" fill="#0053ff"/></svg></span>
       <span class="name">bit</span>
     </a>
-    <a class="back" href="/">На главную →</a>
+    <a class="back" href="/" aria-label="На главную">На главную →</a>
   </header>
 
   <main>
@@ -66,14 +64,14 @@
     <h1>Презентации</h1>
     <p class="sub">Выберите презентацию.</p>
     <div class="grid">
-      <a class="card ai" href="/pitch-decks/ai/">
+      <a class="card" style="--card-accent:var(--blue)" href="/pitch-decks/ai/">
         <span class="accent"></span>
         <span class="tag">AI</span>
         <h2>AI Pitch Deck</h2>
         <p>Продукт и AI-направление BIT — что строим и куда движемся.</p>
         <span class="open">Открыть →</span>
       </a>
-      <a class="card prod" href="/pitch-decks/products/">
+      <a class="card" style="--card-accent:var(--teal)" href="/pitch-decks/products/">
         <span class="accent"></span>
         <span class="tag">Продукты</span>
         <h2>Развитие продуктов</h2>
