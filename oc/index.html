@@ -52,6 +52,13 @@
     [data-oc="integrations"] {
       grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     }
+    /* инспектор из липкой боковой колонки → обычный блок в потоке
+       (иначе sticky + внутренний overflow ломают прокрутку на мобиле) */
+    [data-oc="inspector"] {
+      position: static !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
   }
 
   /* —— Телефон (≤640): KPI и интеграции по 2, контент в одну колонку —— */
@@ -71,6 +78,42 @@
     [data-oc="content"] > * {
       grid-column: auto !important;
     }
+
+    /* —— Drawer → bottom-sheet: выезд снизу, скруглённый верх,
+          drag-handle, высота по svh, отступ под home-indicator —— */
+    [data-oc="drawer-panel"] {
+      top: auto !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+      max-height: 88svh !important;
+      border-left: none !important;
+      border-top: 1px solid var(--border2) !important;
+      border-radius: 18px 18px 0 0 !important;
+      box-shadow: 0 -24px 60px rgba(0, 0, 0, .55) !important;
+      animation: sheetUp .3s cubic-bezier(.2, .8, .2, 1) !important;
+      padding-top: 11px !important;
+      padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+      overflow-y: auto !important;
+      overscroll-behavior: contain !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    /* визуальный grabber bottom-sheet */
+    [data-oc="drawer-panel"]::before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38px;
+      height: 4px;
+      border-radius: 3px;
+      background: var(--border2);
+      z-index: 2;
+    }
   }
 
   /* —— Узкий телефон (≤400): ещё компактнее поля —— */
@@ -78,6 +121,11 @@
     [data-screen-label="Дашборд"] {
       padding: 12px 10px 20px !important;
     }
+  }
+
+  @keyframes sheetUp {
+    from { transform: translateY(100%); opacity: .5; }
+    to   { transform: translateY(0);    opacity: 1;  }
   }
 </style>
 </helmet>
@@ -287,7 +335,7 @@
     </div>
 
     <!-- INSPECTOR -->
-    <aside style="position:sticky;top:14px;align-self:start;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 17px;max-height:calc(100vh - 28px);overflow:auto">
+    <aside data-oc="inspector" style="position:sticky;top:14px;align-self:start;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 17px;max-height:calc(100vh - 28px);overflow:auto">
       {{ inspectorNode }}
     </aside>
   </div>
@@ -310,7 +358,7 @@
   <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:90">
       <div onClick="{{ onCloseDrawer }}" style="position:absolute;inset:0;background:rgba(4,7,11,.66);backdrop-filter:blur(2px);animation:ovIn .2s"></div>
-      <div style="position:absolute;top:0;right:0;height:100%;width:600px;max-width:94vw;background:var(--panel);border-left:1px solid var(--border2);box-shadow:-30px 0 80px rgba(0,0,0,.55);animation:drwIn .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column">
+      <div data-oc="drawer-panel" style="position:absolute;top:0;right:0;height:100%;width:600px;max-width:94vw;background:var(--panel);border-left:1px solid var(--border2);box-shadow:-30px 0 80px rgba(0,0,0,.55);animation:drwIn .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column">
         {{ drawerNode }}
       </div>
     </div>
