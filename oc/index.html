@@ -74,9 +74,34 @@
       grid-template-columns: 1fr !important;
     }
     /* секции с grid-column:span 2 иначе плодят неявную 2-ю колонку
-       и грид не схлопывается — занулить спан при одной колонке */
+       и грид не схлопывается — занулить спан при одной колонке.
+       min-width:0 разрешает широким секциям (график, теплокарта)
+       ужиматься в узкую колонку вместо распирания на ≤360px */
     [data-oc="content"] > * {
       grid-column: auto !important;
+      min-width: 0 !important;
+    }
+
+    /* —— Группа 4: хедерные контролы. Правый блок на всю ширину,
+          ряд периодов — горизонтальный скролл со snap вместо распирания —— */
+    [data-oc="header-controls"] {
+      width: 100% !important;
+      align-items: stretch !important;
+    }
+    [data-oc="period-tabs"] {
+      overflow-x: auto !important;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      scroll-snap-type: x proximity !important;
+      scrollbar-width: none !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    [data-oc="period-tabs"]::-webkit-scrollbar {
+      display: none !important;
+    }
+    [data-oc="period-tabs"] > * {
+      flex: 0 0 auto !important;
+      scroll-snap-align: start !important;
     }
 
     /* —— Drawer → bottom-sheet: выезд снизу, скруглённый верх,
@@ -127,6 +152,17 @@
     from { transform: translateY(100%); opacity: .5; }
     to   { transform: translateY(0);    opacity: 1;  }
   }
+
+  /* —— A11y: уважать «уменьшить движение» — гасим пульс live-точки
+        и анимации входа (bottom-sheet/тосты/строки) —— */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 </style>
 </helmet>
 <div data-screen-label="Дашборд" style="--bg:#0a0e13;--panel:#121823;--panel2:#0e131c;--card:#161e2b;--border:rgba(255,255,255,.075);--border2:rgba(255,255,255,.12);--text:#e7eef7;--muted:#8593a6;--dim:#5d6a7d;--green:#37d399;--blue:#5b9dff;--teal:#2dd4bf;--yellow:#f2c14e;--orange:#ff9d4d;--red:#ff6d6d;--gray:#5b6677;--mono:'IBM Plex Mono','SFMono-Regular',monospace;font-family:'IBM Plex Sans',system-ui,sans-serif;background:radial-gradient(1200px 600px at 78% -10%,rgba(91,157,255,.07),transparent 60%),var(--bg);color:var(--text);min-height:100vh;padding:18px 22px 28px;-webkit-font-smoothing:antialiased">
@@ -143,8 +179,8 @@
         <span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--green)"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);animation:blip 1.6s infinite;box-shadow:0 0 8px var(--green)"></span>{{ liveText }}</span>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:9px;align-items:flex-end">
-      <div style="display:flex;gap:4px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:3px">
+    <div data-oc="header-controls" style="display:flex;flex-direction:column;gap:9px;align-items:flex-end">
+      <div data-oc="period-tabs" style="display:flex;gap:4px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:3px">
         <sc-for list="{{ periods }}" as="p" hint-placeholder-count="6">
           <button onClick="{{ p.onClick }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;padding:6px 11px;border-radius:7px;background:{{ p.bg }};color:{{ p.fg }};transition:.15s" style-hover="color:var(--text)">{{ p.label }}</button>
         </sc-for>
