@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIT · Питч-деки</title>
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0e13; --panel:#121823; --panel2:#0e131c; --border:rgba(255,255,255,.08);
+    --text:#e7eef7; --muted:#8593a6; --dim:#5d6a7d;
+    --blue:#5b9dff; --teal:#2dd4bf; --green:#37d399;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(900px 520px at 80% -8%,rgba(91,157,255,.10),transparent 60%),
+               radial-gradient(700px 480px at 5% 108%,rgba(45,212,191,.07),transparent 55%),var(--bg);
+    color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;
+    display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;
+  }
+  @keyframes fin{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .wrap{width:100%;max-width:920px;margin:0 auto;padding:26px 26px 60px;flex:1;display:flex;flex-direction:column;animation:fin .5s ease both;}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:auto;}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--text);}
+  .brand .mark{width:32px;height:32px;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(91,157,255,.35);}
+  .brand .name{font-size:16px;font-weight:600;letter-spacing:.01em;}
+  .back{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);text-decoration:none;padding:8px 13px;border:1px solid var(--border);border-radius:9px;transition:.15s;}
+  .back:hover{color:var(--text);border-color:rgba(91,157,255,.5);}
+  main{margin:auto 0;padding:48px 0;}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin-bottom:14px;}
+  h1{font-size:38px;font-weight:700;letter-spacing:-.02em;line-height:1.05;}
+  .sub{font-size:15px;color:var(--muted);margin-top:10px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px;}
+  .card{position:relative;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--text);
+        background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--border);
+        border-radius:16px;padding:22px 22px 20px;overflow:hidden;transition:.18s;min-height:172px;}
+  .card:hover{transform:translateY(-3px);border-color:rgba(91,157,255,.4);box-shadow:0 14px 40px rgba(0,0,0,.4);}
+  .card .accent{position:absolute;left:0;top:0;bottom:0;width:3px;}
+  .card.ai .accent{background:var(--blue);} .card.prod .accent{background:var(--teal);}
+  .card .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);}
+  .card h2{font-size:21px;font-weight:600;letter-spacing:-.01em;margin-top:2px;}
+  .card p{font-size:13px;color:var(--muted);line-height:1.5;flex:1;}
+  .card .open{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;margin-top:6px;}
+  .card.ai .open{color:var(--blue);} .card.prod .open{color:var(--teal);}
+  footer{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--dim);margin-top:34px;}
+  @media(max-width:680px){.grid{grid-template-columns:1fr;} h1{font-size:30px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/" aria-label="bit, на главную">
+      <span class="mark"><svg width="20" height="20" viewBox="0 0 360 360"><g fill="#0d0d0d"><rect x="36" y="34" width="72" height="156"/><rect x="134" y="34" width="178" height="60"/><rect x="252" y="34" width="60" height="172"/><rect x="134" y="212" width="140" height="60"/><polygon points="274,212 312,247 312,308 248,272"/><polygon points="252,152 312,206 312,247 252,206"/></g><rect x="36" y="212" width="72" height="72" fill="#0053ff"/></svg></span>
+      <span class="name">bit</span>
+    </a>
+    <a class="back" href="/">На главную →</a>
+  </header>
+
+  <main>
+    <div class="eyebrow">BIT · Питч-деки</div>
+    <h1>Презентации</h1>
+    <p class="sub">Выберите презентацию.</p>
+    <div class="grid">
+      <a class="card ai" href="/pitch-decks/ai/">
+        <span class="accent"></span>
+        <span class="tag">AI</span>
+        <h2>AI Pitch Deck</h2>
+        <p>Продукт и AI-направление BIT — что строим и куда движемся.</p>
+        <span class="open">Открыть →</span>
+      </a>
+      <a class="card prod" href="/pitch-decks/products/">
+        <span class="accent"></span>
+        <span class="tag">Продукты</span>
+        <h2>Развитие продуктов</h2>
+        <p>Как из внутренних систем холдинга получаются продукты для рынка.</p>
+        <span class="open">Открыть →</span>
+      </a>
+    </div>
+  </main>
+
+  <footer>bit-company.ru · питч-деки</footer>
+</div>
+</body>
+</html>
