@@ -203,7 +203,7 @@
     <div data-oc="header-controls" style="display:flex;flex-direction:column;gap:9px;align-items:flex-end">
       <div data-oc="period-tabs" style="display:flex;gap:4px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:3px">
         <sc-for list="{{ periods }}" as="p" hint-placeholder-count="6">
-          <button onClick="{{ p.onClick }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;padding:6px 11px;border-radius:7px;background:{{ p.bg }};color:{{ p.fg }};transition:.15s" style-hover="color:var(--text)">{{ p.label }}</button>
+          <button onClick="{{ p.onClick }}" aria-pressed="{{ p.pressed }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;padding:6px 11px;border-radius:7px;background:{{ p.bg }};color:{{ p.fg }};transition:.15s" style-hover="color:var(--text)">{{ p.label }}</button>
         </sc-for>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
@@ -218,7 +218,7 @@
   <!-- FILTER CHIPS -->
   <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">
     <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6">
-      <button onClick="{{ f.onClick }}" style="border:1px solid {{ f.border }};cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;padding:5px 12px;border-radius:20px;background:{{ f.bg }};color:{{ f.fg }};transition:.15s" style-hover="border-color:var(--border2)">{{ f.label }}</button>
+      <button onClick="{{ f.onClick }}" aria-pressed="{{ f.pressed }}" style="border:1px solid {{ f.border }};cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;padding:5px 12px;border-radius:20px;background:{{ f.bg }};color:{{ f.fg }};transition:.15s" style-hover="border-color:var(--border2)">{{ f.label }}</button>
     </sc-for>
   </div>
 
@@ -250,7 +250,7 @@
           </div>
           <div style="display:flex;gap:4px;background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:3px">
             <sc-for list="{{ chartMetrics }}" as="m" hint-placeholder-count="4">
-              <button onClick="{{ m.onClick }}" style="border:none;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;padding:5px 10px;border-radius:6px;background:{{ m.bg }};color:{{ m.fg }};transition:.15s">{{ m.label }}</button>
+              <button onClick="{{ m.onClick }}" aria-pressed="{{ m.pressed }}" style="border:none;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;padding:5px 10px;border-radius:6px;background:{{ m.bg }};color:{{ m.fg }};transition:.15s">{{ m.label }}</button>
             </sc-for>
           </div>
         </div>
@@ -415,7 +415,7 @@
   <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:90">
       <div onClick="{{ onCloseDrawer }}" style="position:absolute;inset:0;background:rgba(4,7,11,.66);backdrop-filter:blur(2px);animation:ovIn .2s"></div>
-      <div data-oc="drawer-panel" role="dialog" aria-modal="true" aria-label="Детализация" style="position:absolute;top:0;right:0;height:100%;width:600px;max-width:94vw;background:var(--panel);border-left:1px solid var(--border2);box-shadow:-30px 0 80px rgba(0,0,0,.55);animation:drwIn .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column">
+      <div data-oc="drawer-panel" role="dialog" aria-modal="true" aria-label="Детализация" tabindex="-1" style="position:absolute;top:0;right:0;height:100%;width:600px;max-width:94vw;background:var(--panel);border-left:1px solid var(--border2);box-shadow:-30px 0 80px rgba(0,0,0,.55);animation:drwIn .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column">
         {{ drawerNode }}
       </div>
     </div>
@@ -612,10 +612,22 @@ class Component extends DCLogic {
 
   componentDidMount(){
     this._iv=setInterval(()=>{ this.setState(s=>({tick:s.tick+1})); },5000);
-    this._esc=(e)=>{ if(e.key==='Escape' && this.state.drawer.length) this.closeDrawer(); };
-    document.addEventListener('keydown',this._esc);
+    // Esc закрывает drawer; Tab держится внутри открытого листа (focus-trap)
+    this._onKey=(e)=>{
+      if(!this.state.drawer.length) return;
+      if(e.key==='Escape'){ this.closeDrawer(); return; }
+      if(e.key!=='Tab') return;
+      const p=document.querySelector('[data-oc="drawer-panel"]'); if(!p) return;
+      const f=[...p.querySelectorAll('a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(el=>el.offsetParent!==null||el===document.activeElement);
+      if(!f.length){ e.preventDefault(); p.focus(); return; }
+      const first=f[0], last=f[f.length-1], act=document.activeElement;
+      if(!p.contains(act)){ e.preventDefault(); first.focus(); }
+      else if(e.shiftKey && act===first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && act===last){ e.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown',this._onKey);
   }
-  componentWillUnmount(){ clearInterval(this._iv); if(this._tt) clearTimeout(this._tt); if(this._closeTimer) clearTimeout(this._closeTimer); if(this._esc) document.removeEventListener('keydown',this._esc); if(this._dm){ document.removeEventListener('pointermove',this._dm); document.removeEventListener('pointerup',this._du); document.removeEventListener('pointercancel',this._du); } }
+  componentWillUnmount(){ clearInterval(this._iv); if(this._tt) clearTimeout(this._tt); if(this._closeTimer) clearTimeout(this._closeTimer); if(this._onKey) document.removeEventListener('keydown',this._onKey); if(this._dm){ document.removeEventListener('pointermove',this._dm); document.removeEventListener('pointerup',this._du); document.removeEventListener('pointercancel',this._du); } }
 
   // ---------- FORMAT ----------
   fInt(n){ return Math.round(n).toLocaleString('ru-RU'); }
@@ -643,17 +655,18 @@ class Component extends DCLogic {
   setFilter(f){ this.setState({filter:f}); }
   setEventFilter(f){ this.setState({eventFilter:f}); }
   selectEmp(id){ this.setState({selEmp:id}); }
-  openDrawer(frame){ this.setState({drawer:[frame]}); }
+  openDrawer(frame){ if(!this.state.drawer.length) this._lastFocus=document.activeElement; this.setState({drawer:[frame]}); this._focusDrawer(); }
   pushDrawer(frame){ this.setState(s=>({drawer:[...s.drawer,frame]})); }
   popDrawer(n){ this.setState(s=>({drawer:s.drawer.slice(0,n+1)})); }
-  closeDrawer(){ this.setState({drawer:[]}); }
+  closeDrawer(){ this.setState({drawer:[]}); const el=this._lastFocus; this._lastFocus=null; if(el && el!==document.body && el.focus) setTimeout(()=>{ try{ el.focus(); }catch(_){} },0); }
+  _focusDrawer(){ setTimeout(()=>{ const p=document.querySelector('[data-oc="drawer-panel"]'); if(p) p.focus(); },30); }
   // Swipe/drag-to-dismiss: вниз на bottom-sheet (мобилка), вправо на боковом (десктоп). Pointer Events = тач+мышь.
   _drawerDragStart(e){
     if(e.target.closest('button')) return;            // клики по ×/«Назад» не перехватывать
     const panel=document.querySelector('[data-oc="drawer-panel"]');
     if(!panel) return;
     const sheet=window.matchMedia('(max-width:640px)').matches;
-    this._drag={sx:e.clientX,sy:e.clientY,sheet,panel,moved:0};
+    this._drag={sx:e.clientX,sy:e.clientY,sheet,panel,moved:0,vel:0,lastT:e.timeStamp,lastPos:sheet?e.clientY:e.clientX};
     panel.style.transition='none';
     this._dm=(ev)=>this._drawerDragMove(ev);
     this._du=()=>this._drawerDragEnd();
@@ -663,8 +676,11 @@ class Component extends DCLogic {
   }
   _drawerDragMove(e){
     const d=this._drag; if(!d) return;
-    const delta=d.sheet?Math.max(0,e.clientY-d.sy):Math.max(0,e.clientX-d.sx);
+    const pos=d.sheet?e.clientY:e.clientX;
+    const delta=Math.max(0,pos-(d.sheet?d.sy:d.sx));
     d.moved=delta;
+    const dt=e.timeStamp-d.lastT;                     // скорость в px/мс (для fling)
+    if(dt>0){ d.vel=(pos-d.lastPos)/dt; d.lastT=e.timeStamp; d.lastPos=pos; }
     if(e.cancelable) e.preventDefault();              // не дать странице скроллиться/тянуть pull-to-refresh
     d.panel.style.transform=d.sheet?'translateY('+delta+'px)':'translateX('+delta+'px)';
     d.panel.style.opacity=String(Math.max(.45,1-delta/520));
@@ -674,7 +690,9 @@ class Component extends DCLogic {
     document.removeEventListener('pointermove',this._dm);
     document.removeEventListener('pointerup',this._du);
     document.removeEventListener('pointercancel',this._du);
-    if(d.moved>(d.sheet?110:150)){                    // порог пройден → доводим за край и закрываем
+    const fling=d.vel>0.6;                            // быстрый флик в сторону закрытия
+    if(d.moved>(d.sheet?110:150) || (fling && d.moved>24)){  // порог по дистанции ИЛИ по скорости
+      if(navigator.vibrate) navigator.vibrate(8);    // тактильный отклик закрытия (мобилка)
       d.panel.style.transition='transform .2s ease,opacity .2s ease';
       d.panel.style.transform=d.sheet?'translateY(100%)':'translateX(110%)';
       d.panel.style.opacity='0';
@@ -1233,9 +1251,9 @@ class Component extends DCLogic {
     const cfg=this.periodCfg, dp=dm.deltaPrevPeriod, s=dm.summary;
     const sc=this.scope(), ss=sc.sum, filt=sc.mode!=='all';
     const arrow=(x)=>(x>0?'+':x<0?'−':'')+Math.abs(Math.round(x*100))+'%';
-    const periods=[['today','Сегодня'],['yesterday','Вчера'],['7d','7 дней'],['30d','30 дней'],['month','Месяц'],['quarter','Квартал']].map(([k,l])=>({key:k,label:l,bg:st.period===k?C.blue:'transparent',fg:st.period===k?'#0a0e13':C.muted,onClick:()=>this.setPeriod(k)}));
+    const periods=[['today','Сегодня'],['yesterday','Вчера'],['7d','7 дней'],['30d','30 дней'],['month','Месяц'],['quarter','Квартал']].map(([k,l])=>({key:k,label:l,bg:st.period===k?C.blue:'transparent',fg:st.period===k?'#0a0e13':C.muted,pressed:st.period===k?'true':'false',onClick:()=>this.setPeriod(k)}));
     const filterDefs=[['all','Все'],['invoice','Счета'],['upd','УПД'],['tmc','ТМЦ'],['payment','Платежи'],['attention','Только требует внимания'],['auto','Только авто']];
-    const filters=filterDefs.map(([k,l])=>({key:k,label:l,bg:st.filter===k?this.hexA(C.blue,.16):C.panel2,fg:st.filter===k?C.blue:C.muted,border:st.filter===k?this.hexA(C.blue,.5):C.border,onClick:()=>this.setFilter(k)}));
+    const filters=filterDefs.map(([k,l])=>({key:k,label:l,bg:st.filter===k?this.hexA(C.blue,.16):C.panel2,fg:st.filter===k?C.blue:C.muted,border:st.filter===k?this.hexA(C.blue,.5):C.border,pressed:st.filter===k?'true':'false',onClick:()=>this.setFilter(k)}));
 
     const kpis=[
       {key:'documents',label:'Документов обработано',value:this.fInt(this.pv(ss.documentsProcessed)),sub:'авто '+this.fInt(this.pv(ss.documentsAuto))+' · вручную '+this.fInt(this.pv(ss.documentsManual)),delta:arrow(dp.documentsProcessed),deltaColor:C.green,accent:C.blue},
@@ -1248,7 +1266,7 @@ class Component extends DCLogic {
       {key:'accountants',label:'Бухгалтеров активно',value:String(s.accountantsActive),sub:'было 11 → цель 5',delta:'−6',deltaColor:C.green,accent:C.blue},
     ].map(k=>Object.assign(k,{onClick:()=>this.openDrawer({type:'kpi',id:k.key})}));
 
-    const chartMetrics=[['documents','Документы'],['sum','Сумма'],['automation','Автоматизация'],['bottlenecks','Узкие места']].map(([k,l])=>({key:k,label:l,bg:st.chartMetric===k?this.hexA(C.blue,.2):'transparent',fg:st.chartMetric===k?C.blue:C.muted,onClick:()=>this.setChartMetric(k)}));
+    const chartMetrics=[['documents','Документы'],['sum','Сумма'],['automation','Автоматизация'],['bottlenecks','Узкие места']].map(([k,l])=>({key:k,label:l,bg:st.chartMetric===k?this.hexA(C.blue,.2):'transparent',fg:st.chartMetric===k?C.blue:C.muted,pressed:st.chartMetric===k?'true':'false',onClick:()=>this.setChartMetric(k)}));
 
     const maxMix=Math.max(...dm.docTypeMix.map(d=>d.count));
     const mixColors={invoice:C.blue,upd:C.teal,tmc:C.yellow,payment:C.green,timesheet:C.orange};
