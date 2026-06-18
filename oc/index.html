@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="./support.js"></script>
 <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 <link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
@@ -25,6 +25,55 @@
   @keyframes ovIn{from{opacity:0}to{opacity:1}}
   @keyframes toastIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
   @keyframes rowIn{from{transform:translateY(-6px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
+<style id="oc-mobile">
+  /* ============================================================
+     Адаптив дашборда BTS — Группа 1: фундамент раскладки.
+     Хуки data-oc на структурных гридах (переживают гидрацию React).
+     Корень несёт data-screen-label="Дашборд".
+     ============================================================ */
+
+  /* —— Планшет и ниже (≤1024): главный grid в одну колонку,
+        корень без бокового overflow, высота по dvh —— */
+  @media (max-width: 1024px) {
+    [data-screen-label="Дашборд"] {
+      overflow-x: hidden !important;
+      min-height: 100dvh !important;
+      padding: 16px 18px 24px !important;
+    }
+    /* контент + инспектор → одна колонка: инспектор уезжает вниз,
+       контентная колонка больше не схлопывается в 0px */
+    [data-oc="main"] {
+      grid-template-columns: 1fr !important;
+    }
+    [data-oc="kpi"] {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+    [data-oc="integrations"] {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+  }
+
+  /* —— Телефон (≤640): KPI и интеграции по 2, контент в одну колонку —— */
+  @media (max-width: 640px) {
+    [data-screen-label="Дашборд"] {
+      padding: 14px 12px 22px !important;
+    }
+    [data-oc="kpi"],
+    [data-oc="integrations"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+    [data-oc="content"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* —— Узкий телефон (≤400): ещё компактнее поля —— */
+  @media (max-width: 400px) {
+    [data-screen-label="Дашборд"] {
+      padding: 12px 10px 20px !important;
+    }
+  }
 </style>
 </helmet>
 <div data-screen-label="Дашборд" style="--bg:#0a0e13;--panel:#121823;--panel2:#0e131c;--card:#161e2b;--border:rgba(255,255,255,.075);--border2:rgba(255,255,255,.12);--text:#e7eef7;--muted:#8593a6;--dim:#5d6a7d;--green:#37d399;--blue:#5b9dff;--teal:#2dd4bf;--yellow:#f2c14e;--orange:#ff9d4d;--red:#ff6d6d;--gray:#5b6677;--mono:'IBM Plex Mono','SFMono-Regular',monospace;font-family:'IBM Plex Sans',system-ui,sans-serif;background:radial-gradient(1200px 600px at 78% -10%,rgba(91,157,255,.07),transparent 60%),var(--bg);color:var(--text);min-height:100vh;padding:18px 22px 28px;-webkit-font-smoothing:antialiased">
@@ -64,7 +113,7 @@
   </div>
 
   <!-- KPI STRIP -->
-  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px">
+  <div data-oc="kpi" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px">
     <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="8">
       <div onClick="{{ k.onClick }}" title="Открыть детализацию" style="position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:14px 16px 14px 19px;cursor:pointer;display:flex;flex-direction:column;gap:7px;transition:.18s" style-hover="border-color:var(--border2);box-shadow:0 10px 34px rgba(0,0,0,.45);transform:translateY(-2px)">
         <div style="position:absolute;left:0;top:13px;bottom:13px;width:3px;border-radius:0 3px 3px 0;background:{{ k.accent }}"></div>
@@ -79,8 +128,8 @@
   </div>
 
   <!-- MAIN GRID -->
-  <div style="display:grid;grid-template-columns:minmax(0,1fr) 348px;gap:14px;align-items:start">
-    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-content:start">
+  <div data-oc="main" style="display:grid;grid-template-columns:minmax(0,1fr) 348px;gap:14px;align-items:start">
+    <div data-oc="content" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-content:start">
 
       <!-- FLOW CHART -->
       <section style="grid-column:span 2;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
@@ -239,7 +288,7 @@
   </div>
 
   <!-- INTEGRATIONS -->
-  <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px">
+  <div data-oc="integrations" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px">
     <sc-for list="{{ integrations }}" as="i" hint-placeholder-count="5">
       <div onClick="{{ i.onClick }}" style="cursor:pointer;background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:14px 15px;display:flex;flex-direction:column;gap:7px;transition:.16s" style-hover="border-color:var(--border2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.4)">
         <div style="display:flex;justify-content:space-between;align-items:center">
