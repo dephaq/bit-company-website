@@ -662,20 +662,24 @@ class Component extends DCLogic {
   _focusDrawer(){ setTimeout(()=>{ const p=document.querySelector('[data-oc="drawer-panel"]'); if(p) p.focus(); },30); }
   // Swipe/drag-to-dismiss: вниз на bottom-sheet (мобилка), вправо на боковом (десктоп). Pointer Events = тач+мышь.
   _drawerDragStart(e){
+    if(this._drag) return;                             // re-entrancy guard: один жест за раз (мультитач/2-й pointer игнор)
     if(e.target.closest('button')) return;            // клики по ×/«Назад» не перехватывать
     const panel=document.querySelector('[data-oc="drawer-panel"]');
     if(!panel) return;
     const sheet=window.matchMedia('(max-width:640px)').matches;
-    this._drag={sx:e.clientX,sy:e.clientY,sheet,panel,moved:0,vel:0,lastT:e.timeStamp,lastPos:sheet?e.clientY:e.clientX};
+    this._drag={pid:e.pointerId,sx:e.clientX,sy:e.clientY,sheet,panel,moved:0,vel:0,lastT:e.timeStamp,lastPos:sheet?e.clientY:e.clientX};
     panel.style.transition='none';
+    // захват pointer'а: pointerup/cancel дойдёт даже если курсор ушёл за окно/ифрейм (.dc.html в Claude Design)
+    if(e.pointerId!=null && e.currentTarget.setPointerCapture){ try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} }
     this._dm=(ev)=>this._drawerDragMove(ev);
-    this._du=()=>this._drawerDragEnd();
+    this._du=(ev)=>this._drawerDragEnd(ev);
     document.addEventListener('pointermove',this._dm,{passive:false});
     document.addEventListener('pointerup',this._du);
     document.addEventListener('pointercancel',this._du);
   }
   _drawerDragMove(e){
     const d=this._drag; if(!d) return;
+    if(e.pointerId!=null && e.pointerId!==d.pid) return;  // игнор чужого pointer'а (2-й палец не портит скорость)
     const pos=d.sheet?e.clientY:e.clientX;
     const delta=Math.max(0,pos-(d.sheet?d.sy:d.sx));
     d.moved=delta;
@@ -685,8 +689,10 @@ class Component extends DCLogic {
     d.panel.style.transform=d.sheet?'translateY('+delta+'px)':'translateX('+delta+'px)';
     d.panel.style.opacity=String(Math.max(.45,1-delta/520));
   }
-  _drawerDragEnd(){
-    const d=this._drag; if(!d) return; this._drag=null;
+  _drawerDragEnd(e){
+    const d=this._drag; if(!d) return;
+    if(e && e.pointerId!=null && e.pointerId!==d.pid) return;  // завершает только захваченный pointer
+    this._drag=null;
     document.removeEventListener('pointermove',this._dm);
     document.removeEventListener('pointerup',this._du);
     document.removeEventListener('pointercancel',this._du);
