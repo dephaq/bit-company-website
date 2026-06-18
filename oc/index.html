@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BTS Holding · Дашборд автоматизации бухгалтерии</title>
+<meta name="description" content="Дашборд автоматизации бухгалтерии BTS Holding: конвейер Диадок → AI → Битрикс24 → 1С, KPI, матчинг строк, мониторинг конвейера.">
 <script src="./support.js"></script>
 <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 <link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
@@ -32,6 +34,14 @@
      Хуки data-oc на структурных гридах (переживают гидрацию React).
      Корень несёт data-screen-label="Дашборд".
      ============================================================ */
+
+  /* —— A11y: видимое кольцо фокуса для клавиатуры (на всех ширинах,
+        !important перебивает inline outline:none у поля поиска) —— */
+  [data-screen-label="Дашборд"] :focus-visible {
+    outline: 2px solid var(--blue) !important;
+    outline-offset: 2px !important;
+    border-radius: 6px;
+  }
 
   /* —— Планшет и ниже (≤1024): главный grid в одну колонку,
         корень без бокового overflow, высота по dvh —— */
@@ -70,6 +80,10 @@
     [data-oc="integrations"] {
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
+    /* KPI-карточки в 2 колонки: разрешить ужиматься под длинные числа */
+    [data-oc="kpi"] > * {
+      min-width: 0 !important;
+    }
     [data-oc="content"] {
       grid-template-columns: 1fr !important;
     }
@@ -102,6 +116,13 @@
     [data-oc="period-tabs"] > * {
       flex: 0 0 auto !important;
       scroll-snap-align: start !important;
+    }
+    /* тач-таргеты: пилюли периода + кнопка сравнения, кнопки drawer (×/Назад) */
+    [data-oc="header-controls"] button {
+      min-height: 40px !important;
+    }
+    [data-oc="drawer-panel"] button {
+      min-height: 36px !important;
     }
 
     /* —— Drawer → bottom-sheet: выезд снизу, скруглённый верх,
@@ -165,7 +186,7 @@
   }
 </style>
 </helmet>
-<div data-screen-label="Дашборд" style="--bg:#0a0e13;--panel:#121823;--panel2:#0e131c;--card:#161e2b;--border:rgba(255,255,255,.075);--border2:rgba(255,255,255,.12);--text:#e7eef7;--muted:#8593a6;--dim:#5d6a7d;--green:#37d399;--blue:#5b9dff;--teal:#2dd4bf;--yellow:#f2c14e;--orange:#ff9d4d;--red:#ff6d6d;--gray:#5b6677;--mono:'IBM Plex Mono','SFMono-Regular',monospace;font-family:'IBM Plex Sans',system-ui,sans-serif;background:radial-gradient(1200px 600px at 78% -10%,rgba(91,157,255,.07),transparent 60%),var(--bg);color:var(--text);min-height:100vh;padding:18px 22px 28px;-webkit-font-smoothing:antialiased">
+<div data-screen-label="Дашборд" role="main" style="--bg:#0a0e13;--panel:#121823;--panel2:#0e131c;--card:#161e2b;--border:rgba(255,255,255,.075);--border2:rgba(255,255,255,.12);--text:#e7eef7;--muted:#8593a6;--dim:#5d6a7d;--green:#37d399;--blue:#5b9dff;--teal:#2dd4bf;--yellow:#f2c14e;--orange:#ff9d4d;--red:#ff6d6d;--gray:#5b6677;--mono:'IBM Plex Mono','SFMono-Regular',monospace;font-family:'IBM Plex Sans',system-ui,sans-serif;background:radial-gradient(1200px 600px at 78% -10%,rgba(91,157,255,.07),transparent 60%),var(--bg);color:var(--text);min-height:100vh;padding:18px 22px 28px;-webkit-font-smoothing:antialiased">
 
   <!-- TOP BAR -->
   <header style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:16px">
@@ -394,7 +415,7 @@
   <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:90">
       <div onClick="{{ onCloseDrawer }}" style="position:absolute;inset:0;background:rgba(4,7,11,.66);backdrop-filter:blur(2px);animation:ovIn .2s"></div>
-      <div data-oc="drawer-panel" style="position:absolute;top:0;right:0;height:100%;width:600px;max-width:94vw;background:var(--panel);border-left:1px solid var(--border2);box-shadow:-30px 0 80px rgba(0,0,0,.55);animation:drwIn .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column">
+      <div data-oc="drawer-panel" role="dialog" aria-modal="true" aria-label="Детализация" style="position:absolute;top:0;right:0;height:100%;width:600px;max-width:94vw;background:var(--panel);border-left:1px solid var(--border2);box-shadow:-30px 0 80px rgba(0,0,0,.55);animation:drwIn .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column">
         {{ drawerNode }}
       </div>
     </div>
@@ -591,8 +612,10 @@ class Component extends DCLogic {
 
   componentDidMount(){
     this._iv=setInterval(()=>{ this.setState(s=>({tick:s.tick+1})); },5000);
+    this._esc=(e)=>{ if(e.key==='Escape' && this.state.drawer.length) this.closeDrawer(); };
+    document.addEventListener('keydown',this._esc);
   }
-  componentWillUnmount(){ clearInterval(this._iv); if(this._tt) clearTimeout(this._tt); }
+  componentWillUnmount(){ clearInterval(this._iv); if(this._tt) clearTimeout(this._tt); if(this._esc) document.removeEventListener('keydown',this._esc); }
 
   // ---------- FORMAT ----------
   fInt(n){ return Math.round(n).toLocaleString('ru-RU'); }
@@ -1134,7 +1157,7 @@ class Component extends DCLogic {
     };
     const crumbs=['Дашборд',...stack.map(titleOf)];
     return h('div',{style:{display:'flex',flexDirection:'column',height:'100%'}},
-      h('div',{style:{padding:'16px 22px 14px',borderBottom:'1px solid '+C.border}},
+      h('div',{style:{padding:'16px 22px 14px',borderBottom:'1px solid '+C.border,position:'sticky',top:0,zIndex:5,background:C.panel}},
         h('div',{style:{display:'flex',alignItems:'center',gap:'6px',flexWrap:'wrap',marginBottom:'10px'}},crumbs.map((c,i)=>h('span',{key:i,style:{display:'inline-flex',alignItems:'center',gap:'6px'}},i>0?h('span',{style:{color:C.dim,fontSize:'11px'}},'/'):null,h('span',{onClick:()=>{ if(i===0) this.closeDrawer(); else this.popDrawer(i-1); },style:{cursor:'pointer',fontSize:'11px',color:i===crumbs.length-1?C.text:C.muted}},c)))),
         h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'12px'}},
           h('h2',{style:{margin:0,fontSize:'18px',fontWeight:600}},titleOf(top)),
