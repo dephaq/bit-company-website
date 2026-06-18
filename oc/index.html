@@ -66,6 +66,11 @@
     [data-oc="content"] {
       grid-template-columns: 1fr !important;
     }
+    /* секции с grid-column:span 2 иначе плодят неявную 2-ю колонку
+       и грид не схлопывается — занулить спан при одной колонке */
+    [data-oc="content"] > * {
+      grid-column: auto !important;
+    }
   }
 
   /* —— Узкий телефон (≤400): ещё компактнее поля —— */
