@@ -680,7 +680,7 @@ class Component extends DCLogic {
       this.secTitle('Последнее действие'),
       this.card([h('div',{style:{fontSize:'12px',lineHeight:1.4}},e.lastAction),h('div',{style:{fontSize:'10px',color:C.dim,marginTop:'5px'}},dep?dep.name:'Все направления')],{marginBottom:'12px'}),
       this.secTitle('Хронология'),
-      h('div',{style:{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'14px'}},evs.map((ev,i)=>this.linkRow(ev.text,this.srcLabel(ev.source)+' · '+ev.time,null,()=>this.openDrawer({type:'event',id:this.allEvents().indexOf(ev)})))),
+      h('div',{style:{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'14px'}},evs.map((ev,i)=>this.linkRow(ev.text,this.srcLabel(ev.source)+' · '+ev.time,null,()=>this.openDrawer({type:'event',id:this.allEvents().indexOf(ev),payload:ev})))),
       h('button',{onClick:()=>this.openDrawer({type:'accountant',id:e.id}),style:{width:'100%',border:'1px solid '+C.border2,cursor:'pointer',fontFamily:'inherit',fontSize:'12px',fontWeight:500,padding:'10px',borderRadius:'9px',background:C.card,color:C.text,transition:'.15s'},onMouseEnter:ev=>ev.currentTarget.style.borderColor=C.blue,onMouseLeave:ev=>ev.currentTarget.style.borderColor=C.border2},'Открыть детализацию →')
     );
   }
@@ -838,7 +838,7 @@ class Component extends DCLogic {
       );
     }
     if(t==='event'){
-      const ev=this.allEvents()[frame.id]; if(!ev) return null;
+      const ev=this.allEvents()[frame.id]||frame.payload; if(!ev) return null;
       const d=D.docById[ev.docId];
       return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
         h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},this.badge(this.srcLabel(ev.source),this.srcColor(ev.source)),this.badge(ev.severity,this.sevColor(ev.severity))),
