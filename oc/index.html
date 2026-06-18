@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#0a0e13}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:8px}
+  @keyframes blip{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+  @keyframes drwIn{from{transform:translateX(40px);opacity:.4}to{transform:translateX(0);opacity:1}}
+  @keyframes ovIn{from{opacity:0}to{opacity:1}}
+  @keyframes toastIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes rowIn{from{transform:translateY(-6px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
+</helmet>
+<div data-screen-label="Дашборд" style="--bg:#0a0e13;--panel:#121823;--panel2:#0e131c;--card:#161e2b;--border:rgba(255,255,255,.075);--border2:rgba(255,255,255,.12);--text:#e7eef7;--muted:#8593a6;--dim:#5d6a7d;--green:#37d399;--blue:#5b9dff;--teal:#2dd4bf;--yellow:#f2c14e;--orange:#ff9d4d;--red:#ff6d6d;--gray:#5b6677;--mono:'IBM Plex Mono','SFMono-Regular',monospace;font-family:'IBM Plex Sans',system-ui,sans-serif;background:radial-gradient(1200px 600px at 78% -10%,rgba(91,157,255,.07),transparent 60%),var(--bg);color:var(--text);min-height:100vh;padding:18px 22px 28px;-webkit-font-smoothing:antialiased">
+
+  <!-- TOP BAR -->
+  <header style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:16px">
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;align-items:center;gap:11px">
+        <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#5b9dff,#2dd4bf);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#06121f;box-shadow:0 4px 16px rgba(91,157,255,.4)">BTS</div>
+        <h1 style="margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em">BTS Holding · Автоматизация бухгалтерии</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;padding-left:42px">
+        <span style="font-size:12.5px;color:var(--muted)">Конвейер Диадок → AI → Битрикс24 → 1С</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--green)"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);animation:blip 1.6s infinite;box-shadow:0 0 8px var(--green)"></span>{{ liveText }}</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:9px;align-items:flex-end">
+      <div style="display:flex;gap:4px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:3px">
+        <sc-for list="{{ periods }}" as="p" hint-placeholder-count="6">
+          <button onClick="{{ p.onClick }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;padding:6px 11px;border-radius:7px;background:{{ p.bg }};color:{{ p.fg }};transition:.15s" style-hover="color:var(--text)">{{ p.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:var(--muted)">{{ rangeLabel }}</span>
+        <button onClick="{{ onToggleCompare }}" style="display:inline-flex;align-items:center;gap:7px;border:1px solid {{ compareBorder }};cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;padding:6px 11px;border-radius:8px;background:{{ compareBg }};color:{{ compareFg }};transition:.15s">
+          <span style="width:9px;height:9px;border-radius:3px;border:1.5px solid {{ compareFg }};background:{{ compareDot }}"></span>Сравнить с прошлым периодом
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- FILTER CHIPS -->
+  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">
+    <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6">
+      <button onClick="{{ f.onClick }}" style="border:1px solid {{ f.border }};cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;padding:5px 12px;border-radius:20px;background:{{ f.bg }};color:{{ f.fg }};transition:.15s" style-hover="border-color:var(--border2)">{{ f.label }}</button>
+    </sc-for>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px">
+    <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="8">
+      <div onClick="{{ k.onClick }}" title="Открыть детализацию" style="position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:14px 16px 14px 19px;cursor:pointer;display:flex;flex-direction:column;gap:7px;transition:.18s" style-hover="border-color:var(--border2);box-shadow:0 10px 34px rgba(0,0,0,.45);transform:translateY(-2px)">
+        <div style="position:absolute;left:0;top:13px;bottom:13px;width:3px;border-radius:0 3px 3px 0;background:{{ k.accent }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <span style="font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500">{{ k.label }}</span>
+          <span style="font-size:11px;font-family:var(--mono);font-weight:500;color:{{ k.deltaColor }};white-space:nowrap">{{ k.delta }}</span>
+        </div>
+        <div style="font-size:25px;font-weight:600;font-family:var(--mono);line-height:1.05;letter-spacing:-.01em">{{ k.value }}</div>
+        <div style="font-size:11px;color:var(--dim)">{{ k.sub }}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 348px;gap:14px;align-items:start">
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-content:start">
+
+      <!-- FLOW CHART -->
+      <section style="grid-column:span 2;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0;font-size:14px;font-weight:600">Поток документов · {{ periodLabel }}</h3>
+            <p style="margin:3px 0 0;font-size:11.5px;color:var(--dim)">{{ chartHint }}</p>
+          </div>
+          <div style="display:flex;gap:4px;background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:3px">
+            <sc-for list="{{ chartMetrics }}" as="m" hint-placeholder-count="4">
+              <button onClick="{{ m.onClick }}" style="border:none;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;padding:5px 10px;border-radius:6px;background:{{ m.bg }};color:{{ m.fg }};transition:.15s">{{ m.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        {{ chartNode }}
+      </section>
+
+      <!-- FUNNEL -->
+      <section style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
+        <h3 style="margin:0 0 3px;font-size:14px;font-weight:600">Воронка конвейера</h3>
+        <p style="margin:0 0 14px;font-size:11.5px;color:var(--dim)">Где документы теряются по пути в 1С</p>
+        {{ funnelNode }}
+      </section>
+
+      <!-- DOCTYPE MIX -->
+      <section style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
+        <h3 style="margin:0 0 3px;font-size:14px;font-weight:600">Mix по типам документов</h3>
+        <p style="margin:0 0 14px;font-size:11.5px;color:var(--dim)">Клик — детализация типа</p>
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <sc-for list="{{ docTypeMix }}" as="d" hint-placeholder-count="5">
+            <div onClick="{{ d.onClick }}" style="cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:2px 4px;border-radius:8px;transition:.15s;opacity:{{ d.opacity }}" style-hover="background:var(--card)">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px">
+                <span style="font-weight:500">{{ d.label }}</span>
+                <span style="font-family:var(--mono);color:var(--muted);font-size:11.5px">{{ d.countText }} · {{ d.sumText }}</span>
+              </div>
+              <div style="height:8px;border-radius:5px;background:rgba(255,255,255,.05);overflow:hidden">
+                <div style="height:100%;border-radius:5px;width:{{ d.widthPct }}%;background:{{ d.color }};transition:width .5s"></div>
+              </div>
+              <span style="font-size:10.5px;color:var(--dim)">авто {{ d.autoText }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- HEATMAP -->
+      <section style="grid-column:span 2;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:13px">
+          <div>
+            <h3 style="margin:0 0 3px;font-size:14px;font-weight:600">Узкие места · причина × время</h3>
+            <p style="margin:0;font-size:11.5px;color:var(--dim)">Клик по ячейке — застрявшие документы за этот час</p>
+          </div>
+          <div style="display:flex;gap:13px;align-items:center;font-size:10.5px;color:var(--muted)">
+            <span style="display:inline-flex;gap:5px;align-items:center"><span style="width:11px;height:11px;border-radius:3px;background:rgba(255,255,255,.06)"></span>нет</span>
+            <span style="display:inline-flex;gap:5px;align-items:center"><span style="width:11px;height:11px;border-radius:3px;background:var(--yellow)"></span>единичные</span>
+            <span style="display:inline-flex;gap:5px;align-items:center"><span style="width:11px;height:11px;border-radius:3px;background:var(--orange)"></span>заметно</span>
+            <span style="display:inline-flex;gap:5px;align-items:center"><span style="width:11px;height:11px;border-radius:3px;background:var(--red)"></span>критично</span>
+          </div>
+        </div>
+        {{ heatmapNode }}
+      </section>
+
+      <!-- COUNTERPARTIES -->
+      <section style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
+        <h3 style="margin:0 0 3px;font-size:14px;font-weight:600">Деньги по контрагентам</h3>
+        <p style="margin:0 0 14px;font-size:11.5px;color:var(--dim)">Сумма · подтверждено · под риском</p>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ counterparties }}" as="c" hint-placeholder-count="7">
+            <div onClick="{{ c.onClick }}" style="cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:4px 5px;border-radius:8px;transition:.15s" style-hover="background:var(--card)">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-size:12.5px;font-weight:500">{{ c.name }}</span>
+                <span style="font-family:var(--mono);font-size:12px;color:var(--text)">{{ c.sumText }}</span>
+              </div>
+              <div style="position:relative;height:7px;border-radius:5px;background:rgba(255,255,255,.05);overflow:hidden">
+                <div style="position:absolute;left:0;top:0;height:100%;border-radius:5px;width:{{ c.widthPct }}%;background:var(--blue)"></div>
+                <div style="position:absolute;left:0;top:0;height:100%;border-radius:5px;width:{{ c.confirmPct }}%;background:var(--green)"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10.5px">
+                <span style="color:var(--dim)">{{ c.docsText }} · авто {{ c.autoText }}</span>
+                <span style="color:{{ c.riskColor }}">{{ c.riskText }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- ACCOUNTANTS -->
+      <section style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
+        <h3 style="margin:0 0 3px;font-size:14px;font-weight:600">Рейтинг бухгалтеров</h3>
+        <p style="margin:0 0 12px;font-size:11.5px;color:var(--dim)">Клик — инспектор + детализация</p>
+        <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:4px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--dim);padding:0 6px 7px;border-bottom:1px solid var(--border)">
+          <span>Бухгалтер</span><span style="text-align:right">Док.</span><span style="text-align:right">% авто</span><span style="text-align:right">Нагрузка</span>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ accountants }}" as="a" hint-placeholder-count="6">
+            <div onClick="{{ a.onClick }}" style="cursor:pointer;display:grid;grid-template-columns:1fr auto auto auto;gap:4px 12px;align-items:center;padding:9px 6px;border-radius:8px;background:{{ a.rowBg }};border-left:2px solid {{ a.accent }};transition:.13s" style-hover="background:var(--card)">
+              <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                <span style="font-size:12.5px;font-weight:500;display:flex;align-items:center;gap:7px">{{ a.name }}<span style="font-size:9.5px;font-weight:500;padding:1px 6px;border-radius:5px;background:{{ a.tagBg }};color:{{ a.tagFg }}">{{ a.tag }}</span></span>
+                <span style="font-size:10.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.role }}</span>
+              </div>
+              <span style="text-align:right;font-family:var(--mono);font-size:12.5px">{{ a.docs }}</span>
+              <span style="text-align:right;font-family:var(--mono);font-size:12.5px;color:{{ a.autoColor }}">{{ a.autoPct }}</span>
+              <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
+                <div style="width:42px;height:6px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden"><div style="height:100%;width:{{ a.loadPct }}%;background:{{ a.loadColor }}"></div></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- CONVEYOR -->
+      <section style="grid-column:span 2;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
+        <h3 style="margin:0 0 3px;font-size:14px;font-weight:600">Схема конвейера</h3>
+        <p style="margin:0 0 16px;font-size:11.5px;color:var(--dim)">Диадок → Gemini AI → Матчинг → Битрикс24 → 1С · клик по узлу — детализация этапа</p>
+        {{ conveyorNode }}
+      </section>
+
+      <!-- EVENT FEED -->
+      <section style="grid-column:span 2;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:9px">
+            <h3 style="margin:0;font-size:14px;font-weight:600">Лента конвейера</h3>
+            <span style="display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--green)"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:blip 1.6s infinite"></span>live</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input value="{{ eventQuery }}" onInput="{{ onEventQuery }}" placeholder="Поиск: № документа / контрагент" style="font-family:inherit;font-size:11.5px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:6px 11px;color:var(--text);width:230px;outline:none" />
+            <button onClick="{{ onSimulate }}" style="border:1px solid var(--border2);cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;padding:6px 12px;border-radius:8px;background:var(--blue);color:#06121f;transition:.15s" style-hover="filter:brightness(1.1)">+ Симулировать событие</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+          <sc-for list="{{ eventFilters }}" as="ef" hint-placeholder-count="8">
+            <button onClick="{{ ef.onClick }}" style="border:1px solid {{ ef.border }};cursor:pointer;font-family:inherit;font-size:11px;font-weight:500;padding:4px 10px;border-radius:16px;background:{{ ef.bg }};color:{{ ef.fg }};transition:.15s">{{ ef.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px;max-height:300px;overflow:auto;padding-right:4px">
+          <sc-for list="{{ events }}" as="e" hint-placeholder-count="8">
+            <div onClick="{{ e.onClick }}" style="cursor:pointer;display:flex;gap:11px;align-items:flex-start;padding:9px 11px;border-radius:9px;background:var(--panel2);border:1px solid var(--border);border-left:3px solid {{ e.color }};transition:.13s;animation:rowIn .25s" style-hover="background:var(--card);border-color:var(--border2)">
+              <span style="font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:1px;white-space:nowrap">{{ e.time }}</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:12.5px;line-height:1.35">{{ e.text }}</div>
+                <div style="display:flex;gap:8px;align-items:center;margin-top:3px">
+                  <span style="font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:{{ e.color }};font-weight:600">{{ e.srcLabel }}</span>
+                  <span style="font-size:10px;color:var(--dim);font-family:var(--mono)">{{ e.docId }}</span>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- INSPECTOR -->
+    <aside style="position:sticky;top:14px;align-self:start;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 17px;max-height:calc(100vh - 28px);overflow:auto">
+      {{ inspectorNode }}
+    </aside>
+  </div>
+
+  <!-- INTEGRATIONS -->
+  <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px">
+    <sc-for list="{{ integrations }}" as="i" hint-placeholder-count="5">
+      <div onClick="{{ i.onClick }}" style="cursor:pointer;background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:14px 15px;display:flex;flex-direction:column;gap:7px;transition:.16s" style-hover="border-color:var(--border2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.4)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:13px;font-weight:600">{{ i.label }}</span>
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)"></span>
+        </div>
+        <span style="font-size:11px;color:var(--muted);line-height:1.35">{{ i.subtitle }}</span>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--blue);margin-top:auto">{{ i.throughput }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- DRAWER -->
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:90">
+      <div onClick="{{ onCloseDrawer }}" style="position:absolute;inset:0;background:rgba(4,7,11,.66);backdrop-filter:blur(2px);animation:ovIn .2s"></div>
+      <div style="position:absolute;top:0;right:0;height:100%;width:600px;max-width:94vw;background:var(--panel);border-left:1px solid var(--border2);box-shadow:-30px 0 80px rgba(0,0,0,.55);animation:drwIn .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column">
+        {{ drawerNode }}
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- TOAST -->
+  <sc-if value="{{ toastVisible }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:120;background:var(--card);border:1px solid var(--border2);border-left:3px solid var(--green);border-radius:10px;padding:12px 18px;font-size:13px;box-shadow:0 16px 44px rgba(0,0,0,.5);animation:toastIn .25s;display:flex;align-items:center;gap:10px">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)"></span>{{ toastText }}
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1100}}">
+class Component extends DCLogic {
+  state = {
+    period: 'today',
+    compare: false,
+    chartMetric: 'documents',
+    chartHover: null,
+    filter: 'all',
+    eventFilter: 'all',
+    eventQuery: '',
+    selEmp: 'e_01',
+    drawer: [],
+    overrides: {},
+    extraEvents: [],
+    toast: null,
+    tick: 0,
+  };
+
+  get C(){ return { bg:'#0a0e13', panel:'#121823', panel2:'#0e131c', card:'#161e2b', border:'rgba(255,255,255,.075)', border2:'rgba(255,255,255,.13)', text:'#e7eef7', muted:'#8593a6', dim:'#5d6a7d', green:'#37d399', blue:'#5b9dff', teal:'#2dd4bf', yellow:'#f2c14e', orange:'#ff9d4d', red:'#ff6d6d', gray:'#5b6677', mono:"'IBM Plex Mono',monospace" }; }
+
+  // ---------- DEMO DATA ----------
+  get DEMO(){ return {
+    summary:{documentsProcessed:247,documentsAuto:220,documentsManual:27,lineItemsProcessed:1840,lineItemsTotalLifetime:41488,documentsSum:18340000,paymentsCount:84,paymentsSum:9720000,sentTo1c:213,postedIn1c:198,inQueue:19,needsAttention:15,recognitionErrors:6,automationRate:0.89,matchingAccuracy:0.959,avgProcessingMinutes:11,avgProcessingMinutesManualBaseline:38,accountantsActive:5,accountantsBefore:11,hoursSavedToday:33,hoursSavedMonth:724,moneySavedMonth:824000},
+    deltaPrevPeriod:{documentsProcessed:0.12,documentsSum:0.08,automationRate:0.04,avgProcessingMinutes:-0.18,needsAttention:-0.11,postedIn1c:0.09,moneySavedMonth:0.06},
+    departments:[
+      {id:'dep_invoice',name:'Счета',docType:'invoice',documents:92,sum:7480000,automationRate:0.93,stuck:4,accountants:2},
+      {id:'dep_upd',name:'УПД',docType:'upd',documents:78,sum:8120000,automationRate:0.9,stuck:5,accountants:2},
+      {id:'dep_tmc',name:'ТМЦ',docType:'tmc',documents:34,sum:1640000,automationRate:0.82,stuck:3,accountants:1},
+      {id:'dep_payments',name:'Платежи / РПП',docType:'payment',documents:84,sum:9720000,automationRate:0.86,stuck:2,accountants:1},
+      {id:'dep_timesheets',name:'Табели',docType:'timesheet',documents:19,sum:0,automationRate:0.79,stuck:1,accountants:1},
+      {id:'dep_nomenclature',name:'Номенклатура / матчинг',docType:'matching',documents:1840,sum:0,automationRate:0.959,stuck:11,accountants:1},
+    ],
+    employees:[
+      {id:'e_01',name:'Бухгалтер 01',role:'Старший бухгалтер',department:'dep_invoice',documents:64,auto:60,manual:4,avgMinutes:9,load:0.78,confirmationRate:0.97,status:'active',lastAction:'Провёл Счёт №740 в 1С'},
+      {id:'e_02',name:'Бухгалтер 02',role:'Бухгалтер по УПД',department:'dep_upd',documents:58,auto:52,manual:6,avgMinutes:12,load:0.84,confirmationRate:0.93,status:'active',lastAction:'Подтвердил автосопоставление'},
+      {id:'e_03',name:'Бухгалтер 03',role:'Бухгалтер по ТМЦ',department:'dep_tmc',documents:41,auto:33,manual:8,avgMinutes:15,load:0.66,confirmationRate:0.88,status:'active',lastAction:'Ручной выбор номенклатуры (3 строки)'},
+      {id:'e_04',name:'Бухгалтер 04',role:'Бухгалтер по платежам',department:'dep_payments',documents:49,auto:43,manual:6,avgMinutes:10,load:0.72,confirmationRate:0.95,status:'active',lastAction:'Сформировал реестр РПП'},
+      {id:'e_05',name:'Бухгалтер 05',role:'Бухгалтер-универсал',department:'dep_nomenclature',documents:35,auto:32,manual:3,avgMinutes:8,load:0.58,confirmationRate:0.96,status:'active',lastAction:'Закрыл задачу по табелю'},
+      {id:'e_legacy',name:'Автоматический конвейер',role:'Бот · без участия человека',department:'all',documents:220,auto:220,manual:0,avgMinutes:2,load:0.0,confirmationRate:1.0,status:'bot',lastAction:'Создал черновик 1С автоматически'},
+    ],
+    counterparties:[
+      {id:'c_strpost',name:'ООО «СтройПоставка»',type:'Поставщик',sum:4120000,confirmedSum:3980000,documents:38,automationRate:0.95,disputes:1,riskAmount:142000,status:'confirmed'},
+      {id:'c_metall',name:'ООО «МеталлТорг»',type:'Поставщик',sum:3240000,confirmedSum:3010000,documents:29,automationRate:0.9,disputes:2,riskAmount:230000,status:'partial'},
+      {id:'c_beton',name:'АО «БетонСервис»',type:'Поставщик',sum:2880000,confirmedSum:2880000,documents:24,automationRate:0.96,disputes:0,riskAmount:0,status:'confirmed'},
+      {id:'c_spectech',name:'ООО «СпецТехника»',type:'Поставщик',sum:2510000,confirmedSum:2180000,documents:21,automationRate:0.83,disputes:1,riskAmount:330000,status:'dispute'},
+      {id:'c_energo',name:'ООО «ЭнергоСбыт»',type:'Поставщик услуг',sum:1960000,confirmedSum:1960000,documents:18,automationRate:0.88,disputes:0,riskAmount:0,status:'confirmed'},
+      {id:'c_translog',name:'ООО «ТрансЛогистик»',type:'Перевозчик',sum:1730000,confirmedSum:1540000,documents:16,automationRate:0.78,disputes:1,riskAmount:190000,status:'partial'},
+      {id:'c_prommat',name:'ООО «ПромМатериалы»',type:'Поставщик',sum:1430000,confirmedSum:1430000,documents:14,automationRate:0.92,disputes:0,riskAmount:0,status:'confirmed'},
+    ],
+    docTypeMix:[
+      {code:'invoice',label:'Счета',count:92,sum:7480000,automationRate:0.93},
+      {code:'upd',label:'УПД',count:78,sum:8120000,automationRate:0.9},
+      {code:'tmc',label:'ТМЦ',count:34,sum:1640000,automationRate:0.82},
+      {code:'payment',label:'Платежи',count:84,sum:9720000,automationRate:0.86},
+      {code:'timesheet',label:'Табели',count:19,sum:0,automationRate:0.79},
+    ],
+    pipeline:[
+      {stage:'received',label:'Получено из Диадок',count:247,source:'diadoc',lostReason:null},
+      {stage:'recognized',label:'Распознано AI (Gemini)',count:241,lostReason:'Ошибка распознавания'},
+      {stage:'matched',label:'Номенклатура сопоставлена',count:234,lostReason:'Нет маппинга / manual'},
+      {stage:'in_1c',label:'Создан черновик в 1С',count:213,lostReason:'Ждёт проверки бухгалтера'},
+      {stage:'posted',label:'Проведён в 1С',count:198,lostReason:'Заблокирован гейтом / спор'},
+    ],
+    hourly:[
+      {hour:'08:00',documents:18,sum:1240000,auto:16,stuck:1},
+      {hour:'09:00',documents:31,sum:2380000,auto:28,stuck:2},
+      {hour:'10:00',documents:44,sum:3120000,auto:40,stuck:3},
+      {hour:'11:00',documents:39,sum:2870000,auto:35,stuck:2},
+      {hour:'12:00',documents:22,sum:1510000,auto:19,stuck:1},
+      {hour:'13:00',documents:27,sum:1980000,auto:24,stuck:2},
+      {hour:'14:00',documents:38,sum:2740000,auto:35,stuck:2},
+      {hour:'15:00',documents:28,sum:2500000,auto:23,stuck:2},
+    ],
+    daily:[
+      {date:'05-20',documents:184,sum:13900000,automationRate:0.81},{date:'05-21',documents:201,sum:15200000,automationRate:0.82},{date:'05-22',documents:176,sum:12800000,automationRate:0.83},{date:'05-25',documents:213,sum:16100000,automationRate:0.84},{date:'05-26',documents:228,sum:17300000,automationRate:0.85},{date:'05-27',documents:197,sum:14600000,automationRate:0.85},{date:'05-28',documents:234,sum:17900000,automationRate:0.86},{date:'05-29',documents:219,sum:16400000,automationRate:0.86},{date:'06-01',documents:241,sum:18200000,automationRate:0.87},{date:'06-02',documents:226,sum:17100000,automationRate:0.87},{date:'06-03',documents:238,sum:17800000,automationRate:0.88},{date:'06-04',documents:252,sum:19100000,automationRate:0.88},{date:'06-05',documents:244,sum:18600000,automationRate:0.88},{date:'06-08',documents:231,sum:17400000,automationRate:0.89},{date:'06-09',documents:249,sum:18900000,automationRate:0.89},{date:'06-10',documents:257,sum:19600000,automationRate:0.89},{date:'06-11',documents:243,sum:18300000,automationRate:0.9},{date:'06-15',documents:261,sum:19900000,automationRate:0.9},{date:'06-16',documents:255,sum:19200000,automationRate:0.9},{date:'06-17',documents:268,sum:20400000,automationRate:0.91},{date:'06-18',documents:247,sum:18340000,automationRate:0.89},
+    ],
+    bottleneckMatrix:[
+      {reason:'Низкая уверенность AI',stage:'recognized',byHour:[0,1,2,1,0,1,1,0],count:6,amount:410000},
+      {reason:'Нет маппинга номенклатуры',stage:'matched',byHour:[1,1,2,2,0,1,2,2],count:11,amount:720000},
+      {reason:'Ждёт проверки бухгалтера',stage:'in_1c',byHour:[0,2,3,2,1,1,3,3],count:15,amount:1340000},
+      {reason:'Гейт услуг/товаров',stage:'posted',byHour:[0,0,1,1,0,0,1,1],count:4,amount:280000},
+      {reason:'Расхождение суммы / спор',stage:'posted',byHour:[0,1,0,1,0,0,1,0],count:3,amount:330000},
+    ],
+    integrations:[
+      {id:'diadoc',label:'Диадок',subtitle:'3 ящика: БТС · Холдинг · Трансэнерго',throughput:'247 док/день',detail:'Поллинг событий, авто-приём входящих'},
+      {id:'bitrix24',label:'Битрикс24',subtitle:'Задачи бухгалтерам + триггеры',throughput:'8 команд-триггеров',detail:'/счёт /упд /тмц /табель /рпп + /пере*'},
+      {id:'gemini',label:'Gemini AI',subtitle:'Распознавание PDF/XML',throughput:'1840 строк/день',detail:'Реквизиты + табличная часть'},
+      {id:'matching',label:'Матчинг-движок',subtitle:'Сопоставление номенклатуры',throughput:'95.9% точность',detail:'Self-learning · 41 488 строк'},
+      {id:'onec',label:'1С',subtitle:'3 базы по юрлицам',throughput:'213 в 1С / 198 проведено',detail:'Авто-создание черновиков, проводка'},
+    ],
+    baseDocs:[
+      {id:'d_740',number:'Счёт №740',type:'invoice',counterpartyId:'c_strpost',employeeId:'e_01',pathway:'auto_diadoc',sum:184800,lines:8,autoLines:8,status:'posted',status1c:'Проведён',yurlitso:'БТС'},
+      {id:'d_815',number:'УПД №815',type:'upd',counterpartyId:'c_metall',employeeId:'e_02',pathway:'auto_diadoc',sum:412000,lines:12,autoLines:9,status:'in_1c',status1c:'Черновик',yurlitso:'Холдинг'},
+      {id:'d_822',number:'Счёт №822',type:'invoice',counterpartyId:'c_translog',employeeId:'e_03',pathway:'manual',sum:96000,lines:4,autoLines:0,status:'recognition_failed',status1c:'—',yurlitso:'БТС'},
+      {id:'d_877',number:'УПД №877',type:'upd',counterpartyId:'c_spectech',employeeId:'e_02',pathway:'auto_diadoc',sum:330000,lines:6,autoLines:5,status:'blocked',status1c:'Спор',yurlitso:'Холдинг'},
+      {id:'d_903',number:'УПД №903',type:'upd',counterpartyId:'c_beton',employeeId:'e_02',pathway:'trigger_upd',sum:264000,lines:7,autoLines:7,status:'posted',status1c:'Проведён',yurlitso:'БТС'},
+      {id:'d_931',number:'РПП №931',type:'payment',counterpartyId:'c_energo',employeeId:'e_04',pathway:'trigger_rpp',sum:1720000,lines:14,autoLines:12,status:'posted',status1c:'Проведён',yurlitso:'Холдинг'},
+      {id:'d_948',number:'ТМЦ №948',type:'tmc',counterpartyId:'c_prommat',employeeId:'e_03',pathway:'auto_diadoc',sum:142000,lines:5,autoLines:3,status:'blocked',status1c:'Гейт',yurlitso:'Трансэнерго'},
+      {id:'d_952',number:'Счёт №952',type:'invoice',counterpartyId:'c_beton',employeeId:'e_01',pathway:'auto_diadoc',sum:318000,lines:9,autoLines:9,status:'posted',status1c:'Проведён',yurlitso:'БТС'},
+    ],
+    events:[
+      {time:'08:12',docId:'d_740',type:'received',source:'diadoc',text:'Счёт №740 получен из Диадок (ящик БТС)',severity:'info'},
+      {time:'08:13',docId:'d_740',type:'recognized',source:'gemini',text:'AI распознал реквизиты и 8 позиций, уверенность 0.97',severity:'ok'},
+      {time:'08:14',docId:'d_740',type:'matched',source:'matching',text:'Номенклатура сопоставлена автоматически (8/8)',severity:'ok'},
+      {time:'08:15',docId:'d_740',type:'in_1c',source:'onec',text:'Создан черновик Счёта в 1С (база БТС)',severity:'ok'},
+      {time:'09:02',docId:'d_822',type:'recognition_failed',source:'gemini',text:'Скан низкого качества — отправлено на ручную проверку',severity:'warn'},
+      {time:'09:21',docId:'d_815',type:'manual_required',source:'matching',text:'УПД №815: 3 строки без маппинга — нужен ручной выбор',severity:'warn'},
+      {time:'10:05',docId:'d_740',type:'posted',source:'accountant',text:'Бухгалтер 01 проверил и провёл Счёт №740',severity:'ok'},
+      {time:'10:48',docId:'d_903',type:'trigger',source:'bitrix24',text:'Команда /упд в задаче Б24 запустила обработку',severity:'info'},
+      {time:'11:30',docId:'d_877',type:'dispute',source:'accountant',text:'СпецТехника: расхождение суммы, спор на 330 000 ₽',severity:'error'},
+      {time:'12:14',docId:'d_815',type:'matched',source:'accountant',text:'Бухгалтер 02 подтвердил ручной выбор номенклатуры',severity:'ok'},
+      {time:'13:40',docId:'d_931',type:'payment',source:'onec',text:'Реестр РПП сформирован, 14 платежей на 1 720 000 ₽',severity:'ok'},
+      {time:'14:22',docId:'d_948',type:'blocked',source:'onec',text:'ТМЦ №948 заблокирован гейтом услуг/товаров',severity:'warn'},
+    ],
+  }; }
+
+  // ---------- BUILT DATA (memoized) ----------
+  get D(){
+    if(this._D) return this._D;
+    const dm = this.DEMO;
+    const NOM=['Арматура А500С ⌀12','Цемент М500 Д0','Бетон В25 W6 F150','Песок строительный','Щебень фр.5–20','Профнастил С8','Кабель ВВГнг 3×2,5','Труба ВГП 57×3,5','Плита перекрытия ПК','Уголок 63×63×5','Кран шаровой ДУ50','Светильник LED 36Вт','Грунтовка ГФ-021','Доставка по городу','Погрузо-разгрузочные работы','Лист г/к 8мм','Швеллер 16П','Гвозди 100мм'];
+    const cpIds=dm.counterparties.map(c=>c.id);
+    const empIds=['e_01','e_02','e_03','e_04','e_05'];
+    const docs=dm.baseDocs.map(d=>Object.assign({},d));
+    // synthesize more documents
+    const typePool=[['invoice','Счёт'],['upd','УПД'],['tmc','ТМЦ'],['payment','РПП'],['invoice','Счёт'],['upd','УПД']];
+    const yl=['БТС','Холдинг','Трансэнерго'];
+    const statusPool=[['posted','Проведён'],['posted','Проведён'],['posted','Проведён'],['in_1c','Черновик'],['in_1c','Черновик'],['matched','—'],['manual_required','—']];
+    let seed=7;
+    const rnd=()=>{ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; };
+    let num=960;
+    for(let i=0;i<14;i++){
+      const t=typePool[Math.floor(rnd()*typePool.length)];
+      num+=Math.floor(rnd()*40)+5;
+      const lines=2+Math.floor(rnd()*11);
+      const allAuto=rnd()>0.32;
+      const autoLines=allAuto?lines:Math.max(0,lines-1-Math.floor(rnd()*3));
+      const st=statusPool[Math.floor(rnd()*statusPool.length)];
+      const sum=Math.round((20000+rnd()*900000)/1000)*1000;
+      const number=t[1]+' №'+num;
+      docs.push({id:'d_'+num,number,type:t[0],counterpartyId:cpIds[Math.floor(rnd()*cpIds.length)],employeeId:empIds[Math.floor(rnd()*empIds.length)],pathway:allAuto?(rnd()>0.7?'trigger_upd':'auto_diadoc'):'manual',sum,lines,autoLines,status:st[0],status1c:st[1],yurlitso:yl[Math.floor(rnd()*yl.length)]});
+    }
+    // line items
+    const lineItems={};
+    docs.forEach(d=>{
+      const arr=[]; let acc=0;
+      for(let k=0;k<d.lines;k++){
+        const auto=k<d.autoLines;
+        const qty=1+Math.floor(rnd()*40);
+        const price=Math.round((300+rnd()*9000)/10)*10;
+        arr.push({name:NOM[(num+k+d.lines)%NOM.length],qty,price,amount:qty*price,matchStatus:auto?'auto_confirmed':'manual_required',matchConfidence:auto?(0.9+rnd()*0.095):(0.38+rnd()*0.28)});
+        acc+=qty*price;
+      }
+      // scale to doc.sum
+      const f=acc>0?d.sum/acc:1;
+      arr.forEach(li=>{ li.amount=Math.round(li.amount*f); li.price=Math.round(li.price*f); });
+      lineItems[d.id]=arr;
+    });
+    // stuck / exceptions
+    const reasonMap={recognition_failed:'Ошибка распознавания',manual_required:'Нет маппинга номенклатуры',in_1c:'Ждёт проверки бухгалтера',matched:'Нет маппинга номенклатуры'};
+    const stuck=[];
+    docs.forEach(d=>{
+      let reason=null,stage=d.status;
+      if(d.status==='blocked'&&d.status1c==='Спор'){reason='Расхождение суммы / спор';stage='posted';}
+      else if(d.status==='blocked'){reason='Гейт услуг/товаров';stage='posted';}
+      else if(reasonMap[d.status]){reason=reasonMap[d.status];}
+      if(reason && d.status!=='posted'){
+        const risk=d.status1c==='Спор'?d.sum:Math.round(d.sum*(0.3+rnd()*0.5));
+        stuck.push({id:'s_'+d.id,docId:d.id,reason,stage,durationHours:1+Math.floor(rnd()*30),riskAmount:risk,responsible:d.employeeId,status:d.status,dispute:d.status1c==='Спор'});
+      }
+    });
+    this._D={docs,lineItems,stuck,
+      empById:Object.fromEntries(dm.employees.map(e=>[e.id,e])),
+      cpById:Object.fromEntries(dm.counterparties.map(c=>[c.id,c])),
+      docById:Object.fromEntries(docs.map(d=>[d.id,d])),
+      depById:Object.fromEntries(dm.departments.map(p=>[p.id,p])),
+    };
+    return this._D;
+  }
+
+  componentDidMount(){
+    this._iv=setInterval(()=>{ this.setState(s=>({tick:s.tick+1})); },5000);
+  }
+  componentWillUnmount(){ clearInterval(this._iv); if(this._tt) clearTimeout(this._tt); }
+
+  // ---------- FORMAT ----------
+  fInt(n){ return Math.round(n).toLocaleString('ru-RU'); }
+  fMoney(n){ if(n>=1e6) return (n/1e6).toFixed(n>=1e7?1:2).replace('.',',')+' млн ₽'; if(n>=1e3) return Math.round(n/1e3).toLocaleString('ru-RU')+' тыс ₽'; return this.fInt(n)+' ₽'; }
+  fMoneyFull(n){ return this.fInt(n)+' ₽'; }
+  pct(x){ return Math.round(x*100)+'%'; }
+
+  // ---------- PERIOD CONFIG ----------
+  get periodCfg(){
+    return {
+      today:{mult:1,series:'hourly',label:'Сегодня',range:'18 июня 2026'},
+      yesterday:{mult:0.94,series:'hourly',label:'Вчера',range:'17 июня 2026'},
+      '7d':{mult:6.7,series:'daily7',label:'За 7 дней',range:'12.06 – 18.06'},
+      '30d':{mult:27,series:'daily',label:'За 30 дней',range:'20.05 – 18.06'},
+      month:{mult:25,series:'daily',label:'Июнь 2026',range:'01.06 – 18.06'},
+      quarter:{mult:74,series:'daily',label:'II квартал 2026',range:'01.04 – 18.06'},
+    }[this.state.period];
+  }
+  pv(base){ return Math.round(base*this.periodCfg.mult); }
+
+  // ---------- ACTIONS ----------
+  setPeriod(p){ this.setState({period:p,chartHover:null}); }
+  toggleCompare(){ this.setState(s=>({compare:!s.compare})); }
+  setChartMetric(m){ this.setState({chartMetric:m,chartHover:null}); }
+  setFilter(f){ this.setState({filter:f}); }
+  setEventFilter(f){ this.setState({eventFilter:f}); }
+  selectEmp(id){ this.setState({selEmp:id}); }
+  openDrawer(frame){ this.setState({drawer:[frame]}); }
+  pushDrawer(frame){ this.setState(s=>({drawer:[...s.drawer,frame]})); }
+  popDrawer(n){ this.setState(s=>({drawer:s.drawer.slice(0,n+1)})); }
+  closeDrawer(){ this.setState({drawer:[]}); }
+  showToast(t){ this.setState({toast:t}); if(this._tt) clearTimeout(this._tt); this._tt=setTimeout(()=>this.setState({toast:null}),2600); }
+  allEvents(){ return [...this.state.extraEvents,...this.DEMO.events]; }
+  simulate(){
+    const D=this.D; const docs=D.docs;
+    const tmpl=[
+      {type:'recognized',source:'gemini',sev:'ok',txt:d=>`AI распознал ${d.number}, уверенность ${(0.9+Math.random()*0.09).toFixed(2)}`},
+      {type:'matched',source:'matching',sev:'ok',txt:d=>`Номенклатура сопоставлена автоматически (${d.autoLines}/${d.lines})`},
+      {type:'in_1c',source:'onec',sev:'ok',txt:d=>`Создан черновик ${d.number} в 1С (база ${d.yurlitso})`},
+      {type:'posted',source:'accountant',sev:'ok',txt:d=>`Бухгалтер проверил и провёл ${d.number}`},
+      {type:'received',source:'diadoc',sev:'info',txt:d=>`${d.number} получен из Диадок`},
+    ];
+    const d=docs[Math.floor(Math.random()*docs.length)];
+    const t=tmpl[Math.floor(Math.random()*tmpl.length)];
+    const now=new Date(); const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    const ev={time,docId:d.id,type:t.type,source:t.source,text:t.txt(d),severity:t.sev};
+    this.setState(s=>({extraEvents:[ev,...s.extraEvents]}));
+    this.showToast('Новое событие добавлено в ленту');
+  }
+  applyAction(docId,label,newStatus1c){
+    this.setState(s=>({overrides:Object.assign({},s.overrides,{[docId]:newStatus1c})}));
+    const D=this.D; const d=D.docById[docId];
+    const now=new Date(); const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    this.setState(s=>({extraEvents:[{time,docId,type:'posted',source:'accountant',text:`${label}: ${d?d.number:docId}`,severity:'ok'},...s.extraEvents]}));
+    this.showToast('Статус обновлён · '+label);
+  }
+  docStatus1c(d){ return this.state.overrides[d.id]||d.status1c; }
+
+  // ---------- COLORS ----------
+  srcColor(src){ const C=this.C; return {diadoc:C.blue,gemini:C.teal,matching:C.teal,bitrix24:C.yellow,onec:C.green,accountant:C.blue}[src]||C.muted; }
+  srcLabel(src){ return {diadoc:'Диадок',gemini:'Gemini',matching:'Матчинг',bitrix24:'Битрикс24',onec:'1С',accountant:'Бухгалтер'}[src]||src; }
+  sevColor(s){ const C=this.C; return {ok:C.green,info:C.blue,warn:C.orange,error:C.red}[s]||C.muted; }
+  status1cColor(s){ const C=this.C; return {'Проведён':C.green,'Черновик':C.blue,'Спор':C.red,'Гейт':C.orange,'—':C.gray}[s]||C.muted; }
+  pathwayLabel(p){ if(p==='auto_diadoc') return 'Авто · Диадок'; if(p==='manual') return 'Вручную'; if(p&&p.indexOf('trigger')===0) return 'Триггер · /'+p.split('_')[1]; return p; }
+  typeLabel(t){ return {invoice:'Счёт',upd:'УПД',tmc:'ТМЦ',payment:'Платёж',timesheet:'Табель'}[t]||t; }
+
+  // ---------- React helpers ----------
+  h(...a){ return React.createElement(...a); }
+  badge(text,color){ return this.h('span',{style:{fontSize:'10.5px',fontWeight:600,padding:'2px 9px',borderRadius:'6px',color,background:this.hexA(color,.14),whiteSpace:'nowrap'}},text); }
+  hexA(c,a){ const C=this.C; const map={[C.green]:'55,211,153',[C.blue]:'91,157,255',[C.teal]:'45,212,191',[C.yellow]:'242,193,78',[C.orange]:'255,157,77',[C.red]:'255,109,109',[C.gray]:'91,102,119',[C.muted]:'133,147,166'}; const rgb=map[c]||'133,147,166'; return `rgba(${rgb},${a})`; }
+  card(children,extra){ return this.h('div',{style:Object.assign({background:this.C.card,border:'1px solid '+this.C.border,borderRadius:'11px',padding:'13px 15px'},extra||{})},children); }
+  kv(label,value,vstyle){ const C=this.C; return this.h('div',{style:{display:'flex',flexDirection:'column',gap:'3px'}},this.h('span',{style:{fontSize:'10px',textTransform:'uppercase',letterSpacing:'.04em',color:C.dim}},label),this.h('span',{style:Object.assign({fontSize:'13px',fontWeight:500,fontFamily:C.mono},vstyle||{})},value)); }
+  miniKpi(label,value,color){ const C=this.C; return this.card([this.h('div',{style:{fontSize:'10px',textTransform:'uppercase',letterSpacing:'.04em',color:C.dim,marginBottom:'5px'}},label),this.h('div',{style:{fontSize:'19px',fontWeight:600,fontFamily:C.mono,color:color||C.text}},value)],{padding:'11px 13px',flex:1}); }
+  secTitle(t){ return this.h('div',{style:{fontSize:'11px',textTransform:'uppercase',letterSpacing:'.05em',color:this.C.muted,fontWeight:600,margin:'4px 0 9px'}},t); }
+  miniBar(pct,color,h){ const C=this.C; return this.h('div',{style:{height:(h||7)+'px',borderRadius:'5px',background:'rgba(255,255,255,.06)',overflow:'hidden'}},this.h('div',{style:{height:'100%',width:Math.max(2,Math.min(100,pct))+'%',background:color,borderRadius:'5px'}})); }
+  linkRow(label,sub,color,onClick,right){ const C=this.C; return this.h('div',{onClick,style:{cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',gap:'10px',padding:'9px 11px',borderRadius:'9px',background:C.panel2,border:'1px solid '+C.border,transition:'.13s'},onMouseEnter:e=>e.currentTarget.style.background=C.card,onMouseLeave:e=>e.currentTarget.style.background=C.panel2},this.h('div',{style:{minWidth:0}},this.h('div',{style:{fontSize:'12.5px',fontWeight:500,color:color||C.text}},label),sub?this.h('div',{style:{fontSize:'10.5px',color:C.dim,marginTop:'2px'}},sub):null),right||null); }
+
+  // ---------- CHART NODE ----------
+  buildChart(){
+    const C=this.C, dm=this.DEMO, st=this.state, h=this.h.bind(this);
+    const cfg=this.periodCfg;
+    let raw, kind;
+    if(cfg.series==='hourly'){ raw=dm.hourly; kind='hourly'; }
+    else if(cfg.series==='daily7'){ raw=dm.daily.slice(-7); kind='daily'; }
+    else { raw=dm.daily; kind='daily'; }
+    const metric=st.chartMetric;
+    const sc=this.scope(), dRatio=sc.ratio, sRatio=dm.summary.documentsSum?sc.sum.documentsSum/dm.summary.documentsSum:1;
+    const getVal=(pt)=>{
+      if(metric==='documents') return Math.round(pt.documents*dRatio);
+      if(metric==='sum') return Math.round(pt.sum*sRatio);
+      if(metric==='automation') return sc.mode!=='all'?sc.sum.automationRate:(kind==='hourly'?(pt.auto/pt.documents):pt.automationRate);
+      if(metric==='bottlenecks') return Math.round((kind==='hourly'?pt.stuck:pt.documents*0.045)*(sc.mode==='attention'?2:dRatio));
+      return Math.round(pt.documents*dRatio);
+    };
+    const label=(pt)=>kind==='hourly'?pt.hour:pt.date;
+    const mColor={documents:C.blue,sum:C.green,automation:C.teal,bottlenecks:C.orange}[metric];
+    const vals=raw.map(getVal);
+    const cur=vals.slice();
+    const prev=st.compare?vals.map((v,i)=>Math.round(v*(0.86+0.04*Math.sin(i)) )):null;
+    let max=Math.max(...cur,...(prev||[0])), min=0;
+    if(metric==='automation'){ min=Math.min(...cur,...(prev||[1]))-0.05; max=Math.max(...cur,...(prev||[0]))+0.02; }
+    const span=(max-min)||1;
+    const n=cur.length;
+    const xOf=i=>n<=1?50:(i/(n-1))*100;
+    const yOf=v=>100-((v-min)/span)*88-6;
+    const pathOf=(arr)=>arr.map((v,i)=>`${xOf(i).toFixed(2)},${yOf(v).toFixed(2)}`).join(' ');
+    const areaD=`M ${xOf(0).toFixed(2)},100 L `+cur.map((v,i)=>`${xOf(i).toFixed(2)},${yOf(v).toFixed(2)}`).join(' L ')+` L ${xOf(n-1).toFixed(2)},100 Z`;
+    const fmtV=(v)=>{ if(metric==='sum') return this.fMoney(v); if(metric==='automation') return Math.round(v*100)+'%'; return this.fInt(v); };
+    const hv=st.chartHover;
+    const gid='cg_'+metric;
+    return h('div',{style:{position:'relative'}},
+      h('div',{style:{position:'relative',height:'210px',marginTop:'8px'}},
+        // gridlines
+        [0,1,2,3].map(g=>h('div',{key:g,style:{position:'absolute',left:0,right:0,top:(g*25+4)+'%',borderTop:'1px solid rgba(255,255,255,.045)'}})),
+        h('svg',{viewBox:'0 0 100 100',preserveAspectRatio:'none',style:{position:'absolute',inset:0,width:'100%',height:'100%',overflow:'visible'}},
+          h('defs',null,h('linearGradient',{id:gid,x1:0,y1:0,x2:0,y2:1},h('stop',{offset:'0%',stopColor:mColor,stopOpacity:.34}),h('stop',{offset:'100%',stopColor:mColor,stopOpacity:0}))),
+          h('path',{d:areaD,fill:'url(#'+gid+')'}),
+          prev?h('polyline',{points:pathOf(prev),fill:'none',stroke:C.muted,strokeWidth:1.4,strokeDasharray:'3,3',vectorEffect:'non-scaling-stroke',opacity:.7}):null,
+          h('polyline',{points:pathOf(cur),fill:'none',stroke:mColor,strokeWidth:2.2,vectorEffect:'non-scaling-stroke',strokeLinejoin:'round'}),
+        ),
+        // dots + hit areas
+        cur.map((v,i)=>h('div',{key:i,onClick:()=>this.openDrawer({type:'interval',id:i,label:label(raw[i])}),onMouseEnter:()=>this.setState({chartHover:i}),onMouseLeave:()=>this.setState({chartHover:null}),style:{position:'absolute',left:xOf(i)+'%',top:0,bottom:0,width:(100/n)+'%',transform:'translateX(-50%)',cursor:'pointer'}},
+          h('div',{style:{position:'absolute',left:'50%',top:yOf(v)+'%',width:hv===i?'11px':'7px',height:hv===i?'11px':'7px',borderRadius:'50%',background:hv===i?'#fff':mColor,border:'2px solid '+mColor,transform:'translate(-50%,-50%)',boxShadow:hv===i?'0 0 12px '+mColor:'none',transition:'.1s'}})
+        )),
+        // tooltip
+        hv!=null?h('div',{style:{position:'absolute',left:xOf(hv)+'%',top:yOf(cur[hv])+'%',transform:'translate(-50%,-130%)',background:C.bg,border:'1px solid '+C.border2,borderRadius:'9px',padding:'8px 11px',pointerEvents:'none',whiteSpace:'nowrap',zIndex:5,boxShadow:'0 8px 24px rgba(0,0,0,.5)'}},
+          h('div',{style:{fontSize:'11px',color:C.muted,marginBottom:'3px'}},label(raw[hv])),
+          h('div',{style:{fontFamily:C.mono,fontSize:'14px',fontWeight:600,color:mColor}},fmtV(cur[hv])),
+          kind==='hourly'?h('div',{style:{fontSize:'10.5px',color:C.dim,marginTop:'2px'}},`авто ${raw[hv].auto} · застряло ${raw[hv].stuck}`):null
+        ):null,
+      ),
+      // x labels
+      h('div',{style:{display:'flex',justifyContent:'space-between',marginTop:'8px'}},raw.map((pt,i)=>h('span',{key:i,style:{fontSize:'10px',color:C.dim,fontFamily:C.mono}},label(pt)))),
+    );
+  }
+
+  // ---------- FUNNEL ----------
+  buildFunnel(){
+    const C=this.C,dm=this.DEMO,h=this.h.bind(this);
+    const base=dm.pipeline[0].count;
+    const colors=[C.blue,C.teal,C.teal,C.yellow,C.green];
+    return h('div',{style:{display:'flex',flexDirection:'column',gap:'4px'}},dm.pipeline.map((s,i)=>{
+      const w=Math.round(s.count/base*100);
+      const lost=i>0?dm.pipeline[i-1].count-s.count:0;
+      return h('div',{key:s.stage},
+        h('div',{onClick:()=>this.openDrawer({type:'pipeline',id:i,label:s.label}),style:{cursor:'pointer',position:'relative',height:'34px',borderRadius:'8px',background:'rgba(255,255,255,.04)',overflow:'hidden',transition:'.15s'},onMouseEnter:e=>e.currentTarget.style.filter='brightness(1.18)',onMouseLeave:e=>e.currentTarget.style.filter='none'},
+          h('div',{style:{position:'absolute',left:0,top:0,bottom:0,width:w+'%',background:this.hexA(colors[i],.3),borderRight:'2px solid '+colors[i],transition:'width .5s'}}),
+          h('div',{style:{position:'relative',height:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 12px'}},
+            h('span',{style:{fontSize:'12px',fontWeight:500}},s.label),
+            h('span',{style:{fontFamily:C.mono,fontSize:'13px',fontWeight:600,color:colors[i]}},this.fInt(s.count))
+          )
+        ),
+        lost>0?h('div',{style:{display:'flex',justifyContent:'flex-end',alignItems:'center',gap:'6px',padding:'2px 4px'}},h('span',{style:{fontSize:'10px',color:C.dim}},`−${lost} · ${s.lostReason}`)):null
+      );
+    }));
+  }
+
+  // ---------- HEATMAP ----------
+  buildHeatmap(){
+    const C=this.C,dm=this.DEMO,h=this.h.bind(this);
+    const hours=dm.hourly.map(x=>x.hour.slice(0,2));
+    const colorFor=(v)=>v===0?'rgba(255,255,255,.05)':v===1?C.yellow:v===2?C.orange:C.red;
+    return h('div',{style:{display:'grid',gridTemplateColumns:'170px repeat(8,1fr)',gap:'4px',alignItems:'center'}},
+      h('div',null),
+      hours.map(hh=>h('div',{key:hh,style:{textAlign:'center',fontSize:'10px',color:C.dim,fontFamily:C.mono}},hh)),
+      dm.bottleneckMatrix.map((row)=>[
+        h('div',{key:row.reason+'_l',style:{fontSize:'11.5px',color:C.muted,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',paddingRight:'6px'}},row.reason),
+        ...row.byHour.map((v,i)=>h('div',{key:row.reason+i,title:`${row.reason} · ${hours[i]}:00 · ${v} застряло`,onClick:()=>v>0&&this.openDrawer({type:'heatcell',payload:{reason:row.reason,stage:row.stage,hour:hours[i],count:v,amount:Math.round(row.amount/Math.max(1,row.count)*v)}}),style:{height:'30px',borderRadius:'6px',background:colorFor(v),opacity:v===0?1:.88,display:'flex',alignItems:'center',justifyContent:'center',cursor:v>0?'pointer':'default',fontFamily:C.mono,fontSize:'11px',fontWeight:600,color:v>0?'#0a0e13':C.dim,transition:'.13s'},onMouseEnter:e=>{if(v>0)e.currentTarget.style.transform='scale(1.12)';},onMouseLeave:e=>e.currentTarget.style.transform='scale(1)'},v>0?v:'')),
+      ])
+    );
+  }
+
+  // ---------- CONVEYOR ----------
+  buildConveyor(){
+    const C=this.C,h=this.h.bind(this);
+    const nodes=[
+      {id:'diadoc',title:'Диадок',sub:'3 ящика ЭДО',main:'247',mainLabel:'вход',color:C.blue,queue:null,err:null},
+      {id:'gemini',title:'Gemini AI',sub:'распознавание',main:'241',mainLabel:'распознано',color:C.teal,queue:'6',err:'6'},
+      {id:'matching',title:'Матчинг',sub:'номенклатура',main:'95.9%',mainLabel:'точность',color:C.teal,queue:'13',err:null},
+      {id:'bitrix24',title:'Битрикс24',sub:'задачи + триггеры',main:'8',mainLabel:'триггеров',color:C.yellow,queue:'19',err:null},
+      {id:'onec',title:'1С · 3 базы',sub:'БТС·Холдинг·ТЭ',main:'213/198',mainLabel:'в 1С/проведено',color:C.green,queue:'15',err:null},
+    ];
+    const out=[];
+    nodes.forEach((nd,i)=>{
+      out.push(h('div',{key:nd.id,onClick:()=>this.openDrawer({type:'integration',id:nd.id}),style:{flex:'1 1 0',minWidth:'120px',cursor:'pointer',background:C.panel2,border:'1px solid '+C.border,borderTop:'2px solid '+nd.color,borderRadius:'11px',padding:'12px 13px',transition:'.16s'},onMouseEnter:e=>{e.currentTarget.style.borderColor=nd.color;e.currentTarget.style.transform='translateY(-2px)';},onMouseLeave:e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.borderTopColor=nd.color;e.currentTarget.style.transform='none';}},
+        h('div',{style:{fontSize:'12.5px',fontWeight:600}},nd.title),
+        h('div',{style:{fontSize:'10px',color:C.dim,marginBottom:'8px'}},nd.sub),
+        h('div',{style:{fontFamily:C.mono,fontSize:'18px',fontWeight:600,color:nd.color,lineHeight:1}},nd.main),
+        h('div',{style:{fontSize:'9.5px',color:C.dim,marginTop:'2px'}},nd.mainLabel),
+        (nd.queue||nd.err)?h('div',{style:{display:'flex',gap:'7px',marginTop:'9px'}},nd.queue?h('span',{style:{fontSize:'9.5px',color:C.yellow}},'очередь '+nd.queue):null,nd.err?h('span',{style:{fontSize:'9.5px',color:C.red}},'ошибок '+nd.err):null):null
+      ));
+      if(i<nodes.length-1) out.push(h('div',{key:'arr'+i,style:{flex:'0 0 22px',display:'flex',alignItems:'center',justifyContent:'center',color:C.dim,fontSize:'17px'}},'→'));
+    });
+    return h('div',{style:{display:'flex',alignItems:'stretch',gap:'4px',flexWrap:'wrap'}},out);
+  }
+
+  // ---------- INSPECTOR ----------
+  buildInspector(){
+    const C=this.C,h=this.h.bind(this),D=this.D;
+    const e=D.empById[this.state.selEmp]||this.DEMO.employees[0];
+    const isBot=e.status==='bot';
+    const accent=isBot?C.teal:e.load>0.8?C.orange:C.green;
+    const dep=D.depById[e.department];
+    const evs=this.allEvents().filter(ev=>ev.source==='accountant').slice(0,4);
+    return h('div',null,
+      h('div',{style:{fontSize:'11px',textTransform:'uppercase',letterSpacing:'.05em',color:C.muted,fontWeight:600,marginBottom:'12px'}},'Инспектор'),
+      h('div',{style:{display:'flex',alignItems:'center',gap:'11px',marginBottom:'14px'}},
+        h('div',{style:{width:'42px',height:'42px',borderRadius:'11px',background:this.hexA(accent,.16),border:'1px solid '+this.hexA(accent,.4),display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,color:accent,fontSize:'15px',fontFamily:C.mono}},isBot?'БОТ':e.name.slice(-2)),
+        h('div',{style:{minWidth:0}},h('div',{style:{fontSize:'14.5px',fontWeight:600}},e.name),h('div',{style:{fontSize:'11px',color:C.dim}},e.role))
+      ),
+      h('div',{style:{display:'flex',gap:'8px',marginBottom:'13px'}},
+        this.miniKpi('Документов',this.fInt(e.documents),C.text),
+        this.miniKpi('% авто',this.pct(e.auto/Math.max(1,e.documents)),C.teal),
+      ),
+      h('div',{style:{display:'flex',gap:'8px',marginBottom:'14px'}},
+        this.miniKpi('Ср. время',isBot?'2 мин':e.avgMinutes+' мин',C.text),
+        this.miniKpi('Подтвержд.',this.pct(e.confirmationRate),C.green),
+      ),
+      h('div',{style:{marginBottom:'14px'}},
+        h('div',{style:{display:'flex',justifyContent:'space-between',fontSize:'11px',color:C.muted,marginBottom:'5px'}},h('span',null,'Нагрузка'),h('span',{style:{fontFamily:C.mono,color:accent}},isBot?'авто':this.pct(e.load))),
+        this.miniBar(isBot?100:e.load*100,accent,8)
+      ),
+      this.secTitle('Последнее действие'),
+      this.card([h('div',{style:{fontSize:'12px',lineHeight:1.4}},e.lastAction),h('div',{style:{fontSize:'10px',color:C.dim,marginTop:'5px'}},dep?dep.name:'Все направления')],{marginBottom:'12px'}),
+      this.secTitle('Хронология'),
+      h('div',{style:{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'14px'}},evs.map((ev,i)=>this.linkRow(ev.text,this.srcLabel(ev.source)+' · '+ev.time,null,()=>this.openDrawer({type:'event',id:this.allEvents().indexOf(ev)})))),
+      h('button',{onClick:()=>this.openDrawer({type:'accountant',id:e.id}),style:{width:'100%',border:'1px solid '+C.border2,cursor:'pointer',fontFamily:'inherit',fontSize:'12px',fontWeight:500,padding:'10px',borderRadius:'9px',background:C.card,color:C.text,transition:'.15s'},onMouseEnter:ev=>ev.currentTarget.style.borderColor=C.blue,onMouseLeave:ev=>ev.currentTarget.style.borderColor=C.border2},'Открыть детализацию →')
+    );
+  }
+
+  // ---------- DRAWER FRAMES ----------
+  drawerActionBtns(docId,actions){
+    const C=this.C,h=this.h.bind(this);
+    return h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap',marginTop:'4px'}},actions.map((a,i)=>h('button',{key:i,onClick:()=>this.applyAction(docId,a.label,a.set),style:{border:'1px solid '+(a.primary?'transparent':C.border2),cursor:'pointer',fontFamily:'inherit',fontSize:'12px',fontWeight:500,padding:'9px 14px',borderRadius:'8px',background:a.primary?a.color:C.card,color:a.primary?'#0a0e13':C.text,transition:'.15s'},onMouseEnter:e=>e.currentTarget.style.filter='brightness(1.12)',onMouseLeave:e=>e.currentTarget.style.filter='none'},a.label)));
+  }
+  timeline(steps){
+    const C=this.C,h=this.h.bind(this);
+    return h('div',{style:{display:'flex',flexDirection:'column'}},steps.map((s,i)=>h('div',{key:i,style:{display:'flex',gap:'11px'}},
+      h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center'}},
+        h('div',{style:{width:'13px',height:'13px',borderRadius:'50%',background:s.done?s.color:'transparent',border:'2px solid '+(s.active?s.color:s.done?s.color:C.gray),boxShadow:s.active?'0 0 9px '+s.color:'none'}}),
+        i<steps.length-1?h('div',{style:{width:'2px',flex:1,minHeight:'18px',background:s.done?this.hexA(s.color,.5):'rgba(255,255,255,.08)'}}):null
+      ),
+      h('div',{style:{paddingBottom:'14px',flex:1}},h('div',{style:{fontSize:'12.5px',fontWeight:s.active?600:500,color:s.active?s.color:C.text}},s.label),s.sub?h('div',{style:{fontSize:'10.5px',color:C.dim,marginTop:'2px'}},s.sub):null)
+    )));
+  }
+  lineItemsTable(docId){
+    const C=this.C,h=this.h.bind(this),D=this.D;
+    const items=D.lineItems[docId]||[];
+    return h('div',{style:{border:'1px solid '+C.border,borderRadius:'10px',overflow:'hidden'}},
+      h('div',{style:{display:'grid',gridTemplateColumns:'1fr 44px 78px 78px',gap:'8px',padding:'8px 12px',background:C.panel2,fontSize:'10px',textTransform:'uppercase',letterSpacing:'.04em',color:C.dim}},h('span',null,'Позиция'),h('span',{style:{textAlign:'right'}},'Кол-во'),h('span',{style:{textAlign:'right'}},'Сумма'),h('span',{style:{textAlign:'right'}},'Матчинг')),
+      items.map((li,i)=>h('div',{key:i,style:{display:'grid',gridTemplateColumns:'1fr 44px 78px 78px',gap:'8px',padding:'9px 12px',borderTop:'1px solid '+C.border,fontSize:'11.5px',alignItems:'center'}},
+        h('span',{style:{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}},li.name),
+        h('span',{style:{textAlign:'right',fontFamily:C.mono,color:C.muted}},li.qty),
+        h('span',{style:{textAlign:'right',fontFamily:C.mono}},this.fInt(li.amount)),
+        h('span',{style:{textAlign:'right',fontFamily:C.mono,fontSize:'10.5px',color:li.matchStatus==='auto_confirmed'?C.green:C.orange}},li.matchStatus==='auto_confirmed'?'авто '+Math.round(li.matchConfidence*100)+'%':'ручной')
+      ))
+    );
+  }
+
+  renderFrame(frame){
+    const C=this.C,h=this.h.bind(this),D=this.D,dm=this.DEMO;
+    const t=frame.type;
+    if(t==='document'){
+      const d=D.docById[frame.id]; if(!d) return null;
+      const cp=D.cpById[d.counterpartyId], emp=D.empById[d.employeeId];
+      const s1c=this.docStatus1c(d);
+      const isProblem=['recognition_failed','manual_required','blocked','in_1c'].includes(d.status)&&s1c!=='Проведён';
+      const recOk=d.status!=='recognition_failed';
+      const matchOk=d.autoLines>=d.lines||['matched','in_1c','posted'].includes(d.status);
+      const steps=[
+        {label:'Получен из Диадок',sub:'ящик '+d.yurlitso,done:true,color:C.blue},
+        {label:'Распознан AI (Gemini)',sub:recOk?'реквизиты + '+d.lines+' позиций':'ошибка распознавания',done:recOk,active:!recOk,color:recOk?C.teal:C.red},
+        {label:'Номенклатура сопоставлена',sub:d.autoLines+'/'+d.lines+' авто',done:matchOk,active:d.status==='manual_required',color:d.status==='manual_required'?C.orange:C.teal},
+        {label:'Задача в Битрикс24',sub:emp?emp.name:'',done:['in_1c','posted','blocked'].includes(d.status),color:C.yellow},
+        {label:'Создан черновик в 1С',sub:'база '+d.yurlitso,done:['in_1c','posted'].includes(d.status)||s1c==='Проведён',active:s1c==='Черновик',color:C.blue},
+        {label:'Проведён в 1С',sub:s1c==='Проведён'?'готово':s1c==='Спор'?'спор':s1c==='Гейт'?'заблокирован гейтом':'ждёт',done:s1c==='Проведён',active:s1c!=='Проведён',color:s1c==='Проведён'?C.green:s1c==='Спор'?C.red:C.orange},
+      ];
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},this.badge('Распознавание · '+(recOk?'ОК':'ошибка'),recOk?C.green:C.red),this.badge('Сопоставление · '+d.autoLines+'/'+d.lines,matchOk?C.green:C.orange),this.badge('1С · '+s1c,this.status1cColor(s1c))),
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},
+          this.card([this.kv('Тип',this.typeLabel(d.type))]),
+          this.card([this.kv('Путь документа',this.pathwayLabel(d.pathway))]),
+          this.card([this.kv('Контрагент',cp?cp.name:'—'),h('div',{onClick:()=>this.pushDrawer({type:'counterparty',id:d.counterpartyId}),style:{cursor:'pointer',fontSize:'10.5px',color:C.blue,marginTop:'5px'}},'Открыть контрагента →')]),
+          this.card([this.kv('Бухгалтер',emp?emp.name:'—'),h('div',{onClick:()=>this.pushDrawer({type:'accountant',id:d.employeeId}),style:{cursor:'pointer',fontSize:'10.5px',color:C.blue,marginTop:'5px'}},'Открыть бухгалтера →')]),
+          this.card([this.kv('Сумма',this.fMoneyFull(d.sum),{color:C.text})]),
+          this.card([this.kv('Юрлицо (база 1С)',d.yurlitso)]),
+        ),
+        h('div',null,this.secTitle('Timeline документа'),this.timeline(steps)),
+        h('div',null,this.secTitle('Табличная часть · '+d.lines+' строк'),this.lineItemsTable(d.id)),
+        h('div',null,this.secTitle('Первичные данные / артефакты'),h('div',{style:{display:'flex',flexDirection:'column',gap:'7px'}},
+          this.linkRow('Событие Диадок · XML/PDF','исходный документ ЭДО',C.blue,null,this.badge('получен',C.green)),
+          this.linkRow('Ответ Gemini · JSON',recOk?'реквизиты + табличная часть':'низкое качество скана',C.teal,null,this.badge(recOk?'распознан':'ошибка',recOk?C.green:C.red)),
+          this.linkRow('Документ 1С · '+d.yurlitso,'черновик / проводка',C.green,()=>this.pushDrawer({type:'posting',id:d.id}),this.badge(s1c,this.status1cColor(s1c))),
+        )),
+        isProblem?h('div',null,this.secTitle('Demo-действия'),this.drawerActionBtns(d.id,[
+          {label:'Подтвердить сопоставление',color:C.teal,set:'Черновик'},
+          {label:'Провести в 1С',primary:true,color:C.green,set:'Проведён'},
+          {label:'На ручную проверку',color:C.orange,set:'Черновик'},
+        ])):null
+      );
+    }
+    if(t==='stuck'){
+      const s=D.stuck.find(x=>x.id===frame.id)||D.stuck.find(x=>x.docId===frame.id); if(!s) return null;
+      const d=D.docById[s.docId], cp=D.cpById[d.counterpartyId], emp=D.empById[s.responsible];
+      const stageLabel={recognized:'на распознавании',matched:'на сопоставлении',in_1c:'ждёт проверки',posted:'гейт / спор'}[s.stage]||s.stage;
+      const steps=[
+        {label:'Получен из Диадок',done:true,color:C.blue},
+        {label:'Распознан AI',done:s.stage!=='recognized',active:s.stage==='recognized',color:s.stage==='recognized'?C.red:C.teal},
+        {label:'Сопоставление',done:!['recognized','matched'].includes(s.stage),active:s.stage==='matched',color:s.stage==='matched'?C.orange:C.teal},
+        {label:'Проверка / 1С',done:false,active:['in_1c','posted'].includes(s.stage),color:C.orange},
+      ];
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},this.badge(stageLabel,C.orange),this.badge(s.reason,s.dispute?C.red:C.orange)),
+        s.dispute?this.card([h('div',{style:{fontSize:'13px',fontWeight:600,color:C.red,marginBottom:'7px'}},'⚠ Спор · расхождение суммы'),h('div',{style:{fontSize:'11.5px',color:C.muted,lineHeight:1.45,marginBottom:'10px'}},'Инициатор: '+(emp?emp.name:'—')+'. Сумма в документе не сходится с ожидаемой в 1С.'),h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'9px'}},this.kv('В документе',this.fMoneyFull(d.sum),{color:C.text}),this.kv('Ожидается в 1С',this.fMoneyFull(Math.round(d.sum*0.78)),{color:C.text}))],{borderColor:this.hexA(C.red,.4),background:this.hexA(C.red,.07)}):null,
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},
+          this.card([this.kv('Этап',stageLabel)]),
+          this.card([this.kv('Застрял',s.durationHours+' ч')]),
+          this.card([this.kv('Сумма под риском',this.fMoneyFull(s.riskAmount),{color:C.red})]),
+          this.card([this.kv('Ответственный',emp?emp.name:'—'),h('div',{onClick:()=>this.pushDrawer({type:'accountant',id:s.responsible}),style:{cursor:'pointer',fontSize:'10.5px',color:C.blue,marginTop:'5px'}},'Открыть →')]),
+        ),
+        h('div',null,this.secTitle('Где застопорился'),this.timeline(steps)),
+        h('div',null,this.secTitle('Что блокирует'),this.card([h('div',{style:{fontSize:'12px',lineHeight:1.5,color:C.muted}},s.reason+'. До устранения документ не может быть проведён в 1С.')],{marginBottom:'8px'})),
+        h('div',null,this.secTitle('Документ'),this.linkRow(d.number,(cp?cp.name:'')+' · '+this.fMoney(d.sum),C.text,()=>this.pushDrawer({type:'document',id:d.id}),h('span',{style:{color:C.blue,fontSize:'11px'}},'→'))),
+        h('div',null,this.secTitle('Demo-действия'),this.drawerActionBtns(d.id,s.dispute?[
+          {label:'Принять спор',color:C.orange,set:'Черновик'},
+          {label:'Отклонить спор',primary:true,color:C.green,set:'Проведён'},
+          {label:'Переназначить',color:C.blue,set:'Спор'},
+        ]:[
+          {label:'Подтвердить сопоставление',color:C.teal,set:'Черновик'},
+          {label:'Провести в 1С',primary:true,color:C.green,set:'Проведён'},
+          {label:'На ручную проверку',color:C.orange,set:'Черновик'},
+        ]))
+      );
+    }
+    if(t==='accountant'){
+      const e=D.empById[frame.id]; if(!e) return null;
+      const isBot=e.status==='bot';
+      const docs=D.docs.filter(d=>d.employeeId===e.id);
+      const manual=docs.filter(d=>d.pathway==='manual'||d.autoLines<d.lines);
+      const dep=D.depById[e.department];
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},this.badge(isBot?'Бот · без участия человека':'Активен',isBot?C.teal:C.green),this.badge(dep?dep.name:'Все направления',C.blue)),
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},
+          this.miniKpi('Документов',this.fInt(e.documents)),
+          this.miniKpi('% авто',this.pct(e.auto/Math.max(1,e.documents)),C.teal),
+          this.miniKpi('Ср. время',isBot?'2 мин':e.avgMinutes+' мин'),
+          this.miniKpi('Подтверждений',this.pct(e.confirmationRate),C.green),
+        ),
+        h('div',null,this.secTitle('Нагрузка'),this.miniBar(isBot?100:e.load*100,isBot?C.teal:e.load>0.8?C.orange:C.green,9),h('div',{style:{fontSize:'10.5px',color:C.dim,marginTop:'5px'}},isBot?'Конвейер работает без ручного труда':this.pct(e.load)+' от расчётной нагрузки')),
+        h('div',null,this.secTitle('Документы ('+docs.length+')'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px',maxHeight:'220px',overflow:'auto'}},docs.slice(0,12).map(d=>this.linkRow(d.number,(D.cpById[d.counterpartyId]||{}).name+' · '+this.fMoney(d.sum),C.text,()=>this.pushDrawer({type:'document',id:d.id}),this.badge(this.docStatus1c(d),this.status1cColor(this.docStatus1c(d))))))),
+        manual.length?h('div',null,this.secTitle('Ручные правки / споры ('+manual.length+')'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},manual.slice(0,6).map(d=>this.linkRow(d.number,d.pathway==='manual'?'ручной ввод':'ручной выбор номенклатуры',C.orange,()=>this.pushDrawer({type:'document',id:d.id}))))):null,
+      );
+    }
+    if(t==='counterparty'){
+      const c=D.cpById[frame.id]; if(!c) return null;
+      const docs=D.docs.filter(d=>d.counterpartyId===c.id);
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},this.badge(c.type,C.blue),this.badge(c.status==='confirmed'?'подтверждён':c.status==='dispute'?'спор':'частично',c.status==='confirmed'?C.green:c.status==='dispute'?C.red:C.yellow)),
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},
+          this.miniKpi('Сумма за период',this.fMoney(c.sum)),
+          this.miniKpi('Подтверждено',this.fMoney(c.confirmedSum),C.green),
+          this.miniKpi('Документов',this.fInt(c.documents)),
+          this.miniKpi('Под риском',c.riskAmount?this.fMoney(c.riskAmount):'—',c.riskAmount?C.red:C.green),
+        ),
+        h('div',null,this.secTitle('Доля автоматизации'),this.miniBar(c.automationRate*100,C.teal,9),h('div',{style:{fontSize:'10.5px',color:C.dim,marginTop:'5px'}},this.pct(c.automationRate)+' документов прошли автоматически · споров: '+c.disputes)),
+        c.riskAmount?this.card([h('div',{style:{fontSize:'12px',fontWeight:600,color:C.red,marginBottom:'5px'}},'Сумма под риском'),h('div',{style:{fontSize:'11.5px',color:C.muted,lineHeight:1.45}},this.fMoneyFull(c.riskAmount)+' — '+(c.status==='dispute'?'под спором (расхождение суммы)':'не проведено / ждёт подтверждения'))],{borderColor:this.hexA(C.red,.35),background:this.hexA(C.red,.06)}):null,
+        h('div',null,this.secTitle('Документы ('+docs.length+')'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px',maxHeight:'260px',overflow:'auto'}},docs.map(d=>this.linkRow(d.number,this.typeLabel(d.type)+' · '+this.fMoney(d.sum),C.text,()=>this.pushDrawer({type:'document',id:d.id}),this.badge(this.docStatus1c(d),this.status1cColor(this.docStatus1c(d))))))),
+      );
+    }
+    if(t==='posting'){
+      const d=D.docById[frame.id]; const s1c=this.docStatus1c(d);
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px'}},this.badge('1С · '+d.yurlitso,C.blue),this.badge(s1c,this.status1cColor(s1c))),
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},
+          this.card([this.kv('Документ',d.number)]),
+          this.card([this.kv('База 1С',d.yurlitso)]),
+          this.card([this.kv('Сумма',this.fMoneyFull(d.sum))]),
+          this.card([this.kv('Статус проводки',s1c,{color:this.status1cColor(s1c)})]),
+        ),
+        this.card([h('div',{style:{fontSize:'11.5px',color:C.muted,lineHeight:1.5}},s1c==='Проведён'?'Документ проведён в 1С. OneCChangeEvent: posted.':'Создан черновик в 1С по ИНН покупателя. Ожидает проверки и проведения бухгалтером.')]),
+      );
+    }
+    if(t==='event'){
+      const ev=this.allEvents()[frame.id]; if(!ev) return null;
+      const d=D.docById[ev.docId];
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},this.badge(this.srcLabel(ev.source),this.srcColor(ev.source)),this.badge(ev.severity,this.sevColor(ev.severity))),
+        this.card([h('div',{style:{fontSize:'14px',lineHeight:1.45}},ev.text)]),
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},this.card([this.kv('Время',ev.time)]),this.card([this.kv('Источник',this.srcLabel(ev.source))])),
+        d?h('div',null,this.secTitle('Связанный документ'),this.linkRow(d.number,(D.cpById[d.counterpartyId]||{}).name,C.text,()=>this.pushDrawer({type:'document',id:d.id}),h('span',{style:{color:C.blue}},'→'))):null
+      );
+    }
+    if(t==='integration'){
+      const ig=dm.integrations.find(x=>x.id===frame.id); if(!ig) return null;
+      const subBoxes={
+        diadoc:[['Ящик БТС','118 док'],['Ящик Холдинг','94 док'],['Ящик Трансэнерго','35 док']],
+        bitrix24:[['/счёт','42'],['/упд','31'],['/тмц','12'],['/табель','7'],['/рпп','9']],
+        gemini:[['Распознано','241'],['Уверенность ≥0.9','228'],['Ошибки','6']],
+        matching:[['Авто-строки','1764'],['Ручные','76'],['Точность','95.9%']],
+        onec:[['БТС','118'],['Холдинг','71'],['Трансэнерго','24']],
+      }[ig.id]||[];
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},this.badge('Работает',C.green),this.badge(ig.throughput,C.blue)),
+        this.card([h('div',{style:{fontSize:'12px',color:C.muted,lineHeight:1.5}},ig.detail)]),
+        h('div',null,this.secTitle(ig.id==='bitrix24'?'Команды-триггеры':ig.id==='diadoc'||ig.id==='onec'?'По юрлицам':'Показатели'),h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'9px'}},subBoxes.map((b,i)=>this.miniKpi(b[0],b[1],i===subBoxes.length-1?C.teal:C.text)))),
+      );
+    }
+    if(t==='doctype'){
+      const dt=dm.docTypeMix.find(x=>x.code===frame.id); if(!dt) return null;
+      const docs=D.docs.filter(d=>d.type===dt.code);
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px'}},this.badge(this.fInt(dt.count)+' документов',C.blue),this.badge('авто '+this.pct(dt.automationRate),C.teal)),
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},this.miniKpi('Сумма',this.fMoney(dt.sum)),this.miniKpi('Доля авто',this.pct(dt.automationRate),C.teal)),
+        h('div',null,this.secTitle('Документы этого типа'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px',maxHeight:'300px',overflow:'auto'}},docs.length?docs.map(d=>this.linkRow(d.number,(D.cpById[d.counterpartyId]||{}).name+' · '+this.fMoney(d.sum),C.text,()=>this.pushDrawer({type:'document',id:d.id}),this.badge(this.docStatus1c(d),this.status1cColor(this.docStatus1c(d))))):h('div',{style:{fontSize:'12px',color:C.dim,padding:'14px',textAlign:'center'}},'Нет документов в выборке'))),
+      );
+    }
+    if(t==='pipeline'){
+      const s=dm.pipeline[frame.id]; const prev=frame.id>0?dm.pipeline[frame.id-1]:null;
+      const lost=prev?prev.count-s.count:0;
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px'}},this.badge(this.fInt(s.count)+' документов',C.blue),lost>0?this.badge('−'+lost+' потеряно',C.orange):this.badge('вход',C.green)),
+        this.card([h('div',{style:{fontSize:'13px',fontWeight:600,marginBottom:'6px'}},s.label),h('div',{style:{fontSize:'11.5px',color:C.muted,lineHeight:1.5}},prev?('С предыдущего этапа дошло '+this.fInt(s.count)+' из '+this.fInt(prev.count)+'. Причина потерь: '+s.lostReason+'.'):'Все входящие документы из Диадок за период.')]),
+        lost>0?h('div',null,this.secTitle('Что блокирует'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},D.stuck.filter(x=>x.stage===s.stage).slice(0,8).map(x=>{const d=D.docById[x.docId];return this.linkRow(d.number,x.reason,C.orange,()=>this.pushDrawer({type:'stuck',id:x.id}),this.badge(this.fMoney(x.riskAmount),C.red));}))):null
+      );
+    }
+    if(t==='heatcell'){
+      const p=frame.payload;
+      const rel=D.stuck.filter(x=>x.reason===p.reason).slice(0,8);
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},this.badge(p.hour+':00',C.blue),this.badge(p.count+' застряло',C.orange),this.badge('риск '+this.fMoney(p.amount),C.red)),
+        this.card([h('div',{style:{fontSize:'13px',fontWeight:600,marginBottom:'5px'}},p.reason),h('div',{style:{fontSize:'11.5px',color:C.muted,lineHeight:1.5}},'Этап: '+p.stage+'. За '+p.hour+':00 застряло '+p.count+' документ(ов).')]),
+        h('div',null,this.secTitle('Застрявшие документы'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},rel.length?rel.map(x=>{const d=D.docById[x.docId];return this.linkRow(d.number,(D.cpById[d.counterpartyId]||{}).name,C.orange,()=>this.pushDrawer({type:'stuck',id:x.id}),this.badge(this.fMoney(x.riskAmount),C.red));}):h('div',{style:{fontSize:'12px',color:C.dim,padding:'12px'}},'Документы устранены'))),
+      );
+    }
+    if(t==='interval'){
+      const cfg=this.periodCfg;
+      let raw=cfg.series==='hourly'?dm.hourly:(cfg.series==='daily7'?dm.daily.slice(-7):dm.daily);
+      const pt=raw[frame.id]; if(!pt) return null;
+      const isHour=cfg.series==='hourly';
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'flex',gap:'8px'}},this.badge(isHour?'час '+pt.hour:'день '+pt.date,C.blue),this.badge(this.fInt(pt.documents)+' док',C.teal)),
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},
+          this.miniKpi('Документов',this.fInt(pt.documents)),
+          this.miniKpi('Сумма',this.fMoney(pt.sum),C.green),
+          this.miniKpi('Авто',isHour?this.fInt(pt.auto):this.pct(pt.automationRate),C.teal),
+          this.miniKpi('Застряло',isHour?this.fInt(pt.stuck):'~'+Math.round(pt.documents*0.045),C.orange),
+        ),
+        h('div',null,this.secTitle('Документы за интервал'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},D.docs.slice(0,5).map(d=>this.linkRow(d.number,(D.cpById[d.counterpartyId]||{}).name+' · '+this.fMoney(d.sum),C.text,()=>this.pushDrawer({type:'document',id:d.id}),this.badge(this.docStatus1c(d),this.status1cColor(this.docStatus1c(d))))))),
+      );
+    }
+    if(t==='kpi'){ return this.renderKpiFrame(frame.id); }
+    return h('div',{style:{fontSize:'13px',color:C.muted}},'Нет данных');
+  }
+
+  renderKpiFrame(id){
+    const C=this.C,h=this.h.bind(this),D=this.D,dm=this.DEMO;
+    const s=dm.summary;
+    if(id==='documents'){
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'9px'}},this.miniKpi('Всего',this.fInt(this.pv(s.documentsProcessed))),this.miniKpi('Авто',this.fInt(this.pv(s.documentsAuto)),C.teal),this.miniKpi('Вручную',this.fInt(this.pv(s.documentsManual)),C.orange),this.miniKpi('В 1С',this.fInt(this.pv(s.sentTo1c)),C.blue),this.miniKpi('Проведено',this.fInt(this.pv(s.postedIn1c)),C.green),this.miniKpi('В очереди',this.fInt(this.pv(s.inQueue)),C.yellow)),
+        h('div',null,this.secTitle('По типам документов'),h('div',{style:{display:'flex',flexDirection:'column',gap:'8px'}},dm.docTypeMix.map(dt=>h('div',{key:dt.code,onClick:()=>this.pushDrawer({type:'doctype',id:dt.code}),style:{cursor:'pointer'}},h('div',{style:{display:'flex',justifyContent:'space-between',fontSize:'12px',marginBottom:'4px'}},h('span',null,dt.label),h('span',{style:{fontFamily:C.mono,color:C.muted}},dt.count)),this.miniBar(dt.count/92*100,C.blue,6))))),
+        h('div',null,this.secTitle('Документы'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px',maxHeight:'240px',overflow:'auto'}},D.docs.slice(0,12).map(d=>this.linkRow(d.number,(D.cpById[d.counterpartyId]||{}).name+' · '+this.pathwayLabel(d.pathway),C.text,()=>this.pushDrawer({type:'document',id:d.id}),this.badge(this.docStatus1c(d),this.status1cColor(this.docStatus1c(d))))))),
+      );
+    }
+    if(id==='sum'){
+      const wf=[['Счета',7480000,C.blue],['УПД',8120000,C.teal],['ТМЦ',1640000,C.yellow],['Платежи',9720000,C.green]];
+      const top=[...dm.counterparties].sort((a,b)=>b.sum-a.sum).slice(0,5);
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'9px'}},this.miniKpi('Всего',this.fMoney(this.pv(s.documentsSum))),this.miniKpi('Подтверждено',this.fMoney(this.pv(s.documentsSum*0.92)),C.green),this.miniKpi('Под риском',this.fMoney(892000),C.red)),
+        h('div',null,this.secTitle('Структура суммы'),h('div',{style:{display:'flex',flexDirection:'column',gap:'9px'}},wf.map((w,i)=>h('div',{key:i},h('div',{style:{display:'flex',justifyContent:'space-between',fontSize:'12px',marginBottom:'4px'}},h('span',null,w[0]),h('span',{style:{fontFamily:C.mono}},this.fMoney(w[1]))),this.miniBar(w[1]/9720000*100,w[2],7))))),
+        h('div',null,this.secTitle('Топ контрагентов'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},top.map(c=>this.linkRow(c.name,'авто '+this.pct(c.automationRate),C.text,()=>this.pushDrawer({type:'counterparty',id:c.id}),h('span',{style:{fontFamily:C.mono,fontSize:'12px'}},this.fMoney(c.sum)))))),
+      );
+    }
+    if(id==='automation'){
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},this.miniKpi('Доля по документам',this.pct(s.automationRate),C.teal),this.miniKpi('Точность матчинга','95.9%',C.green)),
+        h('div',null,this.secTitle('По источнику'),h('div',{style:{display:'flex',flexDirection:'column',gap:'9px'}},[['Диадок · авто',0.78,C.blue],['Триггер Б24',0.11,C.yellow],['Вручную',0.11,C.orange]].map((r,i)=>h('div',{key:i},h('div',{style:{display:'flex',justifyContent:'space-between',fontSize:'12px',marginBottom:'4px'}},h('span',null,r[0]),h('span',{style:{fontFamily:C.mono}},this.pct(r[1]))),this.miniBar(r[1]*100,r[2],7))))),
+        h('div',null,this.secTitle('Строки номенклатуры'),h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'9px'}},this.miniKpi('auto_confirmed','1 764',C.green),this.miniKpi('manual_required','76',C.orange))),
+        this.card([h('div',{style:{fontSize:'11.5px',color:C.muted,lineHeight:1.5}},'«Потерянная автоматизация»: 76 строк ушли на ручной выбор — низкая уверенность AI или отсутствие маппинга. Движок дообучается на правках бухгалтеров (self-learning).')]),
+      );
+    }
+    if(id==='posted'){
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},this.buildFunnelDrawer(),
+        h('div',null,this.secTitle('Что блокирует остальные'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},D.stuck.slice(0,8).map(x=>{const d=D.docById[x.docId];return this.linkRow(d.number,x.reason,C.orange,()=>this.pushDrawer({type:'stuck',id:x.id}),this.badge(this.fMoney(x.riskAmount),C.red));}))));
+    }
+    if(id==='queue'){
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'9px'}},this.miniKpi('На загрузке','5',C.blue),this.miniKpi('Распознавание','4',C.teal),this.miniKpi('Сопоставление','6',C.yellow),this.miniKpi('Ждёт проверки','4',C.orange)),
+        h('div',null,this.secTitle('Среднее время на этапе'),h('div',{style:{display:'flex',flexDirection:'column',gap:'7px'}},[['Приём из Диадок','1 мин',C.blue],['Распознавание AI','2 мин',C.teal],['Сопоставление','1 мин',C.teal],['Проверка бухгалтером','7 мин',C.orange]].map((r,i)=>this.linkRow(r[0],null,r[2],null,h('span',{style:{fontFamily:C.mono,fontSize:'12px',color:r[2]}},r[1]))))),
+      );
+    }
+    if(id==='attention'){
+      const reasons=dm.bottleneckMatrix.map(b=>[b.reason,b.count,b.amount]);
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},this.miniKpi('Требует внимания',this.fInt(s.needsAttention),C.orange),this.miniKpi('Сумма под риском',this.fMoney(1340000+330000),C.red)),
+        h('div',null,this.secTitle('По причинам'),h('div',{style:{display:'flex',flexDirection:'column',gap:'7px'}},reasons.map((r,i)=>this.linkRow(r[0],r[1]+' документов',C.orange,null,h('span',{style:{fontFamily:C.mono,fontSize:'12px',color:C.red}},this.fMoney(r[2])))))),
+        h('div',null,this.secTitle('Проблемные документы'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},D.stuck.slice(0,8).map(x=>{const d=D.docById[x.docId];return this.linkRow(d.number,x.reason,C.orange,()=>this.pushDrawer({type:'stuck',id:x.id}),this.badge(this.fMoney(x.riskAmount),C.red));}))),
+      );
+    }
+    if(id==='savings'){
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},this.miniKpi('Экономия / мес',this.fMoney(s.moneySavedMonth),C.green),this.miniKpi('Часов / мес',this.fInt(s.hoursSavedMonth),C.teal),this.miniKpi('Авто vs ручная','11 / 38 мин',C.text),this.miniKpi('Сегодня сэкономл.',s.hoursSavedToday+' ч',C.teal)),
+        this.card([h('div',{style:{fontSize:'12px',fontWeight:600,marginBottom:'10px'}},'Было 11 → цель 5 бухгалтеров'),h('div',{style:{display:'flex',gap:'4px',alignItems:'flex-end',height:'56px'}},[...Array(11)].map((_,i)=>h('div',{key:i,style:{flex:1,borderRadius:'4px 4px 0 0',height:i<5?'100%':'46%',background:i<5?C.green:'rgba(255,255,255,.1)',border:i<5?'none':'1px dashed rgba(255,255,255,.2)'}}))),h('div',{style:{display:'flex',justifyContent:'space-between',marginTop:'7px',fontSize:'10.5px',color:C.dim}},h('span',null,'5 активных'),h('span',null,'6 высвобождено'))]),
+        this.card([h('div',{style:{fontSize:'11.5px',color:C.muted,lineHeight:1.5}},'Расчёт: авто-обработанные строки × норма ручного времени. Ручная обработка документа ~38 мин против ~11 мин с автоматикой.')]),
+      );
+    }
+    if(id==='accountants'){
+      return h('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}},
+        h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}},this.miniKpi('Активно',this.fInt(s.accountantsActive),C.green),this.miniKpi('Было',this.fInt(s.accountantsBefore),C.muted)),
+        h('div',null,this.secTitle('Нагрузка по бухгалтерам'),h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},dm.employees.map(e=>this.linkRow(e.name,e.role,e.status==='bot'?C.teal:C.text,()=>this.pushDrawer({type:'accountant',id:e.id}),h('div',{style:{display:'flex',alignItems:'center',gap:'8px'}},h('span',{style:{fontFamily:C.mono,fontSize:'11.5px',color:C.muted}},e.documents),h('div',{style:{width:'40px'}},this.miniBar(e.status==='bot'?100:e.load*100,e.status==='bot'?C.teal:e.load>0.8?C.orange:C.green,6))))))),
+      );
+    }
+    return null;
+  }
+  buildFunnelDrawer(){
+    const C=this.C,h=this.h.bind(this),dm=this.DEMO; const base=dm.pipeline[0].count;
+    return h('div',null,this.secTitle('Воронка получено → проведено'),h('div',{style:{display:'flex',flexDirection:'column',gap:'7px'}},dm.pipeline.map((s,i)=>h('div',{key:i,onClick:()=>this.pushDrawer({type:'pipeline',id:i}),style:{cursor:'pointer'}},h('div',{style:{display:'flex',justifyContent:'space-between',fontSize:'12px',marginBottom:'4px'}},h('span',null,s.label),h('span',{style:{fontFamily:C.mono}},s.count)),this.miniBar(s.count/base*100,[C.blue,C.teal,C.teal,C.yellow,C.green][i],7)))));
+  }
+
+  buildDrawer(){
+    if(!this.state.drawer.length) return null;
+    const C=this.C,h=this.h.bind(this);
+    const stack=this.state.drawer;
+    const top=stack[stack.length-1];
+    const titleOf=(f)=>{
+      const D=this.D,dm=this.DEMO;
+      if(f.type==='document'||f.type==='posting') return (D.docById[f.id]||{}).number||'Документ';
+      if(f.type==='stuck'){ const s=D.stuck.find(x=>x.id===f.id);return 'Застряло · '+(s?(D.docById[s.docId]||{}).number:''); }
+      if(f.type==='accountant') return (D.empById[f.id]||{}).name||'Бухгалтер';
+      if(f.type==='counterparty') return (D.cpById[f.id]||{}).name||'Контрагент';
+      if(f.type==='event') return 'Событие';
+      if(f.type==='integration') return (dm.integrations.find(x=>x.id===f.id)||{}).label||'Интеграция';
+      if(f.type==='doctype') return (dm.docTypeMix.find(x=>x.code===f.id)||{}).label||'Тип';
+      if(f.type==='pipeline') return (dm.pipeline[f.id]||{}).label||'Этап';
+      if(f.type==='heatcell') return f.payload.reason;
+      if(f.type==='interval') return 'Интервал '+(f.label||'');
+      if(f.type==='kpi') return {documents:'Документов обработано',sum:'Сумма документов',automation:'Доля автоматизации',posted:'Отправлено в 1С',queue:'В очереди',attention:'Требует внимания',savings:'Экономия',accountants:'Бухгалтеров активно'}[f.id]||'KPI';
+      return 'Детализация';
+    };
+    const crumbs=['Дашборд',...stack.map(titleOf)];
+    return h('div',{style:{display:'flex',flexDirection:'column',height:'100%'}},
+      h('div',{style:{padding:'16px 22px 14px',borderBottom:'1px solid '+C.border}},
+        h('div',{style:{display:'flex',alignItems:'center',gap:'6px',flexWrap:'wrap',marginBottom:'10px'}},crumbs.map((c,i)=>h('span',{key:i,style:{display:'inline-flex',alignItems:'center',gap:'6px'}},i>0?h('span',{style:{color:C.dim,fontSize:'11px'}},'/'):null,h('span',{onClick:()=>{ if(i===0) this.closeDrawer(); else this.popDrawer(i-1); },style:{cursor:'pointer',fontSize:'11px',color:i===crumbs.length-1?C.text:C.muted}},c)))),
+        h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'12px'}},
+          h('h2',{style:{margin:0,fontSize:'18px',fontWeight:600}},titleOf(top)),
+          h('button',{onClick:()=>this.closeDrawer(),style:{border:'1px solid '+C.border,background:C.panel2,color:C.muted,width:'30px',height:'30px',borderRadius:'8px',cursor:'pointer',fontSize:'16px',lineHeight:1,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}},'×')
+        ),
+        stack.length>1?h('button',{onClick:()=>this.popDrawer(stack.length-2),style:{marginTop:'10px',border:'none',background:'none',color:C.blue,cursor:'pointer',fontSize:'12px',padding:0,fontFamily:'inherit'}},'← Назад'):null
+      ),
+      h('div',{style:{flex:1,overflow:'auto',padding:'18px 22px 28px'}},this.renderFrame(top))
+    );
+  }
+
+  // ---------- SCOPE (active filter) ----------
+  scope(){
+    const dm=this.DEMO, s=dm.summary, f=this.state.filter;
+    if(f==='all') return {mode:'all',ratio:1,sum:s,typeCode:null,label:null};
+    if(f==='auto'){
+      const r=s.documentsAuto/s.documentsProcessed;
+      return {mode:'auto',ratio:r,typeCode:null,label:'только авто',
+        sum:{documentsProcessed:s.documentsAuto,documentsAuto:s.documentsAuto,documentsManual:0,documentsSum:Math.round(s.documentsSum*r),automationRate:1,sentTo1c:Math.round(s.sentTo1c*r),postedIn1c:Math.round(s.postedIn1c*r),inQueue:Math.round(s.inQueue*0.3),needsAttention:Math.round(s.needsAttention*0.2),hoursSavedMonth:s.hoursSavedMonth,moneySavedMonth:s.moneySavedMonth}};
+    }
+    if(f==='attention'){
+      const cnt=s.needsAttention, risk=1670000;
+      return {mode:'attention',ratio:cnt/s.documentsProcessed,typeCode:null,label:'требует внимания',
+        sum:{documentsProcessed:cnt,documentsAuto:0,documentsManual:cnt,documentsSum:risk,automationRate:0,sentTo1c:0,postedIn1c:0,inQueue:s.inQueue,needsAttention:cnt,hoursSavedMonth:0,moneySavedMonth:0}};
+    }
+    const dt=dm.docTypeMix.find(x=>x.code===f);
+    if(!dt) return {mode:'all',ratio:1,sum:s,typeCode:null,label:null};
+    const r=dt.count/s.documentsProcessed, auto=Math.round(dt.count*dt.automationRate);
+    return {mode:'type',ratio:r,typeCode:f,label:dt.label,
+      sum:{documentsProcessed:dt.count,documentsAuto:auto,documentsManual:dt.count-auto,documentsSum:dt.sum,automationRate:dt.automationRate,sentTo1c:Math.round(s.sentTo1c*r),postedIn1c:Math.round(s.postedIn1c*r),inQueue:Math.max(0,Math.round(s.inQueue*r)),needsAttention:Math.max(1,Math.round(s.needsAttention*r)),hoursSavedMonth:Math.round(s.hoursSavedMonth*r),moneySavedMonth:Math.round(s.moneySavedMonth*r)}};
+  }
+
+  // ---------- RENDER VALS ----------
+  renderVals(){
+    const C=this.C, dm=this.DEMO, st=this.state, D=this.D;
+    const cfg=this.periodCfg, dp=dm.deltaPrevPeriod, s=dm.summary;
+    const sc=this.scope(), ss=sc.sum, filt=sc.mode!=='all';
+    const arrow=(x)=>(x>0?'+':x<0?'−':'')+Math.abs(Math.round(x*100))+'%';
+    const periods=[['today','Сегодня'],['yesterday','Вчера'],['7d','7 дней'],['30d','30 дней'],['month','Месяц'],['quarter','Квартал']].map(([k,l])=>({key:k,label:l,bg:st.period===k?C.blue:'transparent',fg:st.period===k?'#0a0e13':C.muted,onClick:()=>this.setPeriod(k)}));
+    const filterDefs=[['all','Все'],['invoice','Счета'],['upd','УПД'],['tmc','ТМЦ'],['payment','Платежи'],['attention','Только требует внимания'],['auto','Только авто']];
+    const filters=filterDefs.map(([k,l])=>({key:k,label:l,bg:st.filter===k?this.hexA(C.blue,.16):C.panel2,fg:st.filter===k?C.blue:C.muted,border:st.filter===k?this.hexA(C.blue,.5):C.border,onClick:()=>this.setFilter(k)}));
+
+    const kpis=[
+      {key:'documents',label:'Документов обработано',value:this.fInt(this.pv(ss.documentsProcessed)),sub:'авто '+this.fInt(this.pv(ss.documentsAuto))+' · вручную '+this.fInt(this.pv(ss.documentsManual)),delta:arrow(dp.documentsProcessed),deltaColor:C.green,accent:C.blue},
+      {key:'sum',label:'Сумма документов',value:this.fMoney(this.pv(ss.documentsSum)),sub:sc.mode==='attention'?'сумма под риском':'подтверждено '+this.fMoney(this.pv(ss.documentsSum*0.92)),delta:arrow(dp.documentsSum),deltaColor:C.green,accent:C.green},
+      {key:'automation',label:'Доля автоматизации',value:this.pct(ss.automationRate),sub:sc.mode==='attention'?'нужен человек':'матчинг строк 95,9%',delta:'+4 п.п.',deltaColor:C.green,accent:C.teal},
+      {key:'posted',label:'Отправлено в 1С',value:this.fInt(this.pv(ss.sentTo1c))+' / '+this.fInt(this.pv(ss.postedIn1c)),sub:'в 1С / проведено',delta:arrow(dp.postedIn1c),deltaColor:C.green,accent:C.green},
+      {key:'queue',label:'В очереди',value:this.fInt(this.pv(ss.inQueue)),sub:'на обработке',delta:'+3',deltaColor:C.muted,accent:C.yellow},
+      {key:'attention',label:'Требует внимания',value:this.fInt(ss.needsAttention),sub:'застряло / споры',delta:arrow(dp.needsAttention),deltaColor:C.green,accent:C.orange},
+      {key:'savings',label:'Экономия / мес',value:this.fMoney(ss.moneySavedMonth),sub:this.fInt(ss.hoursSavedMonth)+' ч · 11 → 5',delta:arrow(dp.moneySavedMonth),deltaColor:C.green,accent:C.teal},
+      {key:'accountants',label:'Бухгалтеров активно',value:String(s.accountantsActive),sub:'было 11 → цель 5',delta:'−6',deltaColor:C.green,accent:C.blue},
+    ].map(k=>Object.assign(k,{onClick:()=>this.openDrawer({type:'kpi',id:k.key})}));
+
+    const chartMetrics=[['documents','Документы'],['sum','Сумма'],['automation','Автоматизация'],['bottlenecks','Узкие места']].map(([k,l])=>({key:k,label:l,bg:st.chartMetric===k?this.hexA(C.blue,.2):'transparent',fg:st.chartMetric===k?C.blue:C.muted,onClick:()=>this.setChartMetric(k)}));
+
+    const maxMix=Math.max(...dm.docTypeMix.map(d=>d.count));
+    const mixColors={invoice:C.blue,upd:C.teal,tmc:C.yellow,payment:C.green,timesheet:C.orange};
+    const docTypeMix=dm.docTypeMix.map(d=>({label:d.label,countText:this.fInt(d.count)+' док',sumText:d.sum?this.fMoney(d.sum):'—',autoText:this.pct(d.automationRate),widthPct:Math.round(d.count/maxMix*100),color:mixColors[d.code],opacity:(sc.typeCode&&sc.typeCode!==d.code)?'.32':'1',onClick:()=>this.setFilter(sc.typeCode===d.code?'all':d.code)}));
+
+    let cpData=dm.counterparties;
+    if(sc.mode==='attention') cpData=cpData.filter(c=>c.riskAmount>0||c.disputes>0);
+    const cpScale=(sc.mode==='type'||sc.mode==='auto')?sc.ratio:1;
+    const cpScaled=cpData.map(c=>Object.assign({},c,{sum:Math.round(c.sum*cpScale),confirmedSum:Math.round(c.confirmedSum*cpScale),documents:Math.max(1,Math.round(c.documents*cpScale))}));
+    const maxCp=Math.max(1,...cpScaled.map(c=>c.sum));
+    const counterparties=cpScaled.map(c=>({name:c.name,sumText:this.fMoney(c.sum),docsText:this.fInt(c.documents)+' док',autoText:this.pct(c.automationRate),widthPct:Math.round(c.sum/maxCp*100),confirmPct:Math.round(c.confirmedSum/maxCp*100),riskText:c.riskAmount?'риск '+this.fMoney(c.riskAmount):(c.disputes?c.disputes+' спор':'✓ чисто'),riskColor:c.riskAmount?C.red:C.green,onClick:()=>this.openDrawer({type:'counterparty',id:c.id})}));
+
+    let empData=dm.employees;
+    if(sc.mode==='type') empData=empData.filter(e=>e.status==='bot'||(D.depById[e.department]&&D.depById[e.department].docType===sc.typeCode));
+    else if(sc.mode==='attention') empData=empData.filter(e=>e.manual>0);
+    const accountants=empData.map(e=>{const isBot=e.status==='bot';const sel=st.selEmp===e.id;const ef=(sc.mode==='type')?sc.ratio:(sc.mode==='auto'&&!isBot?sc.ratio:1);return {name:e.name,role:e.role,docs:this.fInt(Math.max(0,Math.round(e.documents*ef))),autoPct:this.pct(e.auto/Math.max(1,e.documents)),autoColor:isBot?C.teal:C.text,loadPct:isBot?100:Math.round(e.load*100),loadColor:isBot?C.teal:e.load>0.8?C.orange:C.green,accent:isBot?C.teal:sel?C.blue:'transparent',rowBg:sel?this.hexA(C.blue,.08):'transparent',tag:isBot?'БОТ':sel?'выбран':'',tagBg:isBot?this.hexA(C.teal,.16):this.hexA(C.blue,.16),tagFg:isBot?C.teal:C.blue,onClick:()=>{this.selectEmp(e.id);this.openDrawer({type:'accountant',id:e.id});}};});
+
+    const efDefs=[['all','Все'],['recognized','Распознано'],['matched','Сопоставлено'],['in_1c','В 1С'],['posted','Проведено'],['error','Ошибки'],['dispute','Споры'],['trigger','Триггеры']];
+    const eventFilters=efDefs.map(([k,l])=>({key:k,label:l,bg:st.eventFilter===k?this.hexA(C.blue,.16):C.panel2,fg:st.eventFilter===k?C.blue:C.muted,border:st.eventFilter===k?this.hexA(C.blue,.5):C.border,onClick:()=>this.setEventFilter(k)}));
+    let evList=this.allEvents();
+    if(st.eventFilter!=='all'){
+      const map={recognized:['recognized'],matched:['matched'],in_1c:['in_1c'],posted:['posted'],error:['recognition_failed','dispute','blocked'],dispute:['dispute'],trigger:['trigger']};
+      const types=map[st.eventFilter]||[];
+      evList=evList.filter(e=>types.includes(e.type)||(st.eventFilter==='error'&&e.severity==='error'));
+    }
+    if(sc.typeCode){ evList=evList.filter(e=>{const d=D.docById[e.docId];return d&&d.type===sc.typeCode;}); }
+    else if(sc.mode==='auto'){ evList=evList.filter(e=>{const d=D.docById[e.docId];return ['received','recognized','matched','in_1c','trigger','payment'].includes(e.type)||(d&&(d.pathway==='auto_diadoc'||(d.pathway&&d.pathway.indexOf('trigger')===0)));}); }
+    else if(sc.mode==='attention'){ evList=evList.filter(e=>['recognition_failed','manual_required','blocked','dispute'].includes(e.type)||e.severity==='warn'||e.severity==='error'); }
+    if(st.eventQuery.trim()){
+      const q=st.eventQuery.toLowerCase();
+      evList=evList.filter(e=>{const d=D.docById[e.docId];const cp=d?D.cpById[d.counterpartyId]:null;return e.text.toLowerCase().includes(q)||(d&&d.number.toLowerCase().includes(q))||(cp&&cp.name.toLowerCase().includes(q));});
+    }
+    const all=this.allEvents();
+    const events=evList.map(e=>({time:e.time,text:e.text,srcLabel:this.srcLabel(e.source),docId:e.docId,color:this.sevColor(e.severity),onClick:()=>this.openDrawer({type:'event',id:all.indexOf(e)})}));
+
+    const integrations=dm.integrations.map(i=>({label:i.label,subtitle:i.subtitle,throughput:i.throughput,onClick:()=>this.openDrawer({type:'integration',id:i.id})}));
+
+    const liveTexts=['обновлено 4 сек назад','обновлено 9 сек назад','обновлено 2 сек назад','обновлено 12 сек назад'];
+
+    return {
+      liveText:liveTexts[st.tick%liveTexts.length],
+      periodLabel:cfg.label+(filt?' · '+sc.label:''), rangeLabel:cfg.range,
+      chartHint:cfg.series==='hourly'?'Динамика по часам · клик по точке — детализация интервала':'Динамика по дням · клик по точке — детализация дня',
+      periods, filters, kpis, chartMetrics, docTypeMix, counterparties, accountants, eventFilters, events, integrations,
+      onToggleCompare:()=>this.toggleCompare(),
+      compareBg:st.compare?this.hexA(C.blue,.16):C.panel2, compareFg:st.compare?C.blue:C.muted, compareBorder:st.compare?this.hexA(C.blue,.5):C.border, compareDot:st.compare?C.blue:'transparent',
+      onEventQuery:(e)=>this.setState({eventQuery:e.target.value}), eventQuery:st.eventQuery,
+      onSimulate:()=>this.simulate(),
+      chartNode:this.buildChart(),
+      funnelNode:this.buildFunnel(),
+      heatmapNode:this.buildHeatmap(),
+      conveyorNode:this.buildConveyor(),
+      inspectorNode:this.buildInspector(),
+      drawerOpen:st.drawer.length>0,
+      drawerNode:this.buildDrawer(),
+      onCloseDrawer:()=>this.closeDrawer(),
+      toastVisible:!!st.toast, toastText:st.toast||'',
+    };
+  }
+}
+</script>
+</body>
+</html>
